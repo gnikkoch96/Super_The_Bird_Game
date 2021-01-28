@@ -2,3 +2,5 @@ com/procodenators/game/TheBirdGame.java
  com.procodenators.game.TheBirdGame
 com/procodenators/game/GameController.java
  com.procodenators.game.GameController
+com/procodenators/game/Bird.java
+ com.procodenators.game.Bird
