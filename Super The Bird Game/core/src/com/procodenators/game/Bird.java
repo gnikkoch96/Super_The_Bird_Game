@@ -14,7 +14,7 @@ public class Bird {
             String path = "Bird_Animations//idle bird ";
             path = path.concat(Integer.toString(i));
             path = path.concat(".png");
-            Texture temp = resize(path, 250, 250);
+            Texture temp = resize(path, 150, 150);
             idlebird[i-1] = temp;
         }
     }
