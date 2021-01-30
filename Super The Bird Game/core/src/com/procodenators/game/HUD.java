@@ -45,7 +45,7 @@ public class HUD {
         scoreLabel.setFontScale(2);
         //Adding the displays to the screen
         table.add(healthBar).expandX().padTop(10).padRight(800);
-        table.add(scoreLabel).expandX().padTop(10).padRight(50);
+        table.add(scoreLabel).expandX().padTop(10).padRight(50).padBottom(70);
 
         //Display table to screen
         stage.addActor(table);
