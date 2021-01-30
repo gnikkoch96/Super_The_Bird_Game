@@ -8,26 +8,26 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class TheBirdGame extends ApplicationAdapter {
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 480;
+	public static final int WIDTH = 1300;
+	public static final int HEIGHT = 680;
 
 	public static final String TITLE = "The Bird Game";
 
 	private GameController gc;
+	private HUD hud;
 
 	SpriteBatch batch;
 	Texture bg;
 
 	Bird bird;
-	Texture[] idlebird;
-	
+
 	@Override
 	public void create () {
 		gc = new GameController();
 		batch = new SpriteBatch();
 		bg = new Texture("Background//bg.png");
 		bird = new Bird();
-		idlebird = bird.getIdlebird();
+		hud = new HUD(batch);
 	}
 
 	@Override
@@ -37,9 +37,11 @@ public class TheBirdGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		batch.draw(bg, 0, 0);
+		batch.draw(bird.getIdlebird()[0], 200, 150);
 		batch.end();
+		hud.stage.draw();
 	}
-	
+
 	@Override
 	public void dispose () {
 		batch.dispose();
