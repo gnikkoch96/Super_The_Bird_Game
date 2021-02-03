@@ -1,2 +1,0 @@
-com/mygdx/game/TheBirdGame.java
- com.mygdx.game.TheBirdGame
