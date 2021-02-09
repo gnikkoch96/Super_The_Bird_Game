@@ -43,6 +43,8 @@ public class SuperBirdGame extends ApplicationAdapter {
 
 	Bird bird;
 
+	float currTime;
+
 	@Override
 	public void create () {
 		gc = new GameController();
@@ -50,16 +52,20 @@ public class SuperBirdGame extends ApplicationAdapter {
 		bg = new Texture("Background//bg.png");
 		bird = new Bird();
 		hud = new HUD(batch);
+		currTime = 0;
 	}
 
 	@Override
 	public void render () {
+		currTime += Gdx.graphics.getDeltaTime();
 		gc.handleInput(); // Testing purposes only to see if it worked
+		bird.update(currTime); // testing to see if the bird animation updates
+
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		batch.draw(bg, 0, 0);
-		batch.draw(bird.getIdlebird()[0], 200, 150);
+		batch.draw(bird.getBirdImage(), 200, 150);
 		batch.end();
 		hud.stage.draw();
 	}

@@ -3,26 +3,29 @@ package com.procode.game.sprites;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.procode.game.tools.Animation;
 import com.procode.game.tools.ImageFunctions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Bird {
-    private Texture[] idlebird;
+    private Animation birdAnimation; // takes in an animation class to allow for changing of animation played and other settings
     private float healthCount;//Nikko
 
     public Bird() {
-        idlebird = new Texture[4];
+        birdAnimation = new Animation();
         healthCount = 6; //Nikko
-        for(int i = 1; i < 5; i++) {
-            String path = "Bird_Animations//idle bird ";
-            path = path.concat(Integer.toString(i));
-            path = path.concat(".png");
-            Texture temp = ImageFunctions.resize(path, 150, 150);
-            idlebird[i-1] = temp;
-        }
+        birdAnimation.setAnimation("Bird_Animations//idle bird ", 192, 120, 1, 4, 0, .25f);
     }
 
+    // updates the bird every frame
+    public void update(float deltaTime){
+        birdAnimation.updateFrame(deltaTime);
+    }
 
-    public Texture[] getIdlebird() {
-        return idlebird;
+    // gets the current image of the bird
+    public Texture getBirdImage() {
+        return birdAnimation.getCurrImg();
     }
 }
