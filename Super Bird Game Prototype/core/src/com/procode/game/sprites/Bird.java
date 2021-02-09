@@ -12,11 +12,19 @@ import java.util.List;
 public class Bird {
     private Animation birdAnimation; // takes in an animation class to allow for changing of animation played and other settings
     private float healthCount;//Nikko
+    private int birdWidth;
+    private int birdHeight;
+    private float xPos;
+    private float yPos;
 
     public Bird() {
         birdAnimation = new Animation();
         healthCount = 6; //Nikko
-        birdAnimation.setAnimation("Bird_Animations//idle bird ", 192, 120, 1, 4, 0, .25f);
+        birdWidth = 240;
+        birdHeight = 150;
+
+        // sets the current animation to the idle bird
+        birdAnimation.setAnimation("Bird_Animations//idle bird ", birdWidth, birdHeight, 1, 4, 0, .25f);
     }
 
     // updates the bird every frame

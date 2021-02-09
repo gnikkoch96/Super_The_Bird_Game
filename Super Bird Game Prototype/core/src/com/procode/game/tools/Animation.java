@@ -47,6 +47,8 @@ public class Animation {
 
     // this function needs to be called continuously to update the current time the animation is played
     // updates the frame and leaves it on there until the TimePlayedPerFrame is reached
+    // once the animation cycle is over, the animationFinished variable is set to true for that ending frame
+    // until the cycle starts again
     public void updateFrame(float deltaTime){
 
         // updates the current frame once he time played per frame is up
@@ -61,22 +63,18 @@ public class Animation {
             // goes to next frame
             else{
                 currFrame += 1;
-                animationEnded = false;
             }
 
             // updates the time
             timeFrameUpdated = deltaTime;
         }
+
+        // resets the animationEnded var to false
+        else{
+            animationEnded = false;
+        }
     }
 
-    // returns the current frame for the image
-    public Texture getCurrImg(){
-        return anim.get(currFrame);
-    }
-
-    // checks if the current animation cycle is finished
-    public boolean CheckAnimFinished(){
-        return animationEnded;
-    }
-
+    public Texture getCurrImg(){return anim.get(currFrame);} // returns the current frame for the image
+    public boolean CheckAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
 }
