@@ -49,7 +49,7 @@ public class SuperBirdGame extends ApplicationAdapter {
 	public void create () {
 		gc = new GameController();
 		batch = new SpriteBatch();
-		bg = new Texture("Background//bg.png");
+		bg = new Texture("background stuff//bg.png");
 		bird = new Bird();
 		hud = new HUD(batch);
 		currTime = 0;

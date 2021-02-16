@@ -24,7 +24,7 @@ public class Bird {
         birdHeight = 150;
 
         // sets the current animation to the idle bird
-        birdAnimation.setAnimation("Bird_Animations//idle bird ", birdWidth, birdHeight, 1, 4, 0, .25f);
+        birdAnimation.setAnimation("bird animations//idle bird ", birdWidth, birdHeight, 1, 4, 0, .25f);
     }
 
     // updates the bird every frame
