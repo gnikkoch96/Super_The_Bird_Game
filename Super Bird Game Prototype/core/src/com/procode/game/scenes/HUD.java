@@ -44,8 +44,10 @@ public class HUD implements Disposable {
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 1.png", Gdx.graphics.getWidth()/7, Gdx.graphics.getHeight()/5));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel.setFontScale(2);
+
+
         //Adding the displays to the screen
-        table.add(healthBar).expandX().padTop(10).padRight(800).padBottom(60);
+        table.add(healthBar).expandX().padTop(10).padRight(800).padBottom(60);              //--Change these to be more dynamic--//
         table.add(scoreLabel).expandX().padTop(10).padRight(50).padBottom(60);
 
         //Display table to screen
@@ -54,6 +56,7 @@ public class HUD implements Disposable {
     }
 
     //Updates the healthbar with parameter of current health (gets called every time it gets hit)
+    //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){
        //Use currentHealth value and concantenate to find the respective image (i.e. "health(" + currentHealth + ").png)
     }

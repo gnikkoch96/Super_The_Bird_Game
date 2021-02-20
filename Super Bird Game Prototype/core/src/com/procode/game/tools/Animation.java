@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Animation {
+public class Animation { //--Ask Steven to walk through the logic--//
     private List<Texture> anim; // the list holding the animations
     private int currFrame; // the current frame the animation is playing
     private float timeFrameUpdated; // the time in which the last frame was updated
@@ -18,6 +18,8 @@ public class Animation {
         anim = new ArrayList<Texture>();
         currFrame = 0;
         animationEnded = false;
+        timeFrameUpdated = 0;
+        timePlayedPerFrame = 0;
     }
 
     // sets the animation that is to be played and clears the old one
@@ -32,8 +34,8 @@ public class Animation {
     public void setAnimation(String animationDir, int imgWidth, int imgHeight, int startingFrame, int endingFrame, float deltaTime, float animSecs){
         anim.clear(); // clears the animation
         currFrame = 0; // resets the current frame
-        timeFrameUpdated = deltaTime;
-        timePlayedPerFrame = animSecs / ((endingFrame + 1) - startingFrame);
+        timeFrameUpdated += deltaTime;
+        timePlayedPerFrame += animSecs / ((endingFrame + 1) - startingFrame);                       //--Ask Steven how he did this--//
 
         // adds all images for the animation to the array
         for(int i = startingFrame; i < (endingFrame + 1); i++) {
@@ -50,10 +52,8 @@ public class Animation {
     // once the animation cycle is over, the animationFinished variable is set to true for that ending frame
     // until the cycle starts again
     public void updateFrame(float deltaTime){
-
         // updates the current frame once he time played per frame is up
         if (timeFrameUpdated + timePlayedPerFrame <= deltaTime){
-
             // resets the counter if the current frame is at the end of the animation
             if (currFrame >= (anim.size() - 1)){
                 currFrame = 0;
@@ -66,7 +66,7 @@ public class Animation {
             }
 
             // updates the time
-            timeFrameUpdated = deltaTime;
+            timeFrameUpdated += deltaTime;
         }
 
         // resets the animationEnded var to false

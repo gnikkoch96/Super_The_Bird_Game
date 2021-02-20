@@ -1,78 +1,35 @@
 package com.procode.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.procode.game.scenes.HUD;
+import com.procode.game.screens.PlayScreen;
 import com.procode.game.sprites.Bird;
 
-public class SuperBirdGame extends ApplicationAdapter {
+public class SuperBirdGame extends Game {
 	public static final int DESKTOP_WIDTH = 1300;
 	public static final int DESKTOP_HEIGHT = 680;
 	public static final String DEKSTOP_TITLE = "Super Bird Game";
+	public SpriteBatch batch;
 
-//	private SpriteBatch batch;
-//
-//	@Override
-//	public void create () {
-//		batch = new SpriteBatch();
-//	}
-//
-//	@Override
-//	public void render () {
-//		//Clears the Screen
-//		Gdx.gl.glClearColor(1, 0, 0, 1);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//
-//		batch.begin();
-//		batch.end();
-//	}
-//
-//	@Override
-//	public void dispose () {
-//		batch.dispose();
-//	}
-
-	private GameController gc;
-	private HUD hud;
-
-	SpriteBatch batch;
-	Texture bg;
-
-	Bird bird;
-
-	float currTime;
 
 	@Override
 	public void create () {
-		gc = new GameController();
 		batch = new SpriteBatch();
-		bg = new Texture("background stuff//bg.png");
-		bird = new Bird();
-		hud = new HUD(batch);
-		currTime = 0;
+		this.setScreen(new PlayScreen(this));
 	}
 
 	@Override
 	public void render () {
-		currTime += Gdx.graphics.getDeltaTime();
-		gc.handleInput(); // Testing purposes only to see if it worked
-		bird.update(currTime); // testing to see if the bird animation updates
-
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(bg, 0, 0);
-		batch.draw(bird.getBirdImage(), 200, 150);
-		batch.end();
-		hud.stage.draw();
+		super.render();
 	}
 
 	@Override
 	public void dispose () {
 		batch.dispose();
-		bg.dispose();
 	}
 }
