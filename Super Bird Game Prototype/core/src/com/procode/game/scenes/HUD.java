@@ -29,11 +29,11 @@ public class HUD implements Disposable {
     private Label scoreLabel;             //Displays the score
 
 
-    public HUD(SpriteBatch sb){
+    public HUD(SuperBirdGame game){
         //Initialize Values
         score = 0;
-        viewport = new FitViewport(SuperBirdGame.DESKTOP_WIDTH, SuperBirdGame.DESKTOP_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, sb);
+        viewport = new FitViewport(game.ANDROID_WIDTH, game.ANDROID_HEIGHT, new OrthographicCamera());
+        stage = new Stage(viewport, game.batch);
 
         //Table is used for organizing the displays
         Table table = new Table();
