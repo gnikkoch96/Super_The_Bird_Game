@@ -23,6 +23,7 @@ public class PlayScreen implements Screen {
     private Viewport gamePort;
     private World world;  //--Not sure what to do with this yet--//
     private Texture background;
+    private float currTime;
 
     //Sprites
     private Bird player;
@@ -35,6 +36,7 @@ public class PlayScreen implements Screen {
         hud = new HUD(game.batch);
         world = new World(new Vector2(0,0), true);                           //--The Vector Represents Gravity Value--//
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.DESKTOP_WIDTH, SuperBirdGame.DESKTOP_HEIGHT);
+        currTime = 0;
 
         //Creating Sprites
         player = new Bird(50, 100);
@@ -64,7 +66,8 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        update(delta);
+        currTime += Gdx.graphics.getDeltaTime();
+        update(currTime);
 
         //Empties the Screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -104,6 +107,9 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        hud.dispose();
+        world.dispose();
+        background.dispose();
+        player.dispose();
     }
 }

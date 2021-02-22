@@ -1,5 +1,6 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
@@ -31,11 +32,12 @@ public class Animation { //--Ask Steven to walk through the logic--//
     // *** the endingFrame is an int of which frame you wish your animation to end off at (before cycling again)
     // *** the deltatime is the current time in which the animation was set
     // *** the animSecs is a double of how long you wish the entire animation to play per cycle
-    public void setAnimation(String animationDir, int imgWidth, int imgHeight, int startingFrame, int endingFrame, float deltaTime, float animSecs){
+    public void setAnimation(String animationDir, int imgWidth, int imgHeight, int startingFrame, int endingFrame, float animSecs){
         anim.clear(); // clears the animation
         currFrame = 0; // resets the current frame
-        timeFrameUpdated += deltaTime;
-        timePlayedPerFrame += animSecs / ((endingFrame + 1) - startingFrame);                       //--Ask Steven how he did this--//
+
+        float totalFrames = ((endingFrame + 1) - startingFrame);
+        timePlayedPerFrame += animSecs / totalFrames;                       //Gives each animation equal display time
 
         // adds all images for the animation to the array
         for(int i = startingFrame; i < (endingFrame + 1); i++) {
@@ -53,9 +55,14 @@ public class Animation { //--Ask Steven to walk through the logic--//
     // until the cycle starts again
     public void updateFrame(float deltaTime){
         // updates the current frame once he time played per frame is up
+        Gdx.app.log("timeFrameUpdated: ", String.valueOf(timeFrameUpdated));
+        Gdx.app.log("timePlayedPerFrame: ", String.valueOf(timePlayedPerFrame));
+        Gdx.app.log("deltaTime: ", String.valueOf(deltaTime));
         if (timeFrameUpdated + timePlayedPerFrame <= deltaTime){
+            
             // resets the counter if the current frame is at the end of the animation
-            if (currFrame >= (anim.size() - 1)){
+            int maxFrameCount = anim.size();
+            if (currFrame + 1 >= maxFrameCount){
                 currFrame = 0;
                 animationEnded = true;
             }
@@ -66,7 +73,7 @@ public class Animation { //--Ask Steven to walk through the logic--//
             }
 
             // updates the time
-            timeFrameUpdated += deltaTime;
+            timeFrameUpdated = deltaTime;
         }
 
         // resets the animationEnded var to false
