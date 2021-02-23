@@ -32,8 +32,13 @@ public class HUD implements Disposable {
     public HUD(SuperBirdGame game){
         //Initialize Values
         score = 0;
+
         viewport = new FitViewport(game.ANDROID_WIDTH, game.ANDROID_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
+
+        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
+        stage = new Stage(viewport, sb);
+
 
         //Table is used for organizing the displays
         Table table = new Table();

@@ -17,8 +17,27 @@ public class SuperBirdGame extends Game {
 	public static final String DEKSTOP_TITLE = "Super Bird Game";
 	public SpriteBatch batch;
 
+
 	public int ANDROID_WIDTH;
 	public int ANDROID_HEIGHT;
+
+	public static int ANDROID_WIDTH, ANDROID_HEIGHT;
+
+	public static int num;
+
+	public SuperBirdGame(int width, int height){
+		this.ANDROID_WIDTH = width;
+		this.ANDROID_HEIGHT = height;
+		System.out.println("width: " + width);
+		System.out.println("height: " + height);
+	}
+
+	public SuperBirdGame(){
+
+	}
+
+
+
 
 	public SuperBirdGame(){
 

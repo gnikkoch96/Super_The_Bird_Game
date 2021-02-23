@@ -11,6 +11,6 @@ public class DesktopLauncher {
 		config.height = SuperBirdGame.DESKTOP_HEIGHT;
 		config.title = SuperBirdGame.DEKSTOP_TITLE;
 
-		new LwjglApplication(new SuperBirdGame(), config);
+		new LwjglApplication(new SuperBirdGame(SuperBirdGame.DESKTOP_WIDTH,SuperBirdGame.DESKTOP_HEIGHT), config);
 	}
 }
