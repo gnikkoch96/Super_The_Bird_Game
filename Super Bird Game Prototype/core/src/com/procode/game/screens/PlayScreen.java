@@ -66,7 +66,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        currTime += Gdx.graphics.getDeltaTime();
+        currTime += delta;
         update(currTime);
 
         //Empties the Screen

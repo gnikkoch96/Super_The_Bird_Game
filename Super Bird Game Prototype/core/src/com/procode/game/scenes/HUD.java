@@ -26,6 +26,7 @@ public class HUD implements Disposable {
 
     //What is shown on screen
     private Image healthBar;              //Displays the Health Bar
+    private Image pauseBtn;
     private Label scoreLabel;             //Displays the score
 
 
@@ -42,16 +43,20 @@ public class HUD implements Disposable {
 
         //The Displays
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 1.png", Gdx.graphics.getWidth()/7, Gdx.graphics.getHeight()/5));
+        pauseBtn = new Image(ImageFunctions.resize("screen icons//pause-btn.png",Gdx.graphics.getWidth()/45, Gdx.graphics.getHeight()/25));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel.setFontScale(2);
 
 
         //Adding the displays to the screen
-        table.add(healthBar).expandX().padTop(10).padRight(800).padBottom(60);              //--Change these to be more dynamic--//
+        table.add(pauseBtn).padBottom(120).padLeft(20);
+        table.add(healthBar).expandX().padTop(10).padRight(900).padBottom(60);              //--Change these to be more dynamic--/
         table.add(scoreLabel).expandX().padTop(10).padRight(50).padBottom(60);
+
 
         //Display table to screen
         stage.addActor(table);
+
 
     }
 
