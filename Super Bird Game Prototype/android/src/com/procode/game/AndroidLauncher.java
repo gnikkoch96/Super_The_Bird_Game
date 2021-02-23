@@ -15,11 +15,6 @@ import com.procode.game.SuperBirdGame;
 public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
-		Display screensize = getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		screensize.getSize(size);
-		int width = size.x;
-		int height = size.y;
 		super.onCreate(savedInstanceState);
 		Display screensize = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
@@ -28,11 +23,8 @@ public class AndroidLauncher extends AndroidApplication {
 		int height = size.y;
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
-		initialize(new SuperBirdGame(width, height), config);
-
 		//sp.ANDROID_HEIGHT = 100;
 		//sp.setHeight(100);
 		initialize(new SuperBirdGame(width, height), config);
-
 	}
 }

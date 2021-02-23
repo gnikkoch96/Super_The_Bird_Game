@@ -14,12 +14,8 @@ import com.procode.game.sprites.Bird;
 public class SuperBirdGame extends Game {
 	public static final int DESKTOP_WIDTH = 1300;
 	public static final int DESKTOP_HEIGHT = 680;
-	public static final String DEKSTOP_TITLE = "Super Bird Game";
+	public static final String DESKTOP_TITLE = "Super Bird Game";
 	public SpriteBatch batch;
-
-
-	public int ANDROID_WIDTH;
-	public int ANDROID_HEIGHT;
 
 	public static int ANDROID_WIDTH, ANDROID_HEIGHT;
 
@@ -33,20 +29,9 @@ public class SuperBirdGame extends Game {
 	}
 
 	public SuperBirdGame(){
-
+		// DO NOTHING
 	}
 
-
-
-
-	public SuperBirdGame(){
-
-	}
-
-	public SuperBirdGame(int width, int height){
-			ANDROID_WIDTH = width;
-			ANDROID_HEIGHT = height;
-	}
 	@Override
 	public void create () {
 		batch = new SpriteBatch();

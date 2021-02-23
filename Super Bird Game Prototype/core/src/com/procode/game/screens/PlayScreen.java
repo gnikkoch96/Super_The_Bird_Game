@@ -34,7 +34,7 @@ public class PlayScreen implements Screen {
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
         System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
-        hud = new HUD(game.batch);
+        hud = new HUD(game);
         world = new World(new Vector2(0,0), true);                           //--The Vector Represents Gravity Value--//
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
         currTime = 0;
@@ -111,6 +111,5 @@ public class PlayScreen implements Screen {
         hud.dispose();
         world.dispose();
         background.dispose();
-        player.dispose();
     }
 }

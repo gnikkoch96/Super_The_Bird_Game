@@ -33,12 +33,8 @@ public class HUD implements Disposable {
         //Initialize Values
         score = 0;
 
-        viewport = new FitViewport(game.ANDROID_WIDTH, game.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
-
         viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, sb);
-
+        stage = new Stage(viewport, game.batch);
 
         //Table is used for organizing the displays
         Table table = new Table();
@@ -60,12 +56,11 @@ public class HUD implements Disposable {
 
     //Updates the healthbar with parameter of current health (gets called every time it gets hit)
     public void updateHealthBar(int currentHealth){
-       //Use currentHealth value and concantenate to find the respective image (i.e. "health(" + currentHealth + ").png)
+       //Use currentHealth value and concatenate to find the respective image (i.e. "health(" + currentHealth + ").png)
     }
 
     @Override
     public void dispose() {
         stage.dispose();
-
     }
 }

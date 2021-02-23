@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = SuperBirdGame.DESKTOP_WIDTH;
 		config.height = SuperBirdGame.DESKTOP_HEIGHT;
-		config.title = SuperBirdGame.DEKSTOP_TITLE;
+		config.title = SuperBirdGame.DESKTOP_TITLE;
 
 		new LwjglApplication(new SuperBirdGame(SuperBirdGame.DESKTOP_WIDTH,SuperBirdGame.DESKTOP_HEIGHT), config);
 	}
