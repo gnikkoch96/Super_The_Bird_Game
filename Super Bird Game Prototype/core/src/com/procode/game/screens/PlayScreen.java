@@ -55,15 +55,15 @@ public class PlayScreen implements Screen {
 
     public void update(float dt){
         // FOR TESTING PURPOSES ONLY
+        // MUST SUBTRACT SCREEN HEIGHT WITH Y BECAUSE LIBGDX INVERTS Y-AXIS
         if(Gdx.input.isTouched()) {
             int fingerX = Gdx.input.getX();
             int fingerY = Gdx.input.getY();
-            System.out.println("X: " + fingerX + " Y: " + fingerY);
-            player.setPosition(fingerX, SuperBirdGame.ANDROID_HEIGHT - fingerY);
-            System.out.println("android height: " + SuperBirdGame.ANDROID_HEIGHT);
+
+            // the playerBirdSize is to make sure the bird is centered wherever its clicked
+            player.setPosition(fingerX - ((player.getBirdSize().x) / 3), SuperBirdGame.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2)));
         }
-        // MUST SUBTRACT SCREEN HEIGHT WITH Y BECAUSE LIBGDX INVERTS Y-AXIS
-        // FOR TESTING PURPOSES ONLY
+
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
         player.update(dt);                                              //Updates the Animation Frame
     }
