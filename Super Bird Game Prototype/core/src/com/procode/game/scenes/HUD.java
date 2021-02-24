@@ -42,7 +42,7 @@ public class HUD implements Disposable {
         table.setFillParent(true); //Fit to screen
 
         //The Displays
-        healthBar = new Image(ImageFunctions.resize("screen icons//bird health 1.png", Gdx.graphics.getWidth()/7, Gdx.graphics.getHeight()/5));
+        healthBar = new Image(ImageFunctions.resize("screen icons//bird health 1.png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel.setFontScale(2);
         //Adding the displays to the screen
