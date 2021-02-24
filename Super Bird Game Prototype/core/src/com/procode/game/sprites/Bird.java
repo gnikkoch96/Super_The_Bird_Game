@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.procode.game.tools.Animation;
 
-public class Bird {
+public class Bird implements Disposable {
     private static int BirdWidth = 240;
     private static int BirdHeight = 150;
 
@@ -22,7 +22,7 @@ public class Bird {
         velocity = new Vector2(0,0);
 
         // sets the current animation to the idle bird
-        birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, 0, .25f);
+        birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f);
     }
 
     // updates the bird every frame
