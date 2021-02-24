@@ -35,9 +35,15 @@ public class Bird {
         birdAnimation.updateFrame(deltaTime);
     }
 
+
     // gets the current image of the bird
     public Texture getBirdImage() {
         return birdAnimation.getCurrImg();
     }
     public Vector2 getPosition(){return this.position;}     //gets the position of the bird
+
+    public void setPosition(int newX, int newY) {
+        position.x = newX;
+        position.y = newY;
+    }
 }

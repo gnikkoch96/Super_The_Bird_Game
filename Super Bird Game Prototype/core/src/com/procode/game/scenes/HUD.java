@@ -28,7 +28,6 @@ public class HUD implements Disposable {
     private Image healthBar;              //Displays the Health Bar
     private Label scoreLabel;             //Displays the score
 
-
     public HUD(SuperBirdGame game){
         //Initialize Values
         score = 0;
