@@ -79,7 +79,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        currTime += Gdx.graphics.getDeltaTime();
+        currTime += delta;
         update(currTime);
 
         //Empties the Screen
@@ -123,5 +123,6 @@ public class PlayScreen implements Screen {
         hud.dispose();
         world.dispose();
         background.dispose();
+        player.dispose();
     }
 }

@@ -1,7 +1,9 @@
 package com.procode.game.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.procode.game.tools.Animation;
 
 public class Bird {
@@ -24,8 +26,7 @@ public class Bird {
     }
 
     // updates the bird every frame
-    public void update(float deltaTime){
-        birdAnimation.updateFrame(deltaTime);
+    public void update(float deltaTime){ birdAnimation.updateFrame(deltaTime);
     }
 
     // gets the current image of the bird
@@ -47,5 +48,10 @@ public class Bird {
     //gets the width and height of the bird
     public Vector2 getBirdSize(){
         return new Vector2(BirdWidth, BirdHeight);
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

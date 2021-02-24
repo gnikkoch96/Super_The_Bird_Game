@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class GameController {
+public class GameController { //--Can I delete this Class?--//
 
     protected OrthographicCamera cam;
     protected Vector2 finger;
