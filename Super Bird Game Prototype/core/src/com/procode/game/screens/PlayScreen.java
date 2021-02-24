@@ -61,7 +61,9 @@ public class PlayScreen implements Screen {
             int fingerY = Gdx.input.getY();
 
             // the playerBirdSize is to make sure the bird is centered wherever its clicked
-            player.setPosition(fingerX - ((player.getBirdSize().x) / 3), SuperBirdGame.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2)));
+            float newX = fingerX - ((player.getBirdSize().x) / 3);
+            float newY = SuperBirdGame.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2));
+            player.setPosition(newX, newY);
         }
 
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
