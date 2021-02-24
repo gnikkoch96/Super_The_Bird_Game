@@ -12,18 +12,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Bird;
+import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
 //This class will handle the Play State logic of the game
 public class PlayScreen implements Screen {
     private static final int OFFSET = 80;                               //Offset of the camera in respect to the bird
-    private SuperBirdGame game;
+    protected SuperBirdGame game;
     private HUD hud;
     private OrthographicCamera gameCam;
     private Viewport gamePort;
     private World world;  //--Not sure what to do with this yet--//
     private Texture background;
     private float currTime;
+    private Gamepad gamepad;
 
     //Sprites
     private Bird player;
