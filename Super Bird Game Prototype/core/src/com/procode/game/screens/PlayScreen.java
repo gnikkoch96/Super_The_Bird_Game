@@ -32,18 +32,20 @@ public class PlayScreen implements Screen {
         //Initializing Properties
         this.game = game;
         gameCam = new OrthographicCamera();
-        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
-        System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
+        gamePort = new FitViewport(game.ANDROID_WIDTH, game.ANDROID_WIDTH, gameCam);
+        System.out.println("width " + game.ANDROID_WIDTH);
         hud = new HUD(game);
         world = new World(new Vector2(0,0), true);                           //--The Vector Represents Gravity Value--//
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", game.ANDROID_WIDTH, game.ANDROID_HEIGHT);
         currTime = 0;
 
         //Creating Sprites
-        player = new Bird(50, 100);
+        int birdWidth = game.ANDROID_WIDTH/5;
+        int birdHeight = game.ANDROID_HEIGHT/5;
+        player = new Bird(50, 100, birdWidth, birdHeight);
 
         //Setting Properties
-        gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        gameCam.setToOrtho(false, game.ANDROID_WIDTH, game.ANDROID_HEIGHT);
 
 
     }
@@ -69,7 +71,7 @@ public class PlayScreen implements Screen {
 
             // the playerBirdSize is to make sure the bird is centered wherever its clicked
             float newX = fingerX - ((player.getBirdSize().x) / 3);
-            float newY = SuperBirdGame.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2));
+            float newY = game.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2));
             player.setPosition(newX, newY);
         }
 

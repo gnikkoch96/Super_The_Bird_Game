@@ -16,11 +16,14 @@ public class Bird implements Disposable {
     private Vector2 position;
     private Vector2 velocity;
 
-    public Bird(int x, int y) {
+    public Bird(int x, int y, int birdWidth, int birdHeight) {
         birdAnimation = new Animation();
         healthCount = 6;
         position = new Vector2(x,y);
         velocity = new Vector2(0,0);
+
+        BirdWidth = birdWidth;
+        BirdHeight = birdHeight;
 
         // sets the current animation to the idle bird
         birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
