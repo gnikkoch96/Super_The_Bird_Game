@@ -48,12 +48,19 @@ public class PlayScreen implements Screen {
 
     }
 
+    //--TEST--//
+    public static int count = 0;
     public void handleInput(float dt){
+        if(Gdx.input.isTouched()){
+            player.shoot();
+        }
 
     }
 
 
     public void update(float dt){
+        handleInput(dt);
+
         // FOR TESTING PURPOSES ONLY
         // MUST SUBTRACT SCREEN HEIGHT WITH Y BECAUSE LIBGDX INVERTS Y-AXIS
         if(Gdx.input.isTouched()) {

@@ -12,6 +12,7 @@ public class Animation { //--Ask Steven to walk through the logic--//
     private float timeFrameUpdated; // the time in which the last frame was updated
     private float timePlayedPerFrame; // the amount of time each frame plays for
     private boolean animationEnded; // boolean that is only true when the current animation reached its last frame
+    private boolean isLoop; // boolean (if the animation loops = true, else it is false)
 
     // the animation class. Only initializes the arraylist and sets the current frame to 0
     // also sets animationEnded boolean to false
@@ -32,12 +33,13 @@ public class Animation { //--Ask Steven to walk through the logic--//
     // *** the endingFrame is an int of which frame you wish your animation to end off at (before cycling again)
     // *** the deltatime is the current time in which the animation was set
     // *** the animSecs is a double of how long you wish the entire animation to play per cycle
-    public void setAnimation(String animationDir, int imgWidth, int imgHeight, int startingFrame, int endingFrame, float animSecs){
+    // *** the isLoop is a boolean that sets the animation to loop or not (SHOOT, DEAD, and DAMAGED are not looped, but IDLE is)
+    public void setAnimation(String animationDir, int imgWidth, int imgHeight, int startingFrame, int endingFrame, float animSecs, boolean isLoop){
         anim.clear(); // clears the animation
         currFrame = 0; // resets the current frame
-
+        this.isLoop = isLoop;
         float totalFrames = ((endingFrame + 1) - startingFrame);
-        timePlayedPerFrame += animSecs / totalFrames;                       //Gives each animation equal display time
+        timePlayedPerFrame = animSecs / totalFrames;                       //Gives each animation equal display time
 
         // adds all images for the animation to the array
         for(int i = startingFrame; i < (endingFrame + 1); i++) {
@@ -55,33 +57,34 @@ public class Animation { //--Ask Steven to walk through the logic--//
     // until the cycle starts again
     public void updateFrame(float deltaTime){
         // updates the current frame once he time played per frame is up
-        Gdx.app.log("timeFrameUpdated: ", String.valueOf(timeFrameUpdated));
-        Gdx.app.log("timePlayedPerFrame: ", String.valueOf(timePlayedPerFrame));
-        Gdx.app.log("deltaTime: ", String.valueOf(deltaTime));
+//        Gdx.app.log("timeFrameUpdated: ", String.valueOf(timeFrameUpdated));
+//        Gdx.app.log("timePlayedPerFrame: ", String.valueOf(timePlayedPerFrame));
+//        Gdx.app.log("deltaTime: ", String.valueOf(deltaTime));
+
+
         if (timeFrameUpdated + timePlayedPerFrame <= deltaTime){
-            
             // resets the counter if the current frame is at the end of the animation
             int maxFrameCount = anim.size();
             if (currFrame + 1 >= maxFrameCount){
-                currFrame = 0;
+                if(isLoop){                         // reset only when the animation needs to loop
+                    currFrame = 0;
+                }
                 animationEnded = true;
             }
 
             // goes to next frame
             else{
                 currFrame += 1;
+                animationEnded = false;
             }
 
             // updates the time
             timeFrameUpdated = deltaTime;
         }
 
-        // resets the animationEnded var to false
-        else{
-            animationEnded = false;
-        }
     }
 
     public Texture getCurrImg(){return anim.get(currFrame);} // returns the current frame for the image
-    public boolean CheckAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
+    public boolean isAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
+    public boolean getIsLoop(){return this.isLoop;}         //returns the value of the isLoop boolean
 }

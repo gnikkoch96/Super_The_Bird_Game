@@ -25,9 +25,9 @@ public class HUD implements Disposable {
     private int health;
 
     //What is shown on screen
-    private Image healthBar;              //Displays the Health Bar
-    private Image pauseBtn;
-    private Label scoreLabel;             //Displays the score
+    private Image healthBar;              // display the Health Bar
+    private Image pauseBtn;               // display the Pause Button
+    private Label scoreLabel;             // display the score
 
     public HUD(SuperBirdGame game){
         //Initialize Values
@@ -43,13 +43,14 @@ public class HUD implements Disposable {
 
         //The Displays
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 1.png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5));
+        pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.ANDROID_WIDTH/35, SuperBirdGame.ANDROID_HEIGHT/25));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel.setFontScale(2);
 
 
-        //Adding the displays to the screen
+        //Adding the displays to the screen  //--Change these to be more dynamic to the phone's screen res--/
         table.add(pauseBtn).padBottom(120).padLeft(20);
-        table.add(healthBar).expandX().padTop(10).padRight(900).padBottom(60);              //--Change these to be more dynamic--/
+        table.add(healthBar).expandX().padTop(10).padRight(900).padBottom(60);
         table.add(scoreLabel).expandX().padTop(10).padRight(50).padBottom(60);
 
 
