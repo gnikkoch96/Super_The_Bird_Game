@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
 
 public class Bird implements Disposable {
@@ -12,16 +13,19 @@ public class Bird implements Disposable {
 
     public enum State {IDLE, SHOOT, DAMAGED, DEAD};  // different states of the bird
     private Animation birdAnimation; // takes in an animation class to allow for changing of animation played and other settings
-    private float healthCount;
+    private int healthCount;
     private Vector2 position;
     private Vector2 velocity;
+    private boolean isDead;         //checks to see if the bird is dead
+    private int numLives;           //number of lives the bird has (default is 3)
 
     public Bird(int x, int y, int birdWidth, int birdHeight) {
         birdAnimation = new Animation();
         healthCount = 6;
         position = new Vector2(x,y);
         velocity = new Vector2(0,0);
-
+        isDead = false;
+        numLives = 3;
         BirdWidth = birdWidth;
         BirdHeight = birdHeight;
 
@@ -32,9 +36,9 @@ public class Bird implements Disposable {
     // updates the bird every frame
     public void update(float deltaTime){
         if(birdAnimation.isAnimFinished() && !birdAnimation.getIsLoop()){ // play animation once
-            //reset to idle animation again
+            //reset to the IDLE animation
             switchAnimations(Bird.State.IDLE);
-        }else{
+        }else{//continue updating the frame
             birdAnimation.updateFrame(deltaTime);
         }
 
@@ -82,7 +86,28 @@ public class Bird implements Disposable {
 
     //--TEST--//
     public void shoot() {
-        switchAnimations(Bird.State.SHOOT);
+        switchAnimations(State.SHOOT);
+    }
+
+    public void deadBird(HUD hud){
+        if(numLives <= 0){
+            //Play Game Over Screen
+        }else{
+            numLives--; //reduces a life
+            switchAnimations(State.DEAD);
+            //reset the healthbar, healthcount (basically everything related to the bird)
+            healthCount = 6;
+            hud.updateHealthBar(healthCount);
+        }
+    }
+
+    public void damagedBird(HUD hud){
+        switchAnimations(State.DAMAGED);
+        this.healthCount--;                     //reduced the health if bird is damaged
+        if(this.healthCount <= 0){
+            this.deadBird(hud);
+        }
+        hud.updateHealthBar(this.healthCount);  //updates the healthbar to display the change in health
     }
 
     @Override

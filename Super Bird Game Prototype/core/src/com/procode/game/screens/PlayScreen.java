@@ -54,7 +54,7 @@ public class PlayScreen implements Screen {
     public static int count = 0;
     public void handleInput(float dt){
         if(Gdx.input.isTouched()){
-            player.shoot();
+            player.damagedBird(hud);
         }
 
     }

@@ -3,12 +3,15 @@ package com.procode.game.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -28,6 +31,7 @@ public class HUD implements Disposable {
     private Image healthBar;              // display the Health Bar
     private Image pauseBtn;               // display the Pause Button
     private Label scoreLabel;             // display the score
+    private Label livesLabel;             // displays the number of lives
 
     public HUD(SuperBirdGame game){
         //Initialize Values
@@ -42,16 +46,19 @@ public class HUD implements Disposable {
         table.setFillParent(true); //Fit to screen
 
         //The Displays
-        healthBar = new Image(ImageFunctions.resize("screen icons//bird health 1.png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5));
+        healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5));
         pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.ANDROID_WIDTH/35, SuperBirdGame.ANDROID_HEIGHT/25));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel.setFontScale(2);
+        livesLabel = new Label(String.format("%02d", 3), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        livesLabel.setFontScale(2);
 
 
         //Adding the displays to the screen  //--Change these to be more dynamic to the phone's screen res--/
         table.add(pauseBtn).padBottom(120).padLeft(20);
         table.add(healthBar).expandX().padTop(10).padRight(900).padBottom(60);
-        table.add(scoreLabel).expandX().padTop(10).padRight(50).padBottom(60);
+        table.add(scoreLabel).expandX().padTop(10).padRight(30).padBottom(60);
+        table.add(livesLabel).expandX().padBottom(50);
 
 
         //Display table to screen
@@ -63,7 +70,8 @@ public class HUD implements Disposable {
     //Updates the healthbar with parameter of current health (gets called every time it gets hit)
     //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){
-       //Use currentHealth value and concatenate to find the respective image (i.e. "health(" + currentHealth + ").png)
+        Texture newHealth = ImageFunctions.resize("screen icons//bird health " + String.valueOf(currentHealth) + ".png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5);
+        healthBar.setDrawable(new TextureRegionDrawable(new TextureRegion(newHealth)));
     }
 
     @Override
