@@ -29,6 +29,7 @@ public class PlayScreen implements Screen {
 
     //Sprites
     private Bird player;
+    private Gamepad gamePad;
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -49,7 +50,7 @@ public class PlayScreen implements Screen {
         //Setting Properties
         gameCam.setToOrtho(false, game.ANDROID_WIDTH, game.ANDROID_HEIGHT);
 
-
+        gamePad = new Gamepad(game);
     }
 
     public void handleInput(float dt){
@@ -60,15 +61,15 @@ public class PlayScreen implements Screen {
     public void update(float dt){
         // FOR TESTING PURPOSES ONLY
         // MUST SUBTRACT SCREEN HEIGHT WITH Y BECAUSE LIBGDX INVERTS Y-AXIS
-        if(Gdx.input.isTouched()) {
-            int fingerX = Gdx.input.getX();
-            int fingerY = Gdx.input.getY();
-
-            // the playerBirdSize is to make sure the bird is centered wherever its clicked
-            float newX = fingerX - ((player.getBirdSize().x) / 3);
-            float newY = game.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2));
-            player.setPosition(newX, newY);
-        }
+//        if(Gdx.input.isTouched()) {
+//            int fingerX = Gdx.input.getX();
+//            int fingerY = Gdx.input.getY();
+//
+//            // the playerBirdSize is to make sure the bird is centered wherever its clicked
+//            float newX = fingerX - ((player.getBirdSize().x) / 3);
+//            float newY = game.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2));
+//            player.setPosition(newX, newY);
+//        }
 
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
         player.update(dt);                                              //Updates the Animation Frame
