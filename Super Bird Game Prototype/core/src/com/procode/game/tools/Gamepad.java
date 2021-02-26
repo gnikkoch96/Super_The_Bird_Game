@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.screens.PlayScreen;
 
@@ -17,11 +19,11 @@ public class Gamepad{
     private float y;
     private float touchSensitivity; // the amount the bird moves per second the button is held
 
-    private int buttonSize; // because image is a circle only need the radius so size is a single variable
-    public Image upArrow; // need to be images to add on click listeners does not work well with textures
-    public Image downArrow;
-    public Image leftArrow;
-    public Image rightArrow;
+    public int buttonSize; // because image is a circle only need the radius so size is a single variable
+    public ImageButton upArrow; // need to be images to add on click listeners does not work well with textures
+    public ImageButton downArrow;
+    public ImageButton leftArrow;
+    public ImageButton rightArrow;
 
     public Gamepad(SuperBirdGame game) {
         x = 0;
@@ -29,16 +31,16 @@ public class Gamepad{
         touchSensitivity = .05f;
         buttonSize = game.ANDROID_HEIGHT / 10;
 
-        upArrow = new Image(ImageFunctions.resize("screen icons//up button.png", buttonSize, buttonSize));
-        downArrow = new Image(ImageFunctions.resize("screen icons//down button.png", buttonSize, buttonSize));
-        leftArrow = new Image(ImageFunctions.resize("screen icons//left button.png", buttonSize, buttonSize));
-        rightArrow = new Image(ImageFunctions.resize("screen icons//right button.png", buttonSize, buttonSize));
+        upArrow = new ImageButton((Drawable) ImageFunctions.resize("screen icons//up button.png", buttonSize, buttonSize));
+        downArrow = new ImageButton((Drawable) ImageFunctions.resize("screen icons//down button.png", buttonSize, buttonSize));
+        leftArrow = new ImageButton((Drawable) ImageFunctions.resize("screen icons//left button.png", buttonSize, buttonSize));
+        rightArrow = new ImageButton((Drawable) ImageFunctions.resize("screen icons//right button.png", buttonSize, buttonSize));
 
         // add listeners
         upArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                float upMovement = y;
+                float upMovement = touchSensitivity;
                 buttonPressed(upMovement, true);
             }
 
@@ -51,7 +53,7 @@ public class Gamepad{
         downArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                float downMovement = y * -1;
+                float downMovement = touchSensitivity * -1;
                 buttonPressed(downMovement, true);
             }
 
@@ -64,7 +66,7 @@ public class Gamepad{
         leftArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                float leftMovement = x * -1;
+                float leftMovement = touchSensitivity * -1;
                 buttonPressed(leftMovement, false);
             }
 
@@ -77,7 +79,7 @@ public class Gamepad{
         rightArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                float rightMovement = x;
+                float rightMovement = touchSensitivity;
                 buttonPressed(rightMovement, false);
             }
 
@@ -86,11 +88,12 @@ public class Gamepad{
                 buttonReleaed(false);
             }
         });
-    }
 
-    //overrides render to draw the buttons onto the screen
-    public ArrayList<Image> getButtons(){
-        return null;
+        //set where the buttons will be placed on screen
+        downArrow.setPosition(buttonSize,0);
+        leftArrow.setPosition(0,buttonSize);
+        rightArrow.setPosition(buttonSize, buttonSize * 2);
+        upArrow.setPosition(buttonSize * 2, buttonSize);
     }
 
     // adds or subtracts the amount depending on the axis
@@ -118,4 +121,16 @@ public class Gamepad{
     public Vector2 getButtonInputs() {
         return new Vector2(x, y);
     }
+
+    public void dispose(){
+        x = 0;
+        y = 0;
+        buttonSize = 0;
+        touchSensitivity = 0;
+        upArrow = null;
+        downArrow = null;
+        rightArrow = null;
+        leftArrow = null;
+    }
+
 }

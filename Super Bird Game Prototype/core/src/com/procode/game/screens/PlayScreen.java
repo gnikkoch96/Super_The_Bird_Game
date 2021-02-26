@@ -71,6 +71,8 @@ public class PlayScreen implements Screen {
 //            player.setPosition(newX, newY);
 //        }
 
+        // bird movement
+
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
         player.update(dt);                                              //Updates the Animation Frame
     }
@@ -99,6 +101,13 @@ public class PlayScreen implements Screen {
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+
+        //add buttons to screen
+        hud.stage.addActor(gamepad.upArrow);
+        hud.stage.addActor(gamepad.downArrow);
+        hud.stage.addActor(gamepad.rightArrow);
+        hud.stage.addActor(gamepad.leftArrow);
+
         hud.stage.draw();
 
     }
