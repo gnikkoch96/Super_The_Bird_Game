@@ -59,19 +59,9 @@ public class PlayScreen implements Screen {
 
 
     public void update(float dt){
-        // FOR TESTING PURPOSES ONLY
-        // MUST SUBTRACT SCREEN HEIGHT WITH Y BECAUSE LIBGDX INVERTS Y-AXIS
-//        if(Gdx.input.isTouched()) {
-//            int fingerX = Gdx.input.getX();
-//            int fingerY = Gdx.input.getY();
-//
-//            // the playerBirdSize is to make sure the bird is centered wherever its clicked
-//            float newX = fingerX - ((player.getBirdSize().x) / 3);
-//            float newY = game.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2));
-//            player.setPosition(newX, newY);
-//        }
-
         // bird movement
+        Vector2 birdMovement = hud.gamepad.getButtonInputs();
+        player.movePosition(birdMovement.x, birdMovement.y);
 
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
         player.update(dt);                                              //Updates the Animation Frame
@@ -104,7 +94,6 @@ public class PlayScreen implements Screen {
 
         //add buttons to screen
         hud.stage.draw();
-        //gamePad.stage.draw();
     }
 
     @Override

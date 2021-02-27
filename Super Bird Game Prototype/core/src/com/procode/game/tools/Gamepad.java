@@ -38,7 +38,7 @@ public class Gamepad {
     public Gamepad(SuperBirdGame game) {
         x = 0;
         y = 0;
-        touchSensitivity = .05f;
+        touchSensitivity = game.ANDROID_HEIGHT / 60;
         buttonSize = game.ANDROID_HEIGHT / 10;
 
         // this was the only way I could find to implement a texture to a image button
@@ -61,7 +61,6 @@ public class Gamepad {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                buttonReleaed(true);
-                Gdx.app.log("click released:", String.valueOf(y));
             }
         });
 

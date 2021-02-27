@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.Animation;
 
 public class Bird implements Disposable {
@@ -29,8 +30,7 @@ public class Bird implements Disposable {
     }
 
     // updates the bird every frame
-    public void update(float deltaTime){ birdAnimation.updateFrame(deltaTime);
-    }
+    public void update(float deltaTime){ birdAnimation.updateFrame(deltaTime); }
 
     // gets the current image of the bird
     public Texture getBirdImage(){
@@ -43,9 +43,14 @@ public class Bird implements Disposable {
     }
 
     //sets the new position of the bird
-    public void setPosition(float newX, float newY){
-        position.x = newX;
-        position.y = newY;
+    public void movePosition(float newX, float newY){
+
+        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.ANDROID_WIDTH) {
+            position.x += (newX);
+        }
+        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.ANDROID_HEIGHT) {
+            position.y += newY;
+        }
     }
 
     //gets the width and height of the bird

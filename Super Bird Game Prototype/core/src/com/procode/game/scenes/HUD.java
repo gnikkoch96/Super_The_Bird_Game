@@ -32,7 +32,7 @@ public class HUD implements Disposable {
     private Image pauseBtn;
     private Label scoreLabel;             //Displays the score
 
-    private Gamepad gamepad;
+    public Gamepad gamepad;
 
     public HUD(SuperBirdGame game){
         //Initialize Values
