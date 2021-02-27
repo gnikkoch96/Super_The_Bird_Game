@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.sprites.Bird;
 import com.procode.game.tools.ImageFunctions;
 
 public class HUD implements Disposable {
@@ -31,7 +32,7 @@ public class HUD implements Disposable {
     private Image healthBar;              // display the Health Bar
     private Image pauseBtn;               // display the Pause Button
     private Label scoreLabel;             // display the score
-    private Label livesLabel;             // displays the number of lives
+    private Label livesLabel, lives;      // displays the number of lives
 
     public HUD(SuperBirdGame game){
         //Initialize Values
@@ -49,16 +50,20 @@ public class HUD implements Disposable {
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5));
         pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.ANDROID_WIDTH/35, SuperBirdGame.ANDROID_HEIGHT/25));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        scoreLabel.setFontScale(2);
-        livesLabel = new Label(String.format("%02d", 3), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        livesLabel.setFontScale(2);
+        scoreLabel.setFontScale(1.5f);
+        livesLabel = new Label("LIVES:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        livesLabel.setFontScale(1.5f);
+        lives = new Label(String.format("%02d", Bird.numLives), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        lives.setFontScale(1.5f);
 
 
         //Adding the displays to the screen  //--Change these to be more dynamic to the phone's screen res--/
         table.add(pauseBtn).padBottom(120).padLeft(20);
         table.add(healthBar).expandX().padTop(10).padRight(900).padBottom(60);
-        table.add(scoreLabel).expandX().padTop(10).padRight(30).padBottom(60);
-        table.add(livesLabel).expandX().padBottom(50);
+        table.add(livesLabel).padBottom(150);
+        table.add(lives).expandX().padBottom(150);
+        table.add(scoreLabel).padBottom(50);
+
 
 
         //Display table to screen
