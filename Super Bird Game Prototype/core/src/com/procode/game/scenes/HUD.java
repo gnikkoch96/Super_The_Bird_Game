@@ -40,6 +40,7 @@ public class HUD implements Disposable {
 
         viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
+        Gdx.input.setInputProcessor(stage);
 
         //Table is used for organizing the displays
         table = new Table();
