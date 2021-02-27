@@ -63,8 +63,9 @@ public class Animation { //--Ask Steven to walk through the logic--//
             if (currFrame + 1 >= maxFrameCount){
                 if(isLoop){                         // reset only when the animation needs to loop
                     currFrame = 0;
+                }else{
+                    animationEnded = true;
                 }
-                animationEnded = true;
             }
 
             // goes to next frame

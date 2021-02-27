@@ -141,7 +141,6 @@ public class Bird implements Disposable {
         previousState = currentState;
         currentState = State.DAMAGED;
 
-        System.out.println("previousState != State.DAMAGED && !this.isInvincible = " + String.valueOf(previousState != State.DAMAGED && !this.isInvincible));
         if(!this.isInvincible){                         // bird can only get damaged when it isn't invincible
             timeVar = System.currentTimeMillis();       //  update time var to current time value everytime the bird gets damaged
             setInvincible(true);
