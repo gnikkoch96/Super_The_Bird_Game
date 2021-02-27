@@ -1,20 +1,33 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.screens.PlayScreen;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Gamepad{
+public class Gamepad {
+    public Stage stage;
+    private Viewport viewport;
+
     private float x; //values for position to add to the bird
     private float y;
     private float touchSensitivity; // the amount the bird moves per second the button is held
@@ -26,15 +39,19 @@ public class Gamepad{
     public ImageButton rightArrow;
 
     public Gamepad(SuperBirdGame game) {
+        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
+        stage = new Stage(viewport, game.batch);
+
         x = 0;
         y = 0;
         touchSensitivity = .05f;
         buttonSize = game.ANDROID_HEIGHT / 10;
 
-        upArrow = new ImageButton((Drawable) ImageFunctions.resize("screen icons//up button.png", buttonSize, buttonSize));
-        downArrow = new ImageButton((Drawable) ImageFunctions.resize("screen icons//down button.png", buttonSize, buttonSize));
-        leftArrow = new ImageButton((Drawable) ImageFunctions.resize("screen icons//left button.png", buttonSize, buttonSize));
-        rightArrow = new ImageButton((Drawable) ImageFunctions.resize("screen icons//right button.png", buttonSize, buttonSize));
+        // this was the only way I could find to implement a texture to a image button
+        upArrow = new ImageButton(new TextureRegionDrawable(new TextureRegion(ImageFunctions.resize("screen icons//up button.png", buttonSize, buttonSize))));
+        downArrow = new ImageButton(new TextureRegionDrawable(new TextureRegion(ImageFunctions.resize("screen icons//down button.png", buttonSize, buttonSize))));
+        leftArrow = new ImageButton(new TextureRegionDrawable(new TextureRegion(ImageFunctions.resize("screen icons//left button.png", buttonSize, buttonSize))));
+        rightArrow = new ImageButton(new TextureRegionDrawable(new TextureRegion(ImageFunctions.resize("screen icons//right button.png", buttonSize, buttonSize))));
 
         // add listeners
         upArrow.addListener(new ClickListener() {
@@ -47,6 +64,7 @@ public class Gamepad{
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                buttonReleaed(true);
+                Gdx.app.log("click released:", String.valueOf(y));
             }
         });
 
@@ -92,8 +110,13 @@ public class Gamepad{
         //set where the buttons will be placed on screen
         downArrow.setPosition(buttonSize,0);
         leftArrow.setPosition(0,buttonSize);
-        rightArrow.setPosition(buttonSize, buttonSize * 2);
-        upArrow.setPosition(buttonSize * 2, buttonSize);
+        rightArrow.setPosition(buttonSize * 2, buttonSize);
+        upArrow.setPosition(buttonSize, buttonSize * 2);
+
+        stage.addActor(upArrow);
+        stage.addActor(downArrow);
+        stage.addActor(rightArrow);
+        stage.addActor(leftArrow);
     }
 
     // adds or subtracts the amount depending on the axis

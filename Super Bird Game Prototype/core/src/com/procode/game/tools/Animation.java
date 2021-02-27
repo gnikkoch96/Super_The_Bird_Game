@@ -55,9 +55,9 @@ public class Animation { //--Ask Steven to walk through the logic--//
     // until the cycle starts again
     public void updateFrame(float deltaTime){
         // updates the current frame once he time played per frame is up
-        Gdx.app.log("timeFrameUpdated: ", String.valueOf(timeFrameUpdated));
-        Gdx.app.log("timePlayedPerFrame: ", String.valueOf(timePlayedPerFrame));
-        Gdx.app.log("deltaTime: ", String.valueOf(deltaTime));
+        //Gdx.app.log("timeFrameUpdated: ", String.valueOf(timeFrameUpdated));
+        //Gdx.app.log("timePlayedPerFrame: ", String.valueOf(timePlayedPerFrame));
+        //Gdx.app.log("deltaTime: ", String.valueOf(deltaTime));
         if (timeFrameUpdated + timePlayedPerFrame <= deltaTime){
             
             // resets the counter if the current frame is at the end of the animation

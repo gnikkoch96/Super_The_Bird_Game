@@ -103,13 +103,8 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 
         //add buttons to screen
-        hud.stage.addActor(gamepad.upArrow);
-        hud.stage.addActor(gamepad.downArrow);
-        hud.stage.addActor(gamepad.rightArrow);
-        hud.stage.addActor(gamepad.leftArrow);
-
         hud.stage.draw();
-
+        gamePad.stage.draw();
     }
 
     @Override
