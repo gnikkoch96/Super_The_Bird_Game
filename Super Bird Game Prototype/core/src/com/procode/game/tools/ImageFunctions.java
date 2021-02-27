@@ -20,6 +20,7 @@ public class ImageFunctions {
         return output;
     }
 
+    // Resizes a Texture and converts it to an ImageButton
     public static ImageButton resizeImageButton(String path, int newWidth, int newHeight) {
         Texture texture = resize(path, newWidth, newHeight);
         return new ImageButton(new TextureRegionDrawable(new TextureRegion(texture)));

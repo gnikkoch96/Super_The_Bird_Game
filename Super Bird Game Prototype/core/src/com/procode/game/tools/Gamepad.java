@@ -1,28 +1,10 @@
 package com.procode.game.tools;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
-import com.procode.game.screens.PlayScreen;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class Gamepad {
     private float x; //values for position to add to the bird
@@ -34,6 +16,7 @@ public class Gamepad {
     public ImageButton downArrow;
     public ImageButton leftArrow;
     public ImageButton rightArrow;
+    public ImageButton attack;
 
     public Gamepad(SuperBirdGame game) {
         x = 0;
@@ -41,12 +24,12 @@ public class Gamepad {
         touchSensitivity = game.ANDROID_HEIGHT / 60;
         buttonSize = game.ANDROID_HEIGHT / 10;
 
-        // this was the only way I could find to implement a texture to a image button
         upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", buttonSize, buttonSize);
         downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", buttonSize, buttonSize);
         leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", buttonSize, buttonSize);
         rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", buttonSize, buttonSize);
 
+        attack = ImageFunctions.resizeImageButton("screen icons//shoot button.png", buttonSize, buttonSize);
 
         // add listeners
         upArrow.addListener(new ClickListener() {
@@ -60,7 +43,7 @@ public class Gamepad {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-               buttonReleaed(true);
+               buttonReleased(true);
             }
         });
 
@@ -75,7 +58,7 @@ public class Gamepad {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonReleaed(true);
+                buttonReleased(true);
             }
         });
 
@@ -90,7 +73,7 @@ public class Gamepad {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonReleaed(false);
+                buttonReleased(false);
             }
         });
 
@@ -105,7 +88,20 @@ public class Gamepad {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonReleaed(false);
+                buttonReleased(false);
+            }
+        });
+
+        attack.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("SHOOT");
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                buttonReleased(false);
             }
         });
 
@@ -114,6 +110,7 @@ public class Gamepad {
         leftArrow.setPosition(0,buttonSize);
         rightArrow.setPosition(buttonSize * 2, buttonSize);
         upArrow.setPosition(buttonSize, buttonSize * 2);
+        
     }
 
     // adds or subtracts the amount depending on the axis
@@ -129,7 +126,7 @@ public class Gamepad {
     }
 
     // called when button is released
-    public void buttonReleaed(boolean isYAxis){
+    public void buttonReleased(boolean isYAxis){
         if (isYAxis){
             y = 0;
         }
