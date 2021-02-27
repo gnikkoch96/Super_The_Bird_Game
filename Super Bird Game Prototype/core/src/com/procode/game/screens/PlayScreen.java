@@ -104,7 +104,7 @@ public class PlayScreen implements Screen {
 
         //add buttons to screen
         hud.stage.draw();
-        gamePad.stage.draw();
+        //gamePad.stage.draw();
     }
 
     @Override

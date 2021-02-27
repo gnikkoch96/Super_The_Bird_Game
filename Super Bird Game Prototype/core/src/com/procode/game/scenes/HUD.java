@@ -7,18 +7,21 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
 public class HUD implements Disposable {
     //Stage and its own Viewport for HUD
     public Stage stage;
     private Viewport viewport;
+    private Table table;
 
     //Update Values
     private static Integer score;
@@ -29,6 +32,8 @@ public class HUD implements Disposable {
     private Image pauseBtn;
     private Label scoreLabel;             //Displays the score
 
+    private Gamepad gamepad;
+
     public HUD(SuperBirdGame game){
         //Initialize Values
         score = 0;
@@ -37,7 +42,7 @@ public class HUD implements Disposable {
         stage = new Stage(viewport, game.batch);
 
         //Table is used for organizing the displays
-        Table table = new Table();
+        table = new Table();
         table.top(); //Puts the displays on the top
         table.setFillParent(true); //Fit to screen
 
@@ -52,11 +57,15 @@ public class HUD implements Disposable {
         table.add(healthBar).expandX().padTop(10).padRight(900).padBottom(60);              //--Change these to be more dynamic--/
         table.add(scoreLabel).expandX().padTop(10).padRight(50).padBottom(60);
 
+        //Displays the gamepad used for movement
+        gamepad = new Gamepad(game);
+        stage.addActor(gamepad.upArrow);
+        stage.addActor(gamepad.downArrow);
+        stage.addActor(gamepad.leftArrow);
+        stage.addActor(gamepad.rightArrow);
 
         //Display table to screen
         stage.addActor(table);
-
-
     }
 
     //Updates the healthbar with parameter of current health (gets called every time it gets hit)

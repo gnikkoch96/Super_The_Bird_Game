@@ -25,9 +25,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Gamepad {
-    public Stage stage;
-    private Viewport viewport;
-
     private float x; //values for position to add to the bird
     private float y;
     private float touchSensitivity; // the amount the bird moves per second the button is held
@@ -39,26 +36,26 @@ public class Gamepad {
     public ImageButton rightArrow;
 
     public Gamepad(SuperBirdGame game) {
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
-
         x = 0;
         y = 0;
         touchSensitivity = .05f;
         buttonSize = game.ANDROID_HEIGHT / 10;
 
         // this was the only way I could find to implement a texture to a image button
-        upArrow = new ImageButton(new TextureRegionDrawable(new TextureRegion(ImageFunctions.resize("screen icons//up button.png", buttonSize, buttonSize))));
-        downArrow = new ImageButton(new TextureRegionDrawable(new TextureRegion(ImageFunctions.resize("screen icons//down button.png", buttonSize, buttonSize))));
-        leftArrow = new ImageButton(new TextureRegionDrawable(new TextureRegion(ImageFunctions.resize("screen icons//left button.png", buttonSize, buttonSize))));
-        rightArrow = new ImageButton(new TextureRegionDrawable(new TextureRegion(ImageFunctions.resize("screen icons//right button.png", buttonSize, buttonSize))));
+        upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", buttonSize, buttonSize);
+        downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", buttonSize, buttonSize);
+        leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", buttonSize, buttonSize);
+        rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", buttonSize, buttonSize);
+
 
         // add listeners
         upArrow.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float upMovement = touchSensitivity;
                 buttonPressed(upMovement, true);
+                System.out.println("UP");
+                return true;
             }
 
             @Override
@@ -70,9 +67,11 @@ public class Gamepad {
 
         downArrow.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float downMovement = touchSensitivity * -1;
                 buttonPressed(downMovement, true);
+                System.out.println("DOWN");
+                return true;
             }
 
             @Override
@@ -83,9 +82,11 @@ public class Gamepad {
 
         leftArrow.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float leftMovement = touchSensitivity * -1;
                 buttonPressed(leftMovement, false);
+                System.out.println("LEFT");
+                return true;
             }
 
             @Override
@@ -96,9 +97,11 @@ public class Gamepad {
 
         rightArrow.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float rightMovement = touchSensitivity;
                 buttonPressed(rightMovement, false);
+                System.out.println("RIGHT");
+                return true;
             }
 
             @Override
@@ -112,11 +115,6 @@ public class Gamepad {
         leftArrow.setPosition(0,buttonSize);
         rightArrow.setPosition(buttonSize * 2, buttonSize);
         upArrow.setPosition(buttonSize, buttonSize * 2);
-
-        stage.addActor(upArrow);
-        stage.addActor(downArrow);
-        stage.addActor(rightArrow);
-        stage.addActor(leftArrow);
     }
 
     // adds or subtracts the amount depending on the axis
