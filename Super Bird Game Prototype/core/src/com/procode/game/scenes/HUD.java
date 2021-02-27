@@ -64,6 +64,7 @@ public class HUD implements Disposable {
         stage.addActor(gamepad.downArrow);
         stage.addActor(gamepad.leftArrow);
         stage.addActor(gamepad.rightArrow);
+        stage.addActor(gamepad.attack);
 
         //Display table to screen
         stage.addActor(table);

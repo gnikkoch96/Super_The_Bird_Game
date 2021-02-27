@@ -94,14 +94,8 @@ public class Gamepad {
 
         attack.addListener(new ClickListener() {
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("SHOOT");
-                return true;
-            }
-
-            @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonReleased(false);
+                System.out.println("SHOOT RELEASED");
             }
         });
 
@@ -110,7 +104,7 @@ public class Gamepad {
         leftArrow.setPosition(0,buttonSize);
         rightArrow.setPosition(buttonSize * 2, buttonSize);
         upArrow.setPosition(buttonSize, buttonSize * 2);
-        
+        attack.setPosition(SuperBirdGame.ANDROID_WIDTH - buttonSize, buttonSize);
     }
 
     // adds or subtracts the amount depending on the axis
