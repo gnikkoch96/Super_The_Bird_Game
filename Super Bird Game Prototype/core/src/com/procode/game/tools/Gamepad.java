@@ -24,12 +24,12 @@ public class Gamepad {
         touchSensitivity = game.ANDROID_HEIGHT / 60;
         buttonSize = game.ANDROID_HEIGHT / 10;
 
-        upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", buttonSize, buttonSize);
-        downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", buttonSize, buttonSize);
-        leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", buttonSize, buttonSize);
-        rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", buttonSize, buttonSize);
+        upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", "screen icons//pressed up button.png", buttonSize, buttonSize);
+        downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", "screen icons//pressed down button.png", buttonSize, buttonSize);
+        leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", "screen icons//pressed left button.png", buttonSize, buttonSize);
+        rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", "screen icons//pressed right button.png", buttonSize, buttonSize);
 
-        attack = ImageFunctions.resizeImageButton("screen icons//shoot button.png", buttonSize * 2, buttonSize * 2);
+        attack = ImageFunctions.resizeImageButton("screen icons//shoot button.png", "screen icons//pressed shoot button.png", buttonSize * 2, buttonSize * 2);
 
         // add listeners
         upArrow.addListener(new ClickListener() {
@@ -93,6 +93,12 @@ public class Gamepad {
         });
 
         attack.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("SHOOT PRESSED");
+                return true;
+            }
+
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("SHOOT RELEASED");
