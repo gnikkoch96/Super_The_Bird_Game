@@ -71,7 +71,6 @@ public class Animation { //--Ask Steven to walk through the logic--//
             // goes to next frame
             else{
                 currFrame += 1;
-                animationEnded = false;
             }
 
             // updates the time
@@ -79,7 +78,8 @@ public class Animation { //--Ask Steven to walk through the logic--//
         }
 
     }
-
+    public void setAnimationEnded(boolean var){this.animationEnded = var;} // used to fix the transition issue
+    public int getCurrFrameIndex(){return this.currFrame;};  // returns the index, used for the transition of states
     public Texture getCurrImg(){return anim.get(currFrame);} // returns the current frame for the image
     public boolean isAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
     public boolean getIsLoop(){return this.isLoop;}         //returns the value of the isLoop boolean

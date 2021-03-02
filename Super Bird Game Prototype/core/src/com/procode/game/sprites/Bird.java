@@ -49,12 +49,13 @@ public class Bird implements Disposable {
 
     // updates the bird every frame
     public void update(float deltaTime){
-
+        Gdx.app.log("Animation Ended: ", String.valueOf(birdAnimation.isAnimFinished()));
         if(birdAnimation.isAnimFinished() && !birdAnimation.getIsLoop()){ // play animation once
             //reset to the IDLE animation
             previousState = currentState;
             currentState = State.IDLE;
             switchAnimations(State.IDLE);
+            birdAnimation.setAnimationEnded(false);             // fixes the transition issue
         }else{//continue updating the frame
             birdAnimation.updateFrame(deltaTime);
             setInvincible(false);
@@ -103,10 +104,10 @@ public class Bird implements Disposable {
                 birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
                 break;
             case SHOOT:
-                birdAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, .35f, false);
+                birdAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, 0.55f, false);
                 break;
             case DAMAGED:
-                birdAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 3, .60f, false);
+                birdAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 3, .50f, false);
                 break;
             case DEAD:
                 birdAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 1, 5, .45f, false);
@@ -114,9 +115,11 @@ public class Bird implements Disposable {
         }
     }
 
+    public static int counter = 0;
     public void shoot() {
         previousState = currentState;   // updates prev state to current state before update
         currentState = State.SHOOT;
+        Gdx.app.log("prev state #" + Integer.toString(counter++), String.valueOf(previousState));
         if(previousState != State.SHOOT){
             switchAnimations(State.SHOOT);
         }

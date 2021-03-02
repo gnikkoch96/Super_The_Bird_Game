@@ -1,5 +1,6 @@
 package com.procode.game.scenes;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,12 +18,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.sprites.Bird;
+import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
 public class HUD implements Disposable {
     //Stage and its own Viewport for HUD
     public Stage stage;
     private Viewport viewport;
+    private Table topTable;
 
     //Update Values
     private static Integer score;
@@ -33,6 +36,7 @@ public class HUD implements Disposable {
     private Image pauseBtn;               // display the Pause Button
     private Label scoreLabel;             // display the score
     private Label livesLabel, lives;      // displays the number of lives
+    public Gamepad gamepad;               // displays the gamepad on the screen
 
     public HUD(SuperBirdGame game){
         //Initialize Values
@@ -41,10 +45,14 @@ public class HUD implements Disposable {
         viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
 
+        //--TEST--//
+        Gdx.input.setInputProcessor(stage);
+
+
         //Table is used for organizing the displays
-        Table table = new Table();
-        table.top(); //Puts the displays on the top
-        table.setFillParent(true); //Fit to screen
+        topTable = new Table();
+        topTable.top(); //Puts the displays on the top
+        topTable.setFillParent(true); //Fit to screen
 
         //The Displays
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5));
@@ -58,16 +66,23 @@ public class HUD implements Disposable {
 
 
         //Adding the displays to the screen  //--Change these to be more dynamic to the phone's screen res--/
-        table.add(pauseBtn).padBottom(120).padLeft(20);
-        table.add(healthBar).expandX().padTop(10).padRight(900).padBottom(60);
-        table.add(livesLabel).padBottom(150);
-        table.add(lives).expandX().padBottom(150);
-        table.add(scoreLabel).padBottom(50);
+        topTable.add(pauseBtn).padBottom(120).padLeft(20);
+        topTable.add(healthBar).expandX().padTop(10).padRight(900).padBottom(60);
+        topTable.add(livesLabel).padBottom(150);
+        topTable.add(lives).expandX().padBottom(150);
+        topTable.add(scoreLabel).padBottom(50);
 
 
+        // gamepad related
+        gamepad = new Gamepad(game);
+        stage.addActor(gamepad.upArrow);
+        stage.addActor(gamepad.downArrow);
+        stage.addActor(gamepad.leftArrow);
+        stage.addActor(gamepad.rightArrow);
+        stage.addActor(gamepad.shootButton);
 
         //Display table to screen
-        stage.addActor(table);
+        stage.addActor(topTable);
 
 
     }

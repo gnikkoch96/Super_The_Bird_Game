@@ -26,7 +26,7 @@ public class PlayScreen implements Screen {
     private float currTime;
 
     //Sprites
-    private Bird player;
+    public static Bird player;
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -42,7 +42,7 @@ public class PlayScreen implements Screen {
         //Creating Sprites
         int birdWidth = game.ANDROID_WIDTH/5;
         int birdHeight = game.ANDROID_HEIGHT/5;
-        player = new Bird(50, 100, birdWidth, birdHeight);
+        player = new Bird(300, 500, birdWidth, birdHeight);
 
         //Setting Properties
         gameCam.setToOrtho(false, game.ANDROID_WIDTH, game.ANDROID_HEIGHT);
@@ -54,7 +54,7 @@ public class PlayScreen implements Screen {
         //--TEST--//
         if(Gdx.input.isTouched()){
 //            player.damagedBird(hud);
-            player.shoot();
+//            player.shoot();
         }
 
     }
@@ -62,17 +62,17 @@ public class PlayScreen implements Screen {
     public void update(float dt){
         handleInput(dt);
 
-        // FOR TESTING PURPOSES ONLY
-        // MUST SUBTRACT SCREEN HEIGHT WITH Y BECAUSE LIBGDX INVERTS Y-AXIS
-        if(Gdx.input.isTouched()) {
-            int fingerX = Gdx.input.getX();
-            int fingerY = Gdx.input.getY();
-
-            // the playerBirdSize is to make sure the bird is centered wherever its clicked
-            float newX = fingerX - ((player.getBirdSize().x) / 3);
-            float newY = game.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2));
-            player.setPosition(newX, newY);
-        }
+//        // FOR TESTING PURPOSES ONLY
+//        // MUST SUBTRACT SCREEN HEIGHT WITH Y BECAUSE LIBGDX INVERTS Y-AXIS
+//        if(Gdx.input.isTouched()) {
+//            int fingerX = Gdx.input.getX();
+//            int fingerY = Gdx.input.getY();
+//
+//            // the playerBirdSize is to make sure the bird is centered wherever its clicked
+//            float newX = fingerX - ((player.getBirdSize().x) / 3);
+//            float newY = game.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2));
+//            player.setPosition(newX, newY);
+//        }
 
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
         player.update(dt);                                              //Updates the Animation Frame
