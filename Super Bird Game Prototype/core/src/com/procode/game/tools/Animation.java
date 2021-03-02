@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Animation { //--Ask Steven to walk through the logic--//
+public class Animation {
     private List<Texture> anim; // the list holding the animations
     private int currFrame; // the current frame the animation is playing
     private float timeFrameUpdated; // the time in which the last frame was updated
@@ -56,12 +56,12 @@ public class Animation { //--Ask Steven to walk through the logic--//
     // once the animation cycle is over, the animationFinished variable is set to true for that ending frame
     // until the cycle starts again
     public void updateFrame(float deltaTime){
-        // updates the current frame once he time played per frame is up
+        // updates the current frame once the time played per frame is up
         if (timeFrameUpdated + timePlayedPerFrame <= deltaTime){
             // resets the counter if the current frame is at the end of the animation
             int maxFrameCount = anim.size();
             if (currFrame + 1 >= maxFrameCount){
-                if(isLoop){                         // reset only when the animation needs to loop
+                if(isLoop){ // reset frame to zero only when the animation is looped
                     currFrame = 0;
                 }else{
                     animationEnded = true;
@@ -79,8 +79,7 @@ public class Animation { //--Ask Steven to walk through the logic--//
 
     }
     public void setAnimationEnded(boolean var){this.animationEnded = var;} // used to fix the transition issue
-    public int getCurrFrameIndex(){return this.currFrame;};  // returns the index, used for the transition of states
     public Texture getCurrImg(){return anim.get(currFrame);} // returns the current frame for the image
     public boolean isAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
-    public boolean getIsLoop(){return this.isLoop;}         //returns the value of the isLoop boolean
+    public boolean getIsLoop(){return this.isLoop;} // used to differentiate between looped animation and non-loop
 }

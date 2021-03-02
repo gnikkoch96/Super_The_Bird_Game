@@ -98,7 +98,7 @@ public class Gamepad {
         shootButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                PlayScreen.player.shoot();
+//                PlayScreen.player.shoot();
                 return true;
             }
 

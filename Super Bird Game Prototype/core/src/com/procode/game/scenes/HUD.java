@@ -22,34 +22,26 @@ import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
 public class HUD implements Disposable {
-    //Stage and its own Viewport for HUD
     public Stage stage;
     private Viewport viewport;
     private Table topTable;
 
-    //Update Values
+    // values that get updated dynamically
     private static Integer score;
-    private int health;
 
-    //What is shown on screen
-    private Image healthBar;              // display the Health Bar
-    private Image pauseBtn;               // display the Pause Button
-    private Label scoreLabel;             // display the score
-    private Label livesLabel, lives;      // displays the number of lives
+    // what is shown on the HUD
+    private Image healthBar;
+    private Image pauseBtn;
+    private Label scoreLabel;
+    private Label livesLabel, lives;
     public Gamepad gamepad;               // displays the gamepad on the screen
 
     public HUD(SuperBirdGame game){
-        //Initialize Values
         score = 0;
-
         viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
 
-        //--TEST--//
-        Gdx.input.setInputProcessor(stage);
-
-
-        //Table is used for organizing the displays
+        // table is used for organizing the displays
         topTable = new Table();
         topTable.top(); //Puts the displays on the top
         topTable.setFillParent(true); //Fit to screen
@@ -87,7 +79,7 @@ public class HUD implements Disposable {
 
     }
 
-    //Updates the healthbar with parameter of current health (gets called every time it gets hit)
+
     //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){
         Texture newHealth = ImageFunctions.resize("screen icons//bird health " + String.valueOf(currentHealth) + ".png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5);

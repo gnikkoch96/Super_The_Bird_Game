@@ -16,7 +16,7 @@ import com.procode.game.tools.ImageFunctions;
 
 //This class will handle the Play State logic of the game
 public class PlayScreen implements Screen {
-    private static final int OFFSET = 80;                               //Offset of the camera in respect to the bird
+    private static final int OFFSET = 80; // offset of the camera in respect to the bird
     private SuperBirdGame game;
     private HUD hud;
     private OrthographicCamera gameCam;
@@ -32,28 +32,30 @@ public class PlayScreen implements Screen {
         //Initializing Properties
         this.game = game;
         gameCam = new OrthographicCamera();
-        gamePort = new FitViewport(game.ANDROID_WIDTH, game.ANDROID_WIDTH, gameCam);
-        System.out.println("width " + game.ANDROID_WIDTH);
+        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
+        System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
         hud = new HUD(game);
-        world = new World(new Vector2(0,0), true);                           //--The Vector Represents Gravity Value--//
-        background = ImageFunctions.resize("background stuff/bg.png", game.ANDROID_WIDTH, game.ANDROID_HEIGHT);
+        world = new World(new Vector2(0,0), true); // vector2 represents the gravity values
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
         currTime = 0;
 
         //Creating Sprites
-        int birdWidth = game.ANDROID_WIDTH/5;
-        int birdHeight = game.ANDROID_HEIGHT/5;
+        int birdWidth = SuperBirdGame.ANDROID_WIDTH/5;
+        int birdHeight = SuperBirdGame.ANDROID_HEIGHT /5;
         player = new Bird(300, 500, birdWidth, birdHeight);
 
         //Setting Properties
-        gameCam.setToOrtho(false, game.ANDROID_WIDTH, game.ANDROID_HEIGHT);
+        gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 
 
     }
 
+    public World getWorld(){return this.world;}
+
     public void handleInput(float dt){
         //--TEST--//
         if(Gdx.input.isTouched()){
-//            player.damagedBird(hud);
+            player.damagedBird(hud);
 //            player.shoot();
         }
 
@@ -74,11 +76,9 @@ public class PlayScreen implements Screen {
 //            player.setPosition(newX, newY);
 //        }
 
-        gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
-        player.update(dt);                                              //Updates the Animation Frame
+        gameCam.position.x = player.getPosition().x + OFFSET; // updates camera position in relative to bird
+        player.update(dt);
     }
-
-    public World getWorld(){return this.world;}
 
     @Override
     public void show() {
@@ -90,12 +90,12 @@ public class PlayScreen implements Screen {
         currTime += delta;
         update(currTime);
 
-        //Empties the Screen
+        // empties the Screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
-        //Main Render Activities
+        // main render
         game.batch.setProjectionMatrix(gameCam.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
         game.batch.draw(background, 0, 0);
