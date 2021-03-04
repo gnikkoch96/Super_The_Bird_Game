@@ -6,14 +6,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.Animation;
+import java.lang.Math;
 
 public class Bird implements Disposable {
-    private static int BirdWidth = 240;
-    private static int BirdHeight = 150;
+    private static int BirdWidth;
+    private static int BirdHeight;
 
     private Animation birdAnimation; // takes in an animation class to allow for changing of animation played and other settings
-    private float healthCount;
     private Vector2 position;
+    private float healthCount;
     private Vector2 velocity;
 
     public Bird(int x, int y, int birdWidth, int birdHeight) {
@@ -22,8 +23,8 @@ public class Bird implements Disposable {
         position = new Vector2(x,y);
         velocity = new Vector2(0,0);
 
-        BirdWidth = birdWidth;
-        BirdHeight = birdHeight;
+        BirdWidth = (int) birdWidth;
+        BirdHeight = (int) birdHeight;
 
         // sets the current animation to the idle bird
         birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f);
@@ -58,8 +59,22 @@ public class Bird implements Disposable {
         return new Vector2(BirdWidth, BirdHeight);
     }
 
+    public void setBirdSize(int width, int height){
+
+        //repositions the bird of the new size makes it go out of bounds
+        if((position.x + width) > SuperBirdGame.ANDROID_WIDTH) {
+            position.x = SuperBirdGame.ANDROID_WIDTH - width;
+        }
+        if((position.y + height) > SuperBirdGame.ANDROID_HEIGHT) {
+            position.y = SuperBirdGame.ANDROID_HEIGHT - height;
+        }
+
+        BirdWidth = width;
+        BirdHeight = height;
+    }
+
     @Override
     public void dispose() {
-
+        birdAnimation.dispose();
     }
 }

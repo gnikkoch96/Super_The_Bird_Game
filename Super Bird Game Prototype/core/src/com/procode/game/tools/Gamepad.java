@@ -18,6 +18,7 @@ public class Gamepad {
     public ImageButton rightArrow;
     public ImageButton attack;
 
+    //initializes
     public Gamepad(SuperBirdGame game) {
         x = 0;
         y = 0;
@@ -148,6 +149,7 @@ public class Gamepad {
         downArrow = null;
         rightArrow = null;
         leftArrow = null;
+        attack = null;
     }
 
 }

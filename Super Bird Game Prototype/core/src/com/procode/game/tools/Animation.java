@@ -30,7 +30,6 @@ public class Animation { //--Ask Steven to walk through the logic--//
     // *** the imgHeight is an int of how large you wish your image height to be
     // *** the startingFrame is an int of which frame you wish your animation to start off at
     // *** the endingFrame is an int of which frame you wish your animation to end off at (before cycling again)
-    // *** the deltatime is the current time in which the animation was set
     // *** the animSecs is a double of how long you wish the entire animation to play per cycle
     public void setAnimation(String animationDir, int imgWidth, int imgHeight, int startingFrame, int endingFrame, float animSecs){
         anim.clear(); // clears the animation
@@ -55,9 +54,6 @@ public class Animation { //--Ask Steven to walk through the logic--//
     // until the cycle starts again
     public void updateFrame(float deltaTime){
         // updates the current frame once he time played per frame is up
-        //Gdx.app.log("timeFrameUpdated: ", String.valueOf(timeFrameUpdated));
-        //Gdx.app.log("timePlayedPerFrame: ", String.valueOf(timePlayedPerFrame));
-        //Gdx.app.log("deltaTime: ", String.valueOf(deltaTime));
         if (timeFrameUpdated + timePlayedPerFrame <= deltaTime){
             
             // resets the counter if the current frame is at the end of the animation
@@ -84,4 +80,7 @@ public class Animation { //--Ask Steven to walk through the logic--//
 
     public Texture getCurrImg(){return anim.get(currFrame);} // returns the current frame for the image
     public boolean CheckAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
+    public void dispose(){
+        anim.clear();
+    }
 }
