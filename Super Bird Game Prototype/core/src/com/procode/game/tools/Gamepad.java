@@ -32,7 +32,7 @@ public class Gamepad {
         leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", buttonSize, buttonSize);
         rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", buttonSize, buttonSize);
 
-        shootButton = ImageFunctions.resizeImageButton("screen icons//shoot button.png", buttonSize * 2, buttonSize * 2);
+        shootButton = ImageFunctions.resizeImageButton("screen icons//shoot button.png", (int)(buttonSize * 1.5), (int)(buttonSize * 1.5));
 
         // add listeners
         upArrow.addListener(new ClickListener() {
@@ -98,7 +98,7 @@ public class Gamepad {
         shootButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-//                PlayScreen.player.shoot();
+                PlayScreen.player.shoot();
                 return true;
             }
 
@@ -113,7 +113,7 @@ public class Gamepad {
         leftArrow.setPosition(0,buttonSize);
         rightArrow.setPosition(buttonSize * 2, buttonSize);
         upArrow.setPosition(buttonSize, buttonSize * 2);
-        shootButton.setPosition(SuperBirdGame.ANDROID_WIDTH - buttonSize * 3, buttonSize);
+        shootButton.setPosition(SuperBirdGame.ANDROID_WIDTH - buttonSize * 3, (int)(buttonSize/1.5));
     }
 
     // adds or subtracts the amount depending on the axis

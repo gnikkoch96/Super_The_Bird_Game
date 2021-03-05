@@ -55,7 +55,7 @@ public class PlayScreen implements Screen {
     public void handleInput(float dt){
         //--TEST--//
         if(Gdx.input.isTouched()){
-            player.damagedBird(hud);
+//            player.damagedBird(hud);
 //            player.shoot();
         }
 

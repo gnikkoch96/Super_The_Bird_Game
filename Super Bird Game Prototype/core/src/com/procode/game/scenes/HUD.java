@@ -24,7 +24,6 @@ import com.procode.game.tools.ImageFunctions;
 public class HUD implements Disposable {
     public Stage stage;
     private Viewport viewport;
-    private Table topTable;
 
     // values that get updated dynamically
     private static Integer score;
@@ -32,40 +31,39 @@ public class HUD implements Disposable {
     // what is shown on the HUD
     private Image healthBar;
     private Image pauseBtn;
-    private Label scoreLabel;
-    private Label livesLabel, lives;
+    private Label scoreLabel, scoreTextLabel;
     public Gamepad gamepad;               // displays the gamepad on the screen
 
     public HUD(SuperBirdGame game){
         score = 0;
         viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
+        Gdx.input.setInputProcessor(stage);
 
         // table is used for organizing the displays
-        topTable = new Table();
-        topTable.top(); //Puts the displays on the top
-        topTable.setFillParent(true); //Fit to screen
+        Table leftTable = new Table();
+        leftTable.left();
+        leftTable.setFillParent(true);
 
-        //The Displays
+        Table rightTable = new Table();
+        rightTable.right();
+        rightTable.setFillParent(true);
+
+        // displays
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5));
         pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.ANDROID_WIDTH/35, SuperBirdGame.ANDROID_HEIGHT/25));
+        scoreTextLabel = new Label("SCORE: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        scoreTextLabel.setFontScale(2.5f);
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        scoreLabel.setFontScale(1.5f);
-        livesLabel = new Label("LIVES:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        livesLabel.setFontScale(1.5f);
-        lives = new Label(String.format("%02d", Bird.numLives), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        lives.setFontScale(1.5f);
+        scoreLabel.setFontScale(2.5f);
 
+        leftTable.add(pauseBtn).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/3).padLeft(SuperBirdGame.ANDROID_WIDTH/60);
+        leftTable.add(healthBar).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/4);
 
-        //Adding the displays to the screen  //--Change these to be more dynamic to the phone's screen res--/
-        topTable.add(pauseBtn).padBottom(120).padLeft(20);
-        topTable.add(healthBar).expandX().padTop(10).padRight(900).padBottom(60);
-        topTable.add(livesLabel).padBottom(150);
-        topTable.add(lives).expandX().padBottom(150);
-        topTable.add(scoreLabel).padBottom(50);
+        rightTable.add(scoreTextLabel).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/4).padRight(SuperBirdGame.ANDROID_WIDTH/60);
+        rightTable.add(scoreLabel).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/4).padRight(SuperBirdGame.ANDROID_WIDTH/60);
 
-
-        // gamepad related
+        // gamepad
         gamepad = new Gamepad(game);
         stage.addActor(gamepad.upArrow);
         stage.addActor(gamepad.downArrow);
@@ -74,11 +72,10 @@ public class HUD implements Disposable {
         stage.addActor(gamepad.shootButton);
 
         //Display table to screen
-        stage.addActor(topTable);
-
+        stage.addActor(leftTable);
+        stage.addActor(rightTable);
 
     }
-
 
     //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){

@@ -9,18 +9,16 @@ import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
 
 public class Bird implements Disposable {
-    public static int numLives; // is public because it needs to be accessed by the HUD.class
-
     private static final long INVINCIBLE_DURATION = 2000; // value can be changed
     private static long timeVar;  // used for the invincible property
-    private static int BirdWidth = 240;
-    private static int BirdHeight = 150;
 
     public enum State {IDLE, SHOOT, DAMAGED, DEAD}
     private Animation birdAnimation;  // takes in an animation class to allow for changing of animation played and other settings
     private Vector2 position;
     private Vector2 velocity;
     private int healthCount;
+    private int BirdWidth;
+    private int BirdHeight;
 
     // state variables (used to prevent animations from interfering with each other)
     private State currentState;
@@ -38,7 +36,6 @@ public class Bird implements Disposable {
         isDead = false;
         isInvincible = false;
 
-        numLives = 3;
         healthCount = 6;
         BirdWidth = birdWidth;
         BirdHeight = birdHeight;
@@ -131,16 +128,9 @@ public class Bird implements Disposable {
         previousState = currentState;
         currentState = State.DEAD;
 
-        if(numLives <= 0){
-            // play game over screen (i.e. setScreen(new GameOverScreen(...))
-        }else{
-            numLives--;
-            switchAnimations(State.DEAD);
+        switchAnimations(State.DEAD);
 
-            //reset the healthbar, healthcount
-            healthCount = 6;
-            hud.updateHealthBar(healthCount);
-        }
+        // set the screen to game over screen
     }
 
     public void damagedBird(HUD hud){
