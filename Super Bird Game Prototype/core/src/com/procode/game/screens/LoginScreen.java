@@ -146,6 +146,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         //just to see the user name in the console
         //System.out.println(txtUserName.getText());
         System.out.println(txtPassword.getText());
+
         game.setScreen(new PlayScreen(game));
     }
 

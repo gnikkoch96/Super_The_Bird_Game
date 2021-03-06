@@ -13,7 +13,7 @@ import com.procode.game.sprites.Bird;
 
 public class SuperBirdGame extends Game {
 	// desktop configurations
-	public static final int DESKTOP_WIDTH = 1300;
+	public static final int DESKTOP_WIDTH = 1520;
 	public static final int DESKTOP_HEIGHT = 680;
 	public static final String DESKTOP_TITLE = "Super Bird Game";
 	public SpriteBatch batch;
