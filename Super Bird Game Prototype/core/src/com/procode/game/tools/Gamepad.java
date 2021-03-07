@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.screens.PlayScreen;
 
 public class Gamepad {
     private float x; //values for position to add to the bird
@@ -16,7 +17,9 @@ public class Gamepad {
     public ImageButton downArrow;
     public ImageButton leftArrow;
     public ImageButton rightArrow;
-    public ImageButton attack;
+    public ImageButton shootButton;
+
+
 
     public Gamepad(SuperBirdGame game) {
         x = 0;
@@ -24,12 +27,12 @@ public class Gamepad {
         touchSensitivity = game.ANDROID_HEIGHT / 60;
         buttonSize = game.ANDROID_HEIGHT / 10;
 
-        upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", "screen icons//pressed up button.png", buttonSize, buttonSize);
-        downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", "screen icons//pressed down button.png", buttonSize, buttonSize);
-        leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", "screen icons//pressed left button.png", buttonSize, buttonSize);
-        rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", "screen icons//pressed right button.png", buttonSize, buttonSize);
+        upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", buttonSize, buttonSize);
+        downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", buttonSize, buttonSize);
+        leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", buttonSize, buttonSize);
+        rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", buttonSize, buttonSize);
 
-        attack = ImageFunctions.resizeImageButton("screen icons//shoot button.png", "screen icons//pressed shoot button.png", buttonSize * 2, buttonSize * 2);
+        shootButton = ImageFunctions.resizeImageButton("screen icons//shoot button.png", (int)(buttonSize * 1.5), (int)(buttonSize * 1.5));
 
         // add listeners
         upArrow.addListener(new ClickListener() {
@@ -92,16 +95,15 @@ public class Gamepad {
             }
         });
 
-        attack.addListener(new ClickListener() {
+        shootButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("SHOOT PRESSED");
+                PlayScreen.player.shoot();
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("SHOOT RELEASED");
             }
         });
 
@@ -110,7 +112,7 @@ public class Gamepad {
         leftArrow.setPosition(0,buttonSize);
         rightArrow.setPosition(buttonSize * 2, buttonSize);
         upArrow.setPosition(buttonSize, buttonSize * 2);
-        attack.setPosition(SuperBirdGame.ANDROID_WIDTH - buttonSize * 3, buttonSize);
+        shootButton.setPosition(SuperBirdGame.ANDROID_WIDTH - buttonSize * 3, (int)(buttonSize/1.5));
     }
 
     // adds or subtracts the amount depending on the axis
