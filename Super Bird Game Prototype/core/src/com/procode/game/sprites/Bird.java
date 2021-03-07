@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
+import java.lang.Math;
 
 public class Bird implements Disposable {
     private static final long INVINCIBLE_DURATION = 2000; // value can be changed
@@ -15,11 +16,12 @@ public class Bird implements Disposable {
 
     public enum State {IDLE, SHOOT, DAMAGED, DEAD}
     private Animation birdAnimation;  // takes in an animation class to allow for changing of animation played and other settings
+    private static int BirdWidth;
+    private static int BirdHeight;
     private Vector2 position;
+    private float healthCount;
     private Vector2 velocity;
     private int healthCount;
-    private int BirdWidth;
-    private int BirdHeight;
 
     // state variables (used to prevent animations from interfering with each other)
     private State currentState;
@@ -38,8 +40,8 @@ public class Bird implements Disposable {
         isInvincible = false;
 
         healthCount = 6;
-        BirdWidth = birdWidth;
-        BirdHeight = birdHeight;
+        BirdWidth = (int) birdWidth;
+        BirdHeight = (int) birdHeight;
         currentState = State.IDLE;
         previousState = currentState;
 
@@ -157,9 +159,23 @@ public class Bird implements Disposable {
     }
 
 
+    public void setBirdSize(int width, int height){
+
+        //repositions the bird of the new size makes it go out of bounds
+        if((position.x + width) > SuperBirdGame.ANDROID_WIDTH) {
+            position.x = SuperBirdGame.ANDROID_WIDTH - width;
+        }
+        if((position.y + height) > SuperBirdGame.ANDROID_HEIGHT) {
+            position.y = SuperBirdGame.ANDROID_HEIGHT - height;
+        }
+
+        BirdWidth = width;
+        BirdHeight = height;
+    }
+
     @Override
     public void dispose() {
-
+        birdAnimation.dispose();
     }
 
 
