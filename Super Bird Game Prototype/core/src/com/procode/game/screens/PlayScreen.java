@@ -44,7 +44,7 @@ public class PlayScreen implements Screen {
         //Creating Sprites
         int birdWidth = SuperBirdGame.ANDROID_WIDTH/5;
         int birdHeight = SuperBirdGame.ANDROID_HEIGHT /5;
-        player = new Bird(300, 500, birdWidth, birdHeight);
+        player = new Bird(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth, birdHeight);
 
         //Setting Properties
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
