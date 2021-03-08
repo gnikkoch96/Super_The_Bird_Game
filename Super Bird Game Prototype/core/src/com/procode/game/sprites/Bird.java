@@ -19,9 +19,8 @@ public class Bird implements Disposable {
     private static int BirdWidth;
     private static int BirdHeight;
     private Vector2 position;
-    private float healthCount;
-    private Vector2 velocity;
     private int healthCount;
+    private Vector2 velocity;
 
     // state variables (used to prevent animations from interfering with each other)
     private State currentState;

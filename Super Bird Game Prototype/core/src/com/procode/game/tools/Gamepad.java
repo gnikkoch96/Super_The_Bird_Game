@@ -151,7 +151,7 @@ public class Gamepad {
         downArrow = null;
         rightArrow = null;
         leftArrow = null;
-        attack = null;
+        shootButton = null;
     }
 
 }

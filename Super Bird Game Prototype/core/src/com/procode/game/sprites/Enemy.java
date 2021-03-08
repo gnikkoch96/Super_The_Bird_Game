@@ -46,7 +46,7 @@ public class Enemy implements Disposable {
     }
 
     public void setEnemyAnimation(String animation, int width, int height, int startingFrame, int endingFrame, float animationSec){
-        enemyAnimation.setAnimation(animation, width, height, startingFrame, endingFrame, animationSec);
+        enemyAnimation.setAnimation(animation, width, height, startingFrame, endingFrame, animationSec, true);
     }
 
     // gets the current image of the bird

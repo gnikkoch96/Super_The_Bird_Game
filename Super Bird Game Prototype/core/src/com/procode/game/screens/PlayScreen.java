@@ -49,7 +49,7 @@ public class PlayScreen implements Screen {
         //Setting Properties
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 
-        gamePad = new Gamepad(game);
+        gamepad = new Gamepad(game);
     }
 
     public World getWorld(){return this.world;}

@@ -52,8 +52,6 @@ public class HUD implements Disposable {
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
 
-    public Gamepad gamepad;
-
     public HUD(SuperBirdGame game){
         score = 0;
         viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
