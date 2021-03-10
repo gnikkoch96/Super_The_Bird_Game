@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
@@ -33,7 +35,6 @@ public class PlayScreen implements Screen {
         this.game = game;
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
-        System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
         hud = new HUD(game);
         world = new World(new Vector2(0,0), true); // vector2 represents the gravity values
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);

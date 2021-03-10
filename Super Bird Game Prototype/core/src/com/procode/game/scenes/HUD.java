@@ -99,7 +99,7 @@ public class HUD implements Disposable {
         //--Nikko: (Changeable) I have placed the score to be in the middle of the screen as opposed to the right as the user doesn't have to look very far to see their score
         leftTable.add(scoreTextLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.1)).padLeft((int) (SuperBirdGame.ANDROID_WIDTH/4.5));
         leftTable.add(scoreLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.1));
-        scoreBackground.setPosition((int) (SuperBirdGame.ANDROID_HEIGHT/1.13), (int) (SuperBirdGame.ANDROID_WIDTH/2.55));
+        scoreBackground.setPosition((int) (SuperBirdGame.ANDROID_HEIGHT), (int) (SuperBirdGame.ANDROID_WIDTH/2.55));
 
 
         // gamepad
