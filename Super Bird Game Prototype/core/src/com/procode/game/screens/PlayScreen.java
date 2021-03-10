@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
+import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
 import com.procode.game.tools.ImageFunctions;
 
@@ -23,6 +24,7 @@ public class PlayScreen implements Screen {
     private Viewport gamePort;
     private World world;  //--Not sure what to do with this yet--//
     private Texture background;
+    private Background bg;
     private float currTime;
 
     //Sprites
@@ -39,6 +41,7 @@ public class PlayScreen implements Screen {
         background = ImageFunctions.resize("background stuff/bg.png", game.ANDROID_WIDTH, game.ANDROID_HEIGHT);
         currTime = 0;
 
+        bg = new Background();
         //Creating Sprites
         int birdWidth = game.ANDROID_WIDTH/5;
         int birdHeight = game.ANDROID_HEIGHT/5;
@@ -92,7 +95,7 @@ public class PlayScreen implements Screen {
         //Main Render Activities
         game.batch.setProjectionMatrix(gameCam.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
-        game.batch.draw(background, 0, 0);
+        game.batch.draw(bg.getBackgroundSky(), 0, 0);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
