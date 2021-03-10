@@ -12,9 +12,8 @@ import com.procode.game.screens.PlayScreen;
 import com.procode.game.sprites.Bird;
 
 public class SuperBirdGame extends Game {
-	// desktop configurations
-	public static final int DESKTOP_WIDTH = 1000;
-	public static final int DESKTOP_HEIGHT = 700;
+	public static final int DESKTOP_WIDTH = 1920;
+	public static final int DESKTOP_HEIGHT = 1080;
 	public static final String DESKTOP_TITLE = "Super Bird Game";
 	public SpriteBatch batch;
 
@@ -34,8 +33,6 @@ public class SuperBirdGame extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		this.setScreen(new LoginScreen(this));
-		System.out.println("Android Height: " + ANDROID_HEIGHT);
-		System.out.println("Android Width: " + ANDROID_WIDTH);
 	}
 
 	@Override

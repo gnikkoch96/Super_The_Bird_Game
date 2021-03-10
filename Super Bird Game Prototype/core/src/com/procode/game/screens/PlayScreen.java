@@ -7,13 +7,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Bird;
+import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
 //This class will handle the Play State logic of the game
@@ -26,6 +25,7 @@ public class PlayScreen implements Screen {
     private World world;  //--Not sure what to do with this yet--//
     private Texture background;
     private float currTime;
+    private Gamepad gamepad;
 
     //Sprites
     public static Bird player;
@@ -35,6 +35,7 @@ public class PlayScreen implements Screen {
         this.game = game;
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
+        System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
         hud = new HUD(game);
         world = new World(new Vector2(0,0), true); // vector2 represents the gravity values
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
@@ -43,12 +44,12 @@ public class PlayScreen implements Screen {
         //Creating Sprites
         int birdWidth = SuperBirdGame.ANDROID_WIDTH/5;
         int birdHeight = SuperBirdGame.ANDROID_HEIGHT /5;
-        player = new Bird(300, 500, birdWidth, birdHeight);
+        player = new Bird(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth, birdHeight);
 
         //Setting Properties
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 
-
+        gamepad = new Gamepad(game);
     }
 
     public World getWorld(){return this.world;}
@@ -63,22 +64,12 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt){
-        handleInput(dt);
+        // bird movement
+        Vector2 birdMovement = hud.gamepad.getButtonInputs();
+        player.movePosition(birdMovement.x, birdMovement.y);
 
-//        // FOR TESTING PURPOSES ONLY
-//        // MUST SUBTRACT SCREEN HEIGHT WITH Y BECAUSE LIBGDX INVERTS Y-AXIS
-//        if(Gdx.input.isTouched()) {
-//            int fingerX = Gdx.input.getX();
-//            int fingerY = Gdx.input.getY();
-//
-//            // the playerBirdSize is to make sure the bird is centered wherever its clicked
-//            float newX = fingerX - ((player.getBirdSize().x) / 3);
-//            float newY = game.ANDROID_HEIGHT - (fingerY + ((player.getBirdSize().y)/ 2));
-//            player.setPosition(newX, newY);
-//        }
-
-        gameCam.position.x = player.getPosition().x + OFFSET; // updates camera position in relative to bird
-        player.update(dt);
+        gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
+        player.update(dt);                                              //Updates the Animation Frame
     }
 
     @Override
@@ -103,8 +94,9 @@ public class PlayScreen implements Screen {
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
 
+        //add buttons to screen
+        hud.stage.draw();
     }
 
     @Override

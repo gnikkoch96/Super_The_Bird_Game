@@ -31,7 +31,6 @@ public class Animation {
     // *** the imgHeight is an int of how large you wish your image height to be
     // *** the startingFrame is an int of which frame you wish your animation to start off at
     // *** the endingFrame is an int of which frame you wish your animation to end off at (before cycling again)
-    // *** the deltatime is the current time in which the animation was set
     // *** the animSecs is a double of how long you wish the entire animation to play per cycle
     // *** the isLoop is a boolean that sets the animation to loop or not (SHOOT, DEAD, and DAMAGED are not looped, but IDLE is)
     public void setAnimation(String animationDir, int imgWidth, int imgHeight, int startingFrame, int endingFrame, float animSecs, boolean isLoop){
@@ -82,4 +81,7 @@ public class Animation {
     public Texture getCurrImg(){return anim.get(currFrame);} // returns the current frame for the image
     public boolean isAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
     public boolean getIsLoop(){return this.isLoop;} // used to differentiate between looped animation and non-loop
+    public void dispose(){
+        anim.clear();
+    }
 }

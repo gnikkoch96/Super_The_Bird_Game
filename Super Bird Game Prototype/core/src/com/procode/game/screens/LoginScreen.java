@@ -5,6 +5,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.Screen;
@@ -22,8 +24,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
-
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.tools.ImageFunctions;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
@@ -32,7 +36,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
     private SuperBirdGame game;
     private Stage stage;
-    private TextButton btnLogin;
+    private TextButton btnLogin, btnSignUp;
     private TextField userName;
     private TextureAtlas atlas;
     private TextField password;
@@ -42,73 +46,94 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private Label txtUserName, txtPassword;
     private SpriteBatch batch;
-
-
+    private Viewport viewport;
+    private Texture background;
+    private TextField.TextFieldStyle txtFieldStyle;
+    private Label.LabelStyle labelStyle;
+    private TextButton.TextButtonStyle style_button;
+    private Skin skin;
 
     public LoginScreen(SuperBirdGame g){
         game = g;
-        stage = new Stage();
+
+        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
+        stage = new Stage(viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         //atlas = new TextureAtlas("font-export.fnt");
-        Skin skin = new Skin(Gdx.files.internal("comic-ui.json"));
-        //Skin skin = new Skin(atlas);
-        //Skin skin = new Skin(Gdx.files.internal("uiskin.json"), new TextureAtlas(Gdx.files.internal("uiskin.atlas")));
-        //create a text button and send it to skin
+        skin = new Skin(Gdx.files.internal("comic-ui.json"));
 
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
         font = new BitmapFont();
-
-
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = 80;
+        fontParameter.size = 130;
+        //fontParameter.spaceY = 100;
         font = fontGenerator.generateFont(fontParameter);
 
 
         //creates a style for the font
-        TextField.TextFieldStyle ts = new TextField.TextFieldStyle();
-        ts = skin.get(TextField.TextFieldStyle.class);
-        ts.font = font;
+        txtFieldStyle = new TextField.TextFieldStyle();
+        txtFieldStyle = skin.get(TextField.TextFieldStyle.class);
+        txtFieldStyle.font = font;
+
+        //=======Instantiate style for label======================
+        labelStyle = new Label.LabelStyle();
+        labelStyle = skin.get(Label.LabelStyle.class);
+        labelStyle.font = font;
 
         //===============================================
-        Label.LabelStyle style = new Label.LabelStyle();
-        style = skin.get(Label.LabelStyle.class);
-        style.font = font;
+        style_button = new TextButton.TextButtonStyle();
+    }
 
-        txtUserName = new Label("Enter Username",style);
-        txtUserName.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) - 50 );
+
+    public void userName(){
+        //=========This is the label for user name============
+        txtUserName = new Label("Enter Username",labelStyle);
+        txtUserName.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) + 150 );
         txtUserName.setSize(300,300);
 
+        //=========Text field for the user name================
+        userName = new TextField("", txtFieldStyle);
+        userName.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
+        userName.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2));
 
-        txtPassword = new Label("Enter Password",style);
-        txtPassword.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) - 250 );
+
+        stage.addActor(txtUserName);
+        //set the actor UserName
+        stage.addActor(userName);
+    }
+
+    public void userPassword(){
+        txtPassword = new Label("Enter Password",labelStyle);
+        txtPassword.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) - 200 );
         txtPassword.setSize(300,300);
-        //===============================================
 
-
-        userName = new TextField("", ts);
-        userName.setSize(800,100);
-        userName.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) - 50);
-
-
-        //add the user name in the stage
-
-
-        password = new TextField("", ts);
+        //=========Text field for the user password =============
+        password = new TextField("", txtFieldStyle);
         password.setPasswordCharacter('*');
-        password.setPosition(game.ANDROID_WIDTH/2 - 505,(game.ANDROID_HEIGHT/2) - 250);
+        password.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 350);
         password.setPasswordMode(true);
-        password.setSize(800,100);
+        password.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
 
         //then send the password into the stage
         stage.addActor(txtPassword);
+        stage.addActor(password);
+    }
 
-        TextButton btnLogin = new TextButton("Log In", skin);
-        font = new BitmapFont(Gdx.files.internal("font-export.fnt"), false);
-        font.getData().setScale(2,2);
+    //this method contains all the buttons such as Login and SignUp
+    public void buttons(){
+        //setting style for the button and resizing the font
+        style_button = skin.get(TextButton.TextButtonStyle.class);
+        fontParameter.size = 100;
+        font = fontGenerator.generateFont(fontParameter);
+        style_button.font = font;
+
+        //==================Button Log In =====================
+        btnLogin = new TextButton("Log In", style_button);
         skin.add("fonts", font);
         //set the position and size of the button
-        btnLogin.setPosition(game.ANDROID_WIDTH/2 - 505,(game.ANDROID_HEIGHT/2) - 350);
-        btnLogin.setSize(200,100);
+        btnLogin.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 550);
+        btnLogin.setSize(400,200);
 
         //set the listener for log in button
         btnLogin.addListener(new ClickListener(){
@@ -117,57 +142,60 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
                 btnLoginClicked();
             }
         });
+        //=================Button Sign Up =====================
 
-        TextButton btnSignUp = new TextButton("Sign Up", skin);
-        font = new BitmapFont(Gdx.files.internal("font-export.fnt"), false);
-        font.getData().setScale(2,2);
-        skin.add("fonts", font);
+        btnSignUp = new TextButton("Sign Up", style_button);;
         //set the position and size of the button
-        btnSignUp.setPosition(game.ANDROID_WIDTH/2 + 50,(game.ANDROID_HEIGHT/2) - 350);
-        btnSignUp.setSize(200,100);
+        btnSignUp.setPosition((game.ANDROID_WIDTH/2) + 300,(game.ANDROID_HEIGHT/2) - 550);
+        btnSignUp.setSize(400,200);
 
-        //set the listener for log in button
+        //set the listener for SignUp button
         btnSignUp.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                btnLoginClicked();
+                btnSignUpClicked();
             }
         });
 
-        //then draw it on the screen by adding it to stage
+        //=====================================================
+
         stage.addActor(btnLogin);
-        stage.addActor(txtUserName);
-        stage.addActor(userName);
-        stage.addActor(password);
         stage.addActor(btnSignUp);
     }
 
     public void btnLoginClicked(){
         //just to see the user name in the console
-        //System.out.println(txtUserName.getText());
-        System.out.println(txtPassword.getText());
-
-        game.setScreen(new PlayScreen(game));
+        System.out.println(password.getText());
+        game.setScreen(new HomeScreen(game));
     }
 
+    public void btnSignUpClicked(){
+        game.setScreen(new RegisterScreen(game));
+    }
+
+    //this method is from the library of libdx from Application Adapter
+    //It runs automatically just like the render.
+    public void show(){
+        userName();
+        userPassword();
+        buttons();
+    }
 
     @Override
     public void render(float delta){
         Gdx.gl.glClearColor(0,1,1,0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
+        game.batch.begin();
         //render the stage and draw it
+        game.batch.draw(background, 0, 0);
+        game.batch.end();
         stage.act(delta);
         stage.draw();
 
     }
 
     public void resize(int width, int height){
-
-    }
-
-    public void show(){
 
     }
 
@@ -187,7 +215,13 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     @Override
     public void dispose() {
         fontGenerator.dispose();
+        background.dispose();
+        game.dispose();
+        stage.dispose();
+        atlas.dispose();
+        font.dispose();
+        batch.dispose();
+        skin.dispose();
     }
-
 
 }

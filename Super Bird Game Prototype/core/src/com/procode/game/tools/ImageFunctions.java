@@ -27,4 +27,10 @@ public class ImageFunctions {
         return new ImageButton(new TextureRegionDrawable(new TextureRegion(texture)));
     }
 
+    // same as above just with an added image for the pressed image
+    public static ImageButton resizeImageButton(String pathUp, String pathDown, int newWidth, int newHeight) {
+        Texture texture = resize(pathUp, newWidth, newHeight);
+        Texture texture2 = resize(pathDown, newWidth, newHeight);
+        return new ImageButton(new TextureRegionDrawable(new TextureRegion(texture)), new TextureRegionDrawable(new TextureRegion(texture2)));
+    }
 }

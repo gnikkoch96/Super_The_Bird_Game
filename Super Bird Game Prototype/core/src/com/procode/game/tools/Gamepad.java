@@ -21,6 +21,7 @@ public class Gamepad {
 
 
 
+    //initializes
     public Gamepad(SuperBirdGame game) {
         x = 0;
         y = 0;
@@ -104,7 +105,6 @@ public class Gamepad {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-
             }
         });
 
@@ -142,7 +142,6 @@ public class Gamepad {
         return new Vector2(x, y);
     }
 
-
     public void dispose(){
         x = 0;
         y = 0;
@@ -152,6 +151,7 @@ public class Gamepad {
         downArrow = null;
         rightArrow = null;
         leftArrow = null;
+        shootButton = null;
     }
 
 }
