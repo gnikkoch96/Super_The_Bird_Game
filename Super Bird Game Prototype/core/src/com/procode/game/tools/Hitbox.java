@@ -33,7 +33,11 @@ public class Hitbox {
         return false;
     }
 
-    public void updatePos(Vector2 newPos) {
+    public void update(Vector2 newPos) {
         position = newPos;
+        topleft = new Vector2(position.x, position.y-height);
+        topright = new Vector2(position.x+width, position.y-height);
+        botleft = new Vector2(position.x, position.y);
+        botright = new Vector2(position.x+width, position.y);
     }
 }
