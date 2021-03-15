@@ -15,7 +15,7 @@ public class Bird implements Disposable {
     private static long timeVar;  // used for the invincible property
 
     public enum State {IDLE, SHOOT, DAMAGED, DEAD}
-    private Animation birdAnimation;  // takes in an animation class to allow for changing of animation played and other settings
+    private Animation birdAnimation, shootAnimation;  // takes in an animation class to allow for changing of animation played and other settings
     private static int BirdWidth;
     private static int BirdHeight;
     private Vector2 position;
@@ -32,6 +32,7 @@ public class Bird implements Disposable {
 
     public Bird(int x, int y, int birdWidth, int birdHeight) {
         birdAnimation = new Animation();
+        shootAnimation = new Animation();
         position = new Vector2(x,y);
         velocity = new Vector2(0,0);
 
@@ -46,11 +47,18 @@ public class Bird implements Disposable {
 
         // sets the current animation to the idle bird
         birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
+        shootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, 0.1f, false);
     }
 
 
     // gets the current image of the bird
     public Texture getBirdImage(){
+
+        if(currentState == State.IDLE)
+        return birdAnimation.getCurrImg();
+        else if(currentState == State.SHOOT)
+        return shootAnimation.getCurrImg();
+
         return birdAnimation.getCurrImg();
     }
 
@@ -94,7 +102,7 @@ public class Bird implements Disposable {
 
     // updates the bird every frame
     public void update(float deltaTime){
-        if(birdAnimation.isAnimFinished() && !birdAnimation.getIsLoop()){ // plays an animation only once (in this case SHOOT, DEAD, and DAMAGED)
+       /*if(birdAnimation.isAnimFinished() && !birdAnimation.getIsLoop()){ // plays an animation only once (in this case SHOOT, DEAD, and DAMAGED)
             //reset to the IDLE animation
             previousState = currentState;
             currentState = State.IDLE;
@@ -103,8 +111,21 @@ public class Bird implements Disposable {
         }else{//continue updating the frame
             birdAnimation.updateFrame(deltaTime);
             setInvincible(false);
+        }*/
+        if(currentState == State.SHOOT) {
+            shootAnimation.updateFrame(deltaTime);
+            System.out.println("I'm here");
+            //shootAnimation.setAnimationEnded(false);
+            if(shootAnimation.animationEnded == true) {
+                currentState = State.IDLE;
+                shootAnimation.setAnimFinished();
+                System.out.println("Ended");
+            }
+        }else if(currentState == State.IDLE) {
+            birdAnimation.updateFrame(deltaTime);
         }
 
+        setInvincible(false);
 
     }
 
@@ -126,11 +147,12 @@ public class Bird implements Disposable {
     }
 
     public void shoot() {
+        System.out.println("Shooting");
         previousState = currentState;
         currentState = State.SHOOT;
 
         if(previousState != State.SHOOT){ // to allow the shoot animation to properly display before shooting again
-            switchAnimations(State.SHOOT);
+           // switchAnimations(State.SHOOT);
         }
     }
 
