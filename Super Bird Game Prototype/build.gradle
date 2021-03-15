@@ -10,6 +10,9 @@ buildscript {
         google()
     }
     dependencies {
+        //from firebase
+        classpath 'com.google.gms:google-services:4.3.5'
+
         classpath 'com.android.tools.build:gradle:3.5.4'
 
 
@@ -55,7 +58,7 @@ project(":desktop") {
 
 project(":android") {
     apply plugin: "com.android.application"
-
+    apply plugin: 'com.google.gms.google-services'
     configurations { natives }
 
     dependencies {
@@ -79,6 +82,13 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
 
+        //line added
+        implementation 'com.google.firebase:firebase-core:16.0.1'
+        implementation 'com.google.firebase:firebase-database:16.0.1'
+        implementation platform('com.google.firebase:firebase-bom:26.6.0')
+        implementation 'com.google.firebase:firebase-analytics'
+        compile 'com.firebase:firebase-client:1.0.16'
+        // up to here
     }
 }
 

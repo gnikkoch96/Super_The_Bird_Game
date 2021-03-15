@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.sprites.Background;
 import com.procode.game.tools.ImageFunctions;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
@@ -52,6 +53,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     private Label.LabelStyle labelStyle;
     private TextButton.TextButtonStyle style_button;
     private Skin skin;
+    private Background bg;
+    private int moveHills_x, moveMountain_x, moveClouds_x, getMoveClouds_y;
 
     public LoginScreen(SuperBirdGame g){
         game = g;
@@ -83,6 +86,13 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
         //===============================================
         style_button = new TextButton.TextButtonStyle();
+
+        //=======Background stuff ===================
+        bg = new Background();
+
+        moveHills_x = game.ANDROID_WIDTH;
+        moveMountain_x = game.ANDROID_WIDTH - 50;
+        moveClouds_x = game.ANDROID_WIDTH;
     }
 
 
@@ -171,6 +181,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
     public void btnSignUpClicked(){
         game.setScreen(new RegisterScreen(game));
+
     }
 
     //this method is from the library of libdx from Application Adapter
@@ -181,14 +192,37 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         buttons();
     }
 
+    public void upDate(){
+        if(moveHills_x > -(game.ANDROID_WIDTH/4))
+            moveHills_x -= 5;
+        else
+            moveHills_x = game.ANDROID_WIDTH;
+
+        if(moveClouds_x > -(game.ANDROID_WIDTH/2))
+            moveClouds_x -= 5;
+        else
+            moveClouds_x = game.ANDROID_WIDTH;
+
+        if(moveMountain_x > -(game.ANDROID_WIDTH))
+            moveMountain_x -= 5;
+        else
+            moveMountain_x = game.ANDROID_WIDTH;
+
+    }
+
     @Override
     public void render(float delta){
         Gdx.gl.glClearColor(0,1,1,0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        upDate();
         game.batch.begin();
         //render the stage and draw it
-        game.batch.draw(background, 0, 0);
+        //game.batch.draw(background, 0, 0);
+        game.batch.draw(bg.getBackgroundSky(),0,0);
+        game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
+        game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
+        game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
         game.batch.end();
         stage.act(delta);
         stage.draw();
