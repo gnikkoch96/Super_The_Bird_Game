@@ -21,6 +21,11 @@ public class SuperBirdGame extends Game {
 	public static int ANDROID_WIDTH, ANDROID_HEIGHT;
 	public static int num;															// nikko: what does this do?
 
+	// collision bits (used to manage the collision detections)
+	public static final short BIRD_BIT = 2;
+	public static final short ENEMY_BIT = 4;
+	public static final short BIRDSPIT_BIT = 8;
+
 	public SuperBirdGame(){}
 	public SuperBirdGame(int width, int height){
 		this.ANDROID_WIDTH = width;

@@ -11,8 +11,9 @@ public class Animation {
     private int currFrame; // the current frame the animation is playing
     private float timeFrameUpdated; // the time in which the last frame was updated
     private float timePlayedPerFrame; // the amount of time each frame plays for
-    private boolean animationEnded; // boolean that is only true when the current animation reached its last frame
+    public boolean animationEnded; // boolean that is only true when the current animation reached its last frame
     private boolean isLoop; // boolean (if the animation loops = true, else it is false)
+
 
     // the animation class. Only initializes the arraylist and sets the current frame to 0
     // also sets animationEnded boolean to false
@@ -76,12 +77,19 @@ public class Animation {
             timeFrameUpdated = deltaTime;
         }
 
+
     }
+
+
+    public int getCurrFrameIndex(){return this.currFrame;}
     public void setAnimationEnded(boolean var){this.animationEnded = var;} // used to fix the transition issue
     public Texture getCurrImg(){return anim.get(currFrame);} // returns the current frame for the image
     public boolean isAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
     public boolean getIsLoop(){return this.isLoop;} // used to differentiate between looped animation and non-loop
+    public void setIsLoop(boolean loop){this.isLoop = false;}; // set the loop
+    public void setAnimFinished(){this.animationEnded = false; this.timeFrameUpdated = 0; currFrame = 0;};
     public void dispose(){
         anim.clear();
     }
 }
+

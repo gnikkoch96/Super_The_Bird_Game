@@ -4,10 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
+import com.procode.game.tools.Hitbox;
+
 import java.lang.Math;
 
 public class Bird implements Disposable {
@@ -15,12 +18,13 @@ public class Bird implements Disposable {
     private static long timeVar;  // used for the invincible property
 
     public enum State {IDLE, SHOOT, DAMAGED, DEAD}
-    private Animation birdAnimation;  // takes in an animation class to allow for changing of animation played and other settings
+    private Animation currentAnimation, idleAnimation, shootAnimation, damageAnimation, deadAnimation;
     private static int BirdWidth;
     private static int BirdHeight;
     private Vector2 position;
     private int healthCount;
     private Vector2 velocity;
+    private Hitbox hitbox;
 
     // state variables (used to prevent animations from interfering with each other)
     private State currentState;
@@ -30,8 +34,10 @@ public class Bird implements Disposable {
     private boolean isDead;
     private boolean isInvincible;
 
+    private Array<BirdSpit> birdSpits;
+
     public Bird(int x, int y, int birdWidth, int birdHeight) {
-        birdAnimation = new Animation();
+
         position = new Vector2(x,y);
         velocity = new Vector2(0,0);
 
@@ -44,14 +50,23 @@ public class Bird implements Disposable {
         currentState = State.IDLE;
         previousState = currentState;
 
-        // sets the current animation to the idle bird
-        birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
+        // initializes animation variables
+        idleAnimation = new Animation();
+        shootAnimation = new Animation();
+        damageAnimation = new Animation();
+        deadAnimation = new Animation();
+        idleAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
+        shootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, .15f, false);
+        damageAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 8, .45f, false);
+        deadAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 1, 7, .50f, false);
+
+        currentAnimation = idleAnimation;
+
+        birdSpits = new Array<BirdSpit>();
     }
 
     // gets the current image of the bird
-    public Texture getBirdImage(){
-        return birdAnimation.getCurrImg();
-    }
+    public Texture getBirdImage(){return currentAnimation.getCurrImg();}
 
     // gets the position of the bird
     public Vector2 getPosition(){
@@ -92,32 +107,40 @@ public class Bird implements Disposable {
 
     // updates the bird every frame
     public void update(float deltaTime){
-        if(birdAnimation.isAnimFinished() && !birdAnimation.getIsLoop()){ // plays an animation only once (in this case SHOOT, DEAD, and DAMAGED)
-            //reset to the IDLE animation
-            previousState = currentState;
+        if(currentAnimation.animationEnded == true){
             currentState = State.IDLE;
+            shootAnimation.setAnimFinished();
             switchAnimations(State.IDLE);
-            birdAnimation.setAnimationEnded(false); // fixes the transition issue
-        }else{//continue updating the frame
-            birdAnimation.updateFrame(deltaTime);
+        }else{
+            currentAnimation.updateFrame(deltaTime);
             setInvincible(false);
         }
 
+        // manages the Bird spits
+        for(BirdSpit spit : birdSpits){
+            spit.update(deltaTime);
+            if(spit.isDestroyed()){
+                birdSpits.removeValue(spit, true);
+            }
+        }
+
+        // hitbox related
+//        hitbox.update(getPosition());
     }
 
     public void switchAnimations(State playerState){
         switch(playerState){
             case IDLE:
-                birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
+                currentAnimation = idleAnimation;
                 break;
             case SHOOT:
-                birdAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, 0.1f, false);
+                currentAnimation = shootAnimation;
                 break;
             case DAMAGED:
-                birdAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 8, .45f, false);
+                currentAnimation = damageAnimation;
                 break;
             case DEAD:
-                birdAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 1, 7, .50f, false);
+                currentAnimation = deadAnimation;
                 break;
         }
     }
@@ -127,7 +150,7 @@ public class Bird implements Disposable {
         currentState = State.SHOOT;
 
         if(previousState != State.SHOOT){ // to allow the shoot animation to properly display before shooting again
-            switchAnimations(State.SHOOT);
+             switchAnimations(State.SHOOT);
         }
     }
 
@@ -174,7 +197,11 @@ public class Bird implements Disposable {
 
     @Override
     public void dispose() {
-        birdAnimation.dispose();
+        currentAnimation.dispose();
+        deadAnimation.dispose();
+        idleAnimation.dispose();
+        shootAnimation.dispose();
+        damageAnimation.dispose();
     }
 
 
