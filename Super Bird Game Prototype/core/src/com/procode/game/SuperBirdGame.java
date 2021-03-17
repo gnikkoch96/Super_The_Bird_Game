@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.procode.game.scenes.HUD;
 import com.procode.game.screens.LoginScreen;
 import com.procode.game.screens.PlayScreen;
+import com.procode.game.screens.SplashScreen;
 import com.procode.game.sprites.Bird;
 
 public class SuperBirdGame extends Game {
@@ -35,7 +36,7 @@ public class SuperBirdGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		this.setScreen(new LoginScreen(this));
+		this.setScreen(new SplashScreen(this));
 	}
 
 	@Override
