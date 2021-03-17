@@ -1,6 +1,5 @@
 package com.procode.game.tools;
 
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 
 public class Hitbox {
