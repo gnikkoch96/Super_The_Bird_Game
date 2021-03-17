@@ -25,6 +25,7 @@ public class Gamepad {
         touchSensitivity = game.ANDROID_HEIGHT / 60;
         buttonSize = game.ANDROID_HEIGHT / 10;
 
+        // buttons on game screen for up/down/left/right and attack
         upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", "screen icons//pressed up button.png", buttonSize, buttonSize);
         downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", "screen icons//pressed down button.png", buttonSize, buttonSize);
         leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", "screen icons//pressed left button.png", buttonSize, buttonSize);
@@ -32,7 +33,8 @@ public class Gamepad {
 
         attack = ImageFunctions.resizeImageButton("screen icons//shoot button.png", "screen icons//pressed shoot button.png", buttonSize * 2, buttonSize * 2);
 
-        // add listeners
+
+        // add listeners to each button for their touch detection
         upArrow.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -115,6 +117,7 @@ public class Gamepad {
     }
 
     // adds or subtracts the amount depending on the axis
+    // called when a button is pressed
     private void buttonPressed(float movement, boolean isYAxis){
         if (isYAxis){
             y = movement;
@@ -127,6 +130,7 @@ public class Gamepad {
     }
 
     // called when button is released
+    // resets values of inputs to 0 (because not being pressed)
     public void buttonReleased(boolean isYAxis){
         if (isYAxis){
             y = 0;
@@ -136,10 +140,12 @@ public class Gamepad {
         }
     }
 
+    // returns the detected inputs
     public Vector2 getButtonInputs() {
         return new Vector2(x, y);
     }
 
+    // disposes all variables and images when no longer in use
     public void dispose(){
         x = 0;
         y = 0;
