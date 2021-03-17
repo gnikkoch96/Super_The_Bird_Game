@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Pool;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
@@ -34,7 +35,14 @@ public class Bird implements Disposable {
     private boolean isDead;
     private boolean isInvincible;
 
-    private Array<BirdSpit> birdSpits;
+    // bird spit stuff
+    private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // array containing active bird spits
+    private final Pool<BirdSpit> spitPool = new Pool<BirdSpit>(){ // spit pool
+        @Override
+        protected BirdSpit newObject() {
+            return new BirdSpit();
+        }
+    };
 
     public Bird(int x, int y, int birdWidth, int birdHeight) {
 
@@ -56,13 +64,11 @@ public class Bird implements Disposable {
         damageAnimation = new Animation();
         deadAnimation = new Animation();
         idleAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
-        shootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, .15f, false);
+        shootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, .1f, false);
         damageAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 8, .45f, false);
         deadAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 1, 7, .50f, false);
 
         currentAnimation = idleAnimation;
-
-        birdSpits = new Array<BirdSpit>();
     }
 
     // gets the current image of the bird
@@ -108,24 +114,17 @@ public class Bird implements Disposable {
     // updates the bird every frame
     public void update(float deltaTime){
         if(currentAnimation.animationEnded == true){
-            currentState = State.IDLE;
             shootAnimation.setAnimFinished();
             switchAnimations(State.IDLE);
+            currentState = State.IDLE;
+
         }else{
             currentAnimation.updateFrame(deltaTime);
             setInvincible(false);
         }
 
-        // manages the Bird spits
-        for(BirdSpit spit : birdSpits){
-            spit.update(deltaTime);
-            if(spit.isDestroyed()){
-                birdSpits.removeValue(spit, true);
-            }
-        }
 
         // hitbox related
-//        hitbox.update(getPosition());
     }
 
     public void switchAnimations(State playerState){
@@ -151,6 +150,11 @@ public class Bird implements Disposable {
 
         if(previousState != State.SHOOT){ // to allow the shoot animation to properly display before shooting again
              switchAnimations(State.SHOOT);
+
+             // spawn spit
+            BirdSpit item = spitPool.obtain();
+            item.init(this.position.x, this.position.y);
+            activeSpits.add(item);
         }
     }
 
