@@ -45,7 +45,7 @@ public class SplashScreen implements Screen {
         splashstage = new Stage(viewport,game.batch);
         splashstage.addActor(splashimage);
 
-        splashimage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.fadeIn(0.25F),Actions.delay(0.25F), Actions.fadeOut(1F)));
+        splashimage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.fadeIn(1.25F),Actions.delay(0.25F), Actions.fadeOut(1F)));
     }
 
     @Override
