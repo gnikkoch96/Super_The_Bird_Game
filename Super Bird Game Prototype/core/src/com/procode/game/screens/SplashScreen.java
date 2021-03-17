@@ -62,7 +62,7 @@ public class SplashScreen implements Screen {
 
         nextPage += delta;
 
-        if(nextPage > 1.2){
+        if(nextPage > 1.8){
             game.setScreen(new LoginScreen(game));
         }
 
