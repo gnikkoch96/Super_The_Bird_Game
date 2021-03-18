@@ -57,13 +57,13 @@ public class PlayScreen implements Screen {
 
     public void handleInput(float dt){
         //--TEST--//
-        if(Gdx.input.isTouched()){
-//            player.damagedBird(hud);
-        }
+
 
     }
 
     public void update(float dt){
+//        handleInput(dt);
+
         // bird movement
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
@@ -91,6 +91,11 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
         game.batch.draw(background, 0, 0);
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            player.shoot();
+        }
+        player.renderBullets(game.batch);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         game.batch.end();
@@ -99,10 +104,8 @@ public class PlayScreen implements Screen {
         //add buttons to screen
         hud.stage.draw();
 
-        // spit rendering
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
 
-        }
+
     }
 
     @Override
