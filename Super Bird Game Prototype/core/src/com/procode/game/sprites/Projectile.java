@@ -2,12 +2,13 @@ package com.procode.game.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 
-public class Projectile implements Pool.Poolable{
+public class Projectile implements Pool.Poolable {
     protected int projectileWidth;
     protected int projectileHeight;
     protected float velocity; // only apply on x-axis
@@ -16,7 +17,7 @@ public class Projectile implements Pool.Poolable{
     protected Hitbox hitbox;
     protected Vector2 position;
     protected boolean alive;  // checks to see if the bullet is still on screen or hasn't hit an object
-    protected boolean collided; // used to play the finishing animation of the spit
+    protected boolean collided; // used to play the finishing animation of the spit (Nikko: Might remove this as we can just use the isHit() from Hitbox.class)
 
     // single lined methods
     public void madeContact(){

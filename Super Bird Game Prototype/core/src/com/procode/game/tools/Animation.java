@@ -89,7 +89,9 @@ public class Animation {
     public void setIsLoop(boolean loop){this.isLoop = false;}; // set the loop
     public void setAnimFinished(){this.animationEnded = false; this.timeFrameUpdated = 0; currFrame = 0;};
     public void dispose(){
-        anim.clear();
+        for(Texture texture : anim){
+            texture.dispose();
+        }
     }
 }
 

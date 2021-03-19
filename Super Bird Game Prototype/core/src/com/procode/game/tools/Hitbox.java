@@ -8,6 +8,9 @@ public class Hitbox {
     public int width, height;
     public Vector2 topleft, topright, botleft, botright; // coordinates of corners
 
+    //--Test--//
+    public int hitboxBit;
+
     public Hitbox(Vector2 currentPos, int w, int h) {
         position = currentPos;
         width = w;

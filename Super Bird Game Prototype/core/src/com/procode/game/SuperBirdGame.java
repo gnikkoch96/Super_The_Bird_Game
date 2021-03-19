@@ -3,6 +3,8 @@ package com.procode.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,6 +28,11 @@ public class SuperBirdGame extends Game {
 	public static final short ENEMY_BIT = 4;
 	public static final short BIRDSPIT_BIT = 8;
 
+	/* WARNING Using AssetManager in a static way can cause issues, especially on Android.
+	Instead you may want to pass around Assetmanager to those the classes that need it.
+	We will use it in the static context to save time for now. */
+	public static AssetManager manager;
+
 	public SuperBirdGame(){}
 	public SuperBirdGame(int width, int height){
 		this.ANDROID_WIDTH = width;
@@ -37,7 +44,14 @@ public class SuperBirdGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+
+		// asset manager stuff
+		manager = new AssetManager();
+		manager.load("audio/sound/spit.wav", Sound.class);
+		manager.finishLoading();
+
 		this.setScreen(new LoginScreen(this));
+
 	}
 
 	@Override

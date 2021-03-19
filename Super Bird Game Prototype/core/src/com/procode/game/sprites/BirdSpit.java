@@ -3,12 +3,13 @@ package com.procode.game.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 import com.procode.game.tools.ImageFunctions;
 
-public class BirdSpit extends Projectile {
+public class BirdSpit extends Projectile implements Disposable {
     // animations
     private static Texture projectileImage; // this will be the image that floats until a contact has been made
     private static Animation collisionAnimation; // the animation will be when the spit animation is done since we want the spit to stay in its first form until a contact is made
@@ -31,9 +32,11 @@ public class BirdSpit extends Projectile {
         }
 
         hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
+        hitbox.hitboxBit = SuperBirdGame.BIRDSPIT_BIT;
     }
 
-    public void init(float x, float y){ // sets the spit
+    // sets the spit initial values
+    public void init(float x, float y){
         this.position.set(x, y);
         this.alive = true;
     }
@@ -42,26 +45,28 @@ public class BirdSpit extends Projectile {
         // update spit position
         this.position.x += velocity;
 
-        if(isOutOfScreen())
-            alive = false;
+        // update hitbox location
+        hitbox.update(this.position);
 
-//        if(collided) { // play the ending of spit animation once it has been set to destroyed
-//            if(spitAnimationFinished.getCurrFrameIndex() <= 2)
-//                spitAnimationFinished.updateFrame(dt);
-//            else {
-//                collided = false;
-//                destroyed = true;
-//                spitAnimationFinished.dispose(); //--Nikko: Not sure how this will work, will need to test it out--//
-//            }
-//        }else{ // play the spit texture
-//
+//        //--TEST--//
+//        if(hitbox.isHit()){ // if it makes contact with another hitbox, then the collision animation is played
+//            alive = false;
+//            collisionAnimation.updateFrame(dt);
 //        }
+
+        if(isOutOfScreen()) // removes the spit if it exits the screen
+            alive = false;
     }
 
     public void render(SpriteBatch batch){
-        // doesn't need to begin or end batch as this code will be called while the spritebatch of PlayScreen.class already started the begin()
+        //--Nikko: doesn't need to begin or end batch as this code will be called while the spritebatch of PlayScreen.class already started the begin()
         batch.draw(projectileImage, this.position.x + (Bird.getBirdWidth()/2), this.position.y + (Bird.getBirdHeight()/3));
     }
 
 
+    @Override
+    public void dispose() {
+        projectileImage.dispose();
+        collisionAnimation.dispose();
+    }
 }
