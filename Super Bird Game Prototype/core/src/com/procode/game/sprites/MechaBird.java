@@ -116,7 +116,7 @@ public class MechaBird extends Enemy {
                 // so the destination is the same y axis and a position in the screen
                 // (will be randomized somewhat to allow for diversity)
                 currDestination.y = super.position.y;
-                currDestination.x = (int) (SuperBirdGame.ANDROID_WIDTH - (((Math.random() * 3) + 3) * super.enemyWidth));
+                currDestination.x = (int) (SuperBirdGame.ANDROID_WIDTH - ((Math.random() * 3) * super.enemyWidth));
 
             case ATTACK:
                 // will search for the type of attack, if dash, to the end of the screen,
@@ -124,7 +124,7 @@ public class MechaBird extends Enemy {
                 // if shoot, then move up and down for a set period of time
                 if (attackPattern.get(currAttackInList) == 0){ // dash
                     currDestination.y = super.getEnemyPosition().y;
-                    currDestination.x = -SuperBirdGame.ANDROID_WIDTH - super.enemyWidth;
+                    currDestination.x = - super.enemyWidth;
                 }
 
                 else if (attackPattern.get(currAttackInList) == 1){ // spin
@@ -250,9 +250,25 @@ public class MechaBird extends Enemy {
     public void spawn(){
 
         isDisposed = false;
-        super.setEnemyInitialPosition();
+        setEnemyInitialPosition();
         super.changeState(State.IDLE, -1);
     }
+
+
+
+    //sets the enemy position
+    public void setEnemyInitialPosition(){
+        position.x = (int) (SuperBirdGame.ANDROID_WIDTH + ((Math.random() * 3) * enemyWidth));
+        position.y = (int) (((Math.random() * 5) * SuperBirdGame.ANDROID_HEIGHT / 2) + 1);
+    }
+
+
+
+    public Vector2 getMechaPos(){
+        return super.position;
+    }
+
+
 
     // disposes all data
     public void dispose(){

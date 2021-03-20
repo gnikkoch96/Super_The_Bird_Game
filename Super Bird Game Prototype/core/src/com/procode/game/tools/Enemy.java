@@ -107,14 +107,6 @@ public class Enemy implements Disposable {
 
 
 
-    //sets the enemy position
-    public void setEnemyInitialPosition(){
-        position.x = (int) (SuperBirdGame.ANDROID_WIDTH + ((Math.random() * 5) * enemyWidth));
-        position.y = (int) (Math.random() * SuperBirdGame.ANDROID_HEIGHT);
-    }
-
-
-
     public float getEnemySpeed(){
         return enemySpeed;
     }

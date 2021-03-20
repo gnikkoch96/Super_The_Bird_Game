@@ -13,6 +13,7 @@ import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
+import com.procode.game.sprites.MechaBird;
 import com.procode.game.tools.EnemySpawner;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
@@ -70,7 +71,7 @@ public class PlayScreen implements Screen {
 
         gamepad = new Gamepad(game);
 
-        int maxEnemies = 10;
+        int maxEnemies = 1;
         float spawnFrequency = 1.5f;
         spawner = new EnemySpawner(maxEnemies, spawnFrequency);
     }
@@ -142,7 +143,7 @@ public class PlayScreen implements Screen {
         if (spawner.enemies.size() > 0) {
             for (int i = 0; i < spawner.enemies.size(); i++) {
 
-                game.batch.draw(spawner.enemies.get(i).getEnemyImage(), spawner.enemies.get(i).getEnemyPosition().x, spawner.enemies.get(i).getEnemyPosition().y);
+                game.batch.draw(((MechaBird)spawner.enemies.get(i)).getMechaBirdImage(), ((MechaBird)spawner.enemies.get(i)).getMechaPos().x, ((MechaBird)spawner.enemies.get(i)).getMechaPos().y);
             }
         }
     }

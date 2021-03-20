@@ -49,6 +49,7 @@ public class EnemySpawner {
                     int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
                     float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 60;
                     MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
+                    mecha.setEnemyInitialPosition();
                     enemies.add(mecha);
                 }
 
