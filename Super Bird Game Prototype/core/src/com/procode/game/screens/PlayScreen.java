@@ -13,6 +13,7 @@ import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
+import com.procode.game.sprites.EnemyDummy;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
@@ -34,8 +35,9 @@ public class PlayScreen implements Screen {
     private final int GAME_PAUSE = 1; // pause the game
     //Sprites
     public static Bird player;
+    public static EnemyDummy enemy;
     private Background bg;
-    private int moveHills_x, moveMountain_x, moveClouds_x;
+    private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -55,13 +57,14 @@ public class PlayScreen implements Screen {
         moveHills_x = game.ANDROID_WIDTH;
         moveMountain_x = game.ANDROID_WIDTH;
         moveClouds_x = game.ANDROID_WIDTH;
-
+        enemySpeed = game.ANDROID_WIDTH;
         //start the state with game
         state = GAME_PLAY;
         //Creating Sprites
         int birdWidth = SuperBirdGame.ANDROID_WIDTH/5;
         int birdHeight = SuperBirdGame.ANDROID_HEIGHT /5;
         player = new Bird(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth, birdHeight);
+        enemy = new EnemyDummy(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2,birdWidth,birdHeight);
 
         //Setting Properties
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
@@ -83,6 +86,7 @@ public class PlayScreen implements Screen {
     public void update(float dt){
         state = HUD.state;
         player.update(dt);
+        enemy.update(dt);
         // bird movement
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
@@ -112,6 +116,11 @@ public class PlayScreen implements Screen {
             moveMountain_x -= 3;
         else
             moveMountain_x = game.ANDROID_WIDTH;
+
+        if(enemySpeed > -(game.ANDROID_WIDTH))
+            enemySpeed -=15;
+        else
+            enemySpeed = game.ANDROID_WIDTH;
     }
 
     @Override
@@ -128,6 +137,7 @@ public class PlayScreen implements Screen {
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+        game.batch.draw(enemy.getBirdImage(),enemySpeed, 500);
     }
 
     @Override
