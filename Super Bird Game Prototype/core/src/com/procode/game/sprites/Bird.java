@@ -114,12 +114,12 @@ public class Bird implements Disposable {
         }*/
         if(currentState == State.SHOOT) {
             shootAnimation.updateFrame(deltaTime);
-            System.out.println("I'm here");
+
             //shootAnimation.setAnimationEnded(false);
             if(shootAnimation.animationEnded == true) {
                 currentState = State.IDLE;
                 shootAnimation.setAnimFinished();
-                System.out.println("Ended");
+
             }
         }else if(currentState == State.IDLE) {
             birdAnimation.updateFrame(deltaTime);

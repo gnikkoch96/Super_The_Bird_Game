@@ -13,6 +13,7 @@ import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
+import com.procode.game.tools.EnemySpawner;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
@@ -36,6 +37,7 @@ public class PlayScreen implements Screen {
     public static Bird player;
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x;
+    private EnemySpawner spawner;
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -67,6 +69,10 @@ public class PlayScreen implements Screen {
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 
         gamepad = new Gamepad(game);
+
+        int maxEnemies = 10;
+        float spawnFrequency = 1.5f;
+        spawner = new EnemySpawner(maxEnemies, spawnFrequency);
     }
 
     public World getWorld(){return this.world;}
@@ -89,6 +95,9 @@ public class PlayScreen implements Screen {
         setBackgroundMovement();
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
                                                       //Updates the Animation Frame
+
+        // updates the spawner
+        spawner.updateSpawner(dt);
 
         /*if(hud.getShootStateBtn() == true) {
            // System.out.println("Player Shoot");
@@ -128,6 +137,14 @@ public class PlayScreen implements Screen {
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+
+        // draws all enemies on screen
+        if (spawner.enemies.size() > 0) {
+            for (int i = 0; i < spawner.enemies.size(); i++) {
+
+                game.batch.draw(spawner.enemies.get(i).getEnemyImage(), spawner.enemies.get(i).getEnemyPosition().x, spawner.enemies.get(i).getEnemyPosition().y);
+            }
+        }
     }
 
     @Override

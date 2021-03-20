@@ -58,7 +58,6 @@ public class HUD implements Disposable {
     public int bird_State = 0;
     private final int GAME_PLAY = 0, GAME_PAUSE = 1;
 
-    public Gamepad gamepad;
 
     public HUD(SuperBirdGame game){
         score = 0;
