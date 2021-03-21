@@ -226,7 +226,6 @@ public class Bird implements Disposable {
 
     }
 
-
     public void setBirdSize(int width, int height){
         //repositions the bird of the new size makes it go out of bounds
         if((position.x + width) > SuperBirdGame.ANDROID_WIDTH) {
