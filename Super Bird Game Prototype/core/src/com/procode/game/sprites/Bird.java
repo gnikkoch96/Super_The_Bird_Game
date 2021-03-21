@@ -34,7 +34,6 @@ public class Bird implements Disposable {
     private boolean isInvincible;
 
     // bird properties
-    private int healthCount;
     private Vector2 position;
     private int healthCount;
     private Vector2 velocity;
@@ -55,16 +54,8 @@ public class Bird implements Disposable {
     };
 
 
-    // state variables (used to prevent animations from interfering with each other)
-    private State currentState;
-    private State previousState;
-
-    // boolean vars for bird (used in the damagedBird())
-    private boolean isDead;
-    private boolean isInvincible;
-
     public Bird(int x, int y, int birdWidth, int birdHeight) {
-        birdAnimation = new Animation();
+        currentAnimation = new Animation();
         shootAnimation = new Animation();
         position = new Vector2(x,y);
         velocity = new Vector2(0,0);
@@ -131,17 +122,6 @@ public class Bird implements Disposable {
 
     // returns the status of the invincibility of the bird (used to re-enable the bird's collision detection)
     public boolean getInvincible() {return this.isInvincible;}
-
-    //sets the new position of the bird
-    public void movePosition(float newX, float newY){
-
-        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.ANDROID_WIDTH) {
-            position.x += (newX);
-        }
-        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.ANDROID_HEIGHT) {
-            position.y += newY;
-        }
-    }
 
     // can only set invincible after a certain period of time has passed
     public void setInvincible(boolean isInvincible){

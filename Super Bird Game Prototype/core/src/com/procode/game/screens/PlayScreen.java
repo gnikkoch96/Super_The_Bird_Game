@@ -49,7 +49,6 @@ public class PlayScreen implements Screen {
         gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
         System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
         hud = new HUD(game);
-        world = new World(new Vector2(0,0), true); // vector2 represents the gravity values
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
         currTime = 0;
 
@@ -74,15 +73,6 @@ public class PlayScreen implements Screen {
 
         gamepad = new Gamepad(game);
     }
-
-    public World getWorld(){return this.world;}
-
-    public void handleInput(float dt){
-        //--TEST--//
-        if(Gdx.input.isTouched()){
-//            player.damagedBird(hud);
-//            player.shoot();
-        }
 
     public void handleInput(float dt){
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
