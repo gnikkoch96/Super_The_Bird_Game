@@ -56,10 +56,14 @@ public class PlayScreen implements Screen {
 
 
     public void handleInput(float dt){
-
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            player.damageBird(hud);
+        }
     }
 
     public void update(float dt){
+        handleInput(dt);
+
         // bird movement
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);

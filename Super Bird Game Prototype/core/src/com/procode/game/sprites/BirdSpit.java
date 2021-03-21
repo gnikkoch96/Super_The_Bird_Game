@@ -55,7 +55,7 @@ public class BirdSpit extends Projectile implements Disposable {
 //        }
 
         if(isOutOfScreen()) // removes the spit if it exits the screen
-            alive = false;
+            this.alive = false;
     }
 
     public void render(SpriteBatch batch){

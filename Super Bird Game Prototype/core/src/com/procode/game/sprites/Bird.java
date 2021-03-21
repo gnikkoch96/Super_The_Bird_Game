@@ -41,6 +41,8 @@ public class Bird implements Disposable {
 
     // audio related
     private Sound spitSound;
+    private Sound damageSoundNormal, damageSoundLoud;
+    private Sound deadSound, deadSoundSad;
 
     // projectiles (w/ memory management)
     private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
@@ -64,11 +66,15 @@ public class Bird implements Disposable {
         BirdHeight = (int) birdHeight;
         hitbox = new Hitbox(this.position, BirdWidth, BirdHeight);
         hitbox.hitboxBit = SuperBirdGame.BIRD_BIT;
-
-        spitSound = SuperBirdGame.manager.get("audio/sound/spit.wav", Sound.class);
-
         currentState = State.IDLE;
         previousState = currentState;
+
+        // getting sounds
+        spitSound = SuperBirdGame.manager.get("audio/sound/spit.wav", Sound.class);
+        damageSoundNormal = SuperBirdGame.manager.get("audio/sound/bird_scream_normal.wav", Sound.class);
+        damageSoundLoud = SuperBirdGame.manager.get("audio/sound/bird_scream_loud.wav", Sound.class);
+        deadSound = SuperBirdGame.manager.get("audio/sound/bird_dead.wav", Sound.class);
+        deadSoundSad = SuperBirdGame.manager.get("audio/sound/bird_dead_sad.wav", Sound.class);
 
         // initializes animation variables (memory management)
         idleAnimation = new Animation();
@@ -130,11 +136,11 @@ public class Bird implements Disposable {
         // update hitbox
         hitbox.update(this.position);
 
-        if(currentAnimation.animationEnded == true){
-            shootAnimation.setAnimFinished();
+        if(currentAnimation.animationEnded == true){ // transitions from non-idle animation back to idle
+            currentAnimation.setAnimFinished();
             switchAnimations(State.IDLE);
             currentState = State.IDLE;
-        }else{
+        }else{ // updates the idle animation
             currentAnimation.updateFrame(deltaTime);
             setInvincible(false);
         }
@@ -166,7 +172,7 @@ public class Bird implements Disposable {
         previousState = currentState;
         currentState = State.SHOOT;
 
-        if(previousState != State.SHOOT){ // to allow the shoot animation to properly display before shooting again
+        if(previousState != State.SHOOT && previousState == State.IDLE){ // to prevent overlapping of animations
             // plays sound
             spitSound.play();
 
@@ -191,6 +197,8 @@ public class Bird implements Disposable {
 
         switchAnimations(State.DEAD);
 
+        deadSoundSad.play();
+
         // set the screen to game over screen
 
     }
@@ -200,6 +208,12 @@ public class Bird implements Disposable {
         currentState = State.DAMAGED;
 
         if(!this.isInvincible){ // bird can only get damaged when it isn't invincible
+            if(this.healthCount == 2){
+//                damageSoundLoud.play();
+            }else{
+                damageSoundNormal.play();
+            }
+
             timeVar = System.currentTimeMillis(); // update time var to current time value every time the bird gets damaged
             setInvincible(true);
             switchAnimations(State.DAMAGED);
@@ -232,6 +246,11 @@ public class Bird implements Disposable {
         idleAnimation.dispose();
         shootAnimation.dispose();
         damageAnimation.dispose();
+        spitSound.dispose();
+        deadSound.dispose();
+        deadSoundSad.dispose();
+        damageSoundNormal.dispose();
+        damageSoundLoud.dispose();
     }
 
 
