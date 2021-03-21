@@ -56,6 +56,7 @@ public class HomeScreen implements Screen {
 
         buttonSize = game.ANDROID_HEIGHT / 5;
 
+
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -134,7 +135,7 @@ public class HomeScreen implements Screen {
         btnPlay.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new PlayScreen(game));
+                game.setScreen(new LoadingScreen(game));
             }
         });
     }
@@ -203,5 +204,6 @@ public class HomeScreen implements Screen {
         background.dispose();
         game.dispose();
         stage.dispose();
+        bird.dispose();
     }
 }

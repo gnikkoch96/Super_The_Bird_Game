@@ -9,8 +9,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.procode.game.scenes.HUD;
+import com.procode.game.screens.LoadingScreen;
 import com.procode.game.screens.LoginScreen;
 import com.procode.game.screens.PlayScreen;
+import com.procode.game.screens.SplashScreen;
 import com.procode.game.sprites.Bird;
 
 public class SuperBirdGame extends Game {

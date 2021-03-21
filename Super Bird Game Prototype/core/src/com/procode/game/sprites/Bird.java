@@ -36,6 +36,7 @@ public class Bird implements Disposable {
     // bird properties
     private int healthCount;
     private Vector2 position;
+    private int healthCount;
     private Vector2 velocity;
     private Hitbox hitbox;
 
@@ -54,7 +55,17 @@ public class Bird implements Disposable {
     };
 
 
+    // state variables (used to prevent animations from interfering with each other)
+    private State currentState;
+    private State previousState;
+
+    // boolean vars for bird (used in the damagedBird())
+    private boolean isDead;
+    private boolean isInvincible;
+
     public Bird(int x, int y, int birdWidth, int birdHeight) {
+        birdAnimation = new Animation();
+        shootAnimation = new Animation();
         position = new Vector2(x,y);
         velocity = new Vector2(0,0);
 
@@ -100,6 +111,18 @@ public class Bird implements Disposable {
     //--Nikko: I used this to locate where the spits should be rendering from
     public static int getBirdWidth(){return BirdWidth;}
     public static int getBirdHeight(){return BirdHeight;}
+
+    //sets the new position of the bird
+    public void movePosition(float newX, float newY){
+
+        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.ANDROID_WIDTH) {
+            position.x += (newX);
+        }
+        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.ANDROID_HEIGHT) {
+            position.y += newY;
+        }
+    }
+
 
     // gets the width and height of the bird
     public Vector2 getBirdSize(){
