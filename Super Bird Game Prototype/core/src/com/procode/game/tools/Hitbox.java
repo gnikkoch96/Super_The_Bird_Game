@@ -8,9 +8,6 @@ public class Hitbox {
     public int width, height;
     public Vector2 topleft, topright, botleft, botright; // coordinates of corners
 
-    //--Test--//
-    public int hitboxBit;
-
     public Hitbox(Vector2 currentPos, int w, int h) {
         position = currentPos;
         width = w;
@@ -41,5 +38,9 @@ public class Hitbox {
         topright = new Vector2(position.x+width, position.y-height);
         botleft = new Vector2(position.x, position.y);
         botright = new Vector2(position.x+width, position.y);
+    }
+
+    public String toString() {
+        return "(" + position.x + ", " + position.y + ")";
     }
 }

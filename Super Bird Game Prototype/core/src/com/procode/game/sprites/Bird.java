@@ -37,7 +37,7 @@ public class Bird implements Disposable {
     private Vector2 position;
     private int healthCount;
     private Vector2 velocity;
-    private Hitbox hitbox;
+    public Hitbox hitbox;
 
     // audio related
     private Sound spitSound;
@@ -67,7 +67,6 @@ public class Bird implements Disposable {
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
         hitbox = new Hitbox(this.position, BirdWidth, BirdHeight);
-        hitbox.hitboxBit = SuperBirdGame.BIRD_BIT;
         currentState = State.IDLE;
         previousState = currentState;
 

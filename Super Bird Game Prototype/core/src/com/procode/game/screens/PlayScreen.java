@@ -83,7 +83,10 @@ public class PlayScreen implements Screen {
     public void update(float dt){
         state = HUD.state;
         player.update(dt);
+        //System.out.println("Player position: " + player.hitbox);
         enemy.update(dt);
+        System.out.println("Enemy position: " + enemy.hitbox);
+        //player.hitbox.isHit(enemy.hitbox);
         // bird movement
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
