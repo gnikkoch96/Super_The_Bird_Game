@@ -36,7 +36,6 @@ public class HUD implements Disposable {
     public Stage stage;
     private Viewport viewport;
 
-
     // values that get updated dynamically
     private static Integer score;
 
@@ -51,6 +50,9 @@ public class HUD implements Disposable {
     private BitmapFont font;
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
+    public static int state;
+    public int bird_State = 0;
+    private final int GAME_PLAY = 0, GAME_PAUSE = 1;
 
     public HUD(SuperBirdGame game){
         score = 0;
@@ -80,6 +82,10 @@ public class HUD implements Disposable {
         style.font = font;
 
 
+        //set the state of the game and the bird
+        state = GAME_PLAY;
+        bird_State = 0;
+
         // displays
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5));
         pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.ANDROID_WIDTH/35, SuperBirdGame.ANDROID_HEIGHT/25));
@@ -95,6 +101,8 @@ public class HUD implements Disposable {
         leftTable.add(scoreLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.09));
         scoreTable.add(scoreBackground).padBottom((float) (SuperBirdGame.ANDROID_HEIGHT/1.1));
 
+        //set the sate of the PauseBtn
+        setPauseBtn();
 
         // gamepad
         gamepad = new Gamepad(game);
@@ -111,6 +119,22 @@ public class HUD implements Disposable {
 
 
 
+    }
+    public void setPauseBtn(){
+        pauseBtn.addListener(new ClickListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if(state == GAME_PLAY)
+                    state = GAME_PAUSE;
+                else if(state == GAME_PAUSE)
+                    state = GAME_PLAY;
+                return true;
+            }
+        });
+    }
+
+    public boolean getShootStateBtn(){
+        return gamepad.shoot;
     }
 
     //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
