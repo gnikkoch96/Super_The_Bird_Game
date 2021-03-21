@@ -17,12 +17,17 @@ public class EnemySpawner {
     private float lastTimeUpdated = 0;
     private float spawnFrequency; // amount of time passed before a new enemy is spawned if limit isnt reached
 
+    private MechaBird mecha;
 
 
     public EnemySpawner(int maxEnemiesOnScreen, float spawnFrequency){
         this.maxEnemiesOnScreen = maxEnemiesOnScreen;
         this.spawnFrequency = spawnFrequency;
         enemies = new ArrayList<Enemy>();
+        int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
+        int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
+        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 60;
+        mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
     }
 
 
@@ -31,6 +36,7 @@ public class EnemySpawner {
     // deleting enemies when any one of them has been removed
     public void updateSpawner(float deltaTime){
 
+        mecha.updateMechaBird(deltaTime);
 
         if (lastTimeUpdated + spawnFrequency < deltaTime){
 
@@ -45,10 +51,7 @@ public class EnemySpawner {
                 // spawns a mecha bird
                 if (randomEnemy == 0){
 
-                    int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
-                    int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
-                    float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 60;
-                    MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
+
                     mecha.setEnemyInitialPosition();
                     enemies.add(mecha);
                 }
@@ -56,27 +59,28 @@ public class EnemySpawner {
                 // spawns a drone
                 else {
                     // -------------------spawn a drone ----------------------
+
                 }
             }
         }
 
         // updates enemy animations
-        if (enemies.size() > 0){
+       /* if (enemies.size() > 0){
             for (int i =0; i < enemies.size(); i++){
                 if (enemies.get(i) instanceof MechaBird){
                     ((MechaBird) enemies.get(i)).updateMechaBird(deltaTime);
                 }
                 // should be an else if for drone types
             }
-        }
+        }*/
 
         // now delete any enemies that have been disposed
-        int iterator = 0;
+        /*int iterator = 0;
         if (enemies.size() > 0){
             while (iterator < enemies.size()){
                 if (enemies.get(iterator) instanceof MechaBird){
                     if (((MechaBird) enemies.get(iterator)).isDisposed == true){
-                        enemies.remove(iterator);
+                        //enemies.remove(iterator);
                     }
                     else{
                         iterator ++;
@@ -85,6 +89,6 @@ public class EnemySpawner {
 
                 // need one for drone too
             }
-        }
+        }*/
     }
 }

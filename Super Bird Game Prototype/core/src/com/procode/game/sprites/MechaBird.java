@@ -116,7 +116,7 @@ public class MechaBird extends Enemy {
                 // so the destination is the same y axis and a position in the screen
                 // (will be randomized somewhat to allow for diversity)
                 currDestination.y = super.position.y;
-                currDestination.x = (int) (SuperBirdGame.ANDROID_WIDTH - ((Math.random() * 3) * super.enemyWidth));
+                currDestination.x = (int) (SuperBirdGame.ANDROID_WIDTH - ((Math.random() * super.enemyWidth) + super.enemyWidth));
 
             case ATTACK:
                 // will search for the type of attack, if dash, to the end of the screen,
@@ -153,7 +153,8 @@ public class MechaBird extends Enemy {
 
                 // checks to see if the position of the mecha bird has reached the destination
                 if (super.position.x > currDestination.x){
-                    updatePos();
+                    //updatePos();
+                    setDestination();
                 }
                 else{
 
@@ -188,7 +189,7 @@ public class MechaBird extends Enemy {
                                     super.changeState(State.DEAD, -1);
                                 }
                                 else{
-                                    updatePos();
+                                    //updatePos();
                                 }
 
                             }
@@ -215,7 +216,7 @@ public class MechaBird extends Enemy {
 
 
     // is called to update the position to the current destination
-    public void updatePos(){
+    /*public void updatePos(){
 
         // checks if the position is close enough to the destination to stop moving
         if (Math.abs(currDestination.x - super.position.x ) > super.enemySpeed * 1.5){
@@ -234,7 +235,7 @@ public class MechaBird extends Enemy {
                 position.y -= super.enemySpeed;
             }
         }
-    }
+    }*/
 
 
 

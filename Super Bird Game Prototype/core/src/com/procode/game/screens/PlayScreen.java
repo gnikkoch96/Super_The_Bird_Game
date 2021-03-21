@@ -37,8 +37,9 @@ public class PlayScreen implements Screen {
     //Sprites
     public static Bird player;
     private Background bg;
-    private int moveHills_x, moveMountain_x, moveClouds_x;
+    private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
     private EnemySpawner spawner;
+    private double random, random1;
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -58,6 +59,7 @@ public class PlayScreen implements Screen {
         moveHills_x = game.ANDROID_WIDTH;
         moveMountain_x = game.ANDROID_WIDTH;
         moveClouds_x = game.ANDROID_WIDTH;
+        enemySpeed = game.ANDROID_WIDTH;
 
         //start the state with game
         state = GAME_PLAY;
@@ -74,6 +76,10 @@ public class PlayScreen implements Screen {
         int maxEnemies = 1;
         float spawnFrequency = 1.5f;
         spawner = new EnemySpawner(maxEnemies, spawnFrequency);
+
+
+        random = (Math.random() * 100) + 3;
+        random1 = (Math.random() * 400) + 5;
     }
 
     public World getWorld(){return this.world;}
@@ -94,6 +100,7 @@ public class PlayScreen implements Screen {
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
         setBackgroundMovement();
+        setEnemyPosition();
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
                                                       //Updates the Animation Frame
 
@@ -105,6 +112,15 @@ public class PlayScreen implements Screen {
             player.shoot();
         }*/
 
+    }
+
+    public void setEnemyPosition(){
+        if(enemySpeed > -(game.ANDROID_WIDTH/4)){
+            enemySpeed -= 15;
+        }else{
+            enemySpeed = game.ANDROID_WIDTH;
+            randomSpawn();
+        }
     }
 
     public void setBackgroundMovement(){
@@ -122,6 +138,7 @@ public class PlayScreen implements Screen {
             moveMountain_x -= 3;
         else
             moveMountain_x = game.ANDROID_WIDTH;
+
     }
 
     @Override
@@ -143,11 +160,20 @@ public class PlayScreen implements Screen {
         if (spawner.enemies.size() > 0) {
             for (int i = 0; i < spawner.enemies.size(); i++) {
 
-                game.batch.draw(((MechaBird)spawner.enemies.get(i)).getMechaBirdImage(), ((MechaBird)spawner.enemies.get(i)).getMechaPos().x, ((MechaBird)spawner.enemies.get(i)).getMechaPos().y);
+                game.batch.draw(((MechaBird)spawner.enemies.get(i)).getMechaBirdImage(),enemySpeed, (int)random);
+                game.batch.draw(((MechaBird)spawner.enemies.get(i)).getMechaBirdImage(),enemySpeed, (int)random1);
+
             }
+            System.out.println("I am here inside the enemy");
         }
+        System.out.println("Enemy size = " + spawner.enemies.size());
+
     }
 
+    public void randomSpawn(){
+        random = (Math.random() * game.ANDROID_HEIGHT) + 3;
+        random1 = (Math.random() * game.ANDROID_HEIGHT) + 5;
+    }
     @Override
     public void render(float delta) {
 
