@@ -1,10 +1,7 @@
 package com.procode.game;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.widget.Toast;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -16,20 +13,24 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
+public class Database {
 
-public class Test extends ApplicationAdapter {
+    private final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    private final HashMap<String,Object> userdataMap = new HashMap<>();
 
-    public Test(){
-        onCreate();
+    private String username, password, email, birthday, fullName;
+
+    public Database(String username, String password, String email, String birthday, String fullname){
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.fullName = fullname;
+        this.birthday = birthday;
     }
 
-    public void onCreate(){
-        //database reference
-        final DatabaseReference rootRef;
-
-        rootRef = FirebaseDatabase.getInstance().getReference();
-
-        final HashMap<String,Object> userdataMap = new HashMap<>();
+    //this class will insert the data to the database including the username, password,
+    //email, birthday and fullName
+    public void insertData(){
         userdataMap.put("username", "kev");
         userdataMap.put("password", "123");
         userdataMap.put("email", "email");
@@ -39,11 +40,14 @@ public class Test extends ApplicationAdapter {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                rootRef.child("Users").child("Maui").updateChildren(userdataMap).
+                rootRef.child("Users").child(username).updateChildren(userdataMap).
                         addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-
+                                if(task.isSuccessful()){
+                                   // Toast
+                               }else{
+                               }
                             }
                         });
 //                rootRef.child("Users").child(username).updateChildren(userdataMap)
