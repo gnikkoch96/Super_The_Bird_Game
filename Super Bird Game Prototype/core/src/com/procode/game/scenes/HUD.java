@@ -101,8 +101,7 @@ public class HUD implements Disposable {
         leftTable.add(scoreLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.09));
         scoreTable.add(scoreBackground).padBottom((float) (SuperBirdGame.ANDROID_HEIGHT/1.1));
 
-        //set the sate of the PauseBtn
-        setPauseBtn();
+
 
         // gamepad
         gamepad = new Gamepad(game);
@@ -120,22 +119,7 @@ public class HUD implements Disposable {
 
 
     }
-    public void setPauseBtn(){
-        pauseBtn.addListener(new ClickListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if(state == GAME_PLAY)
-                    state = GAME_PAUSE;
-                else if(state == GAME_PAUSE)
-                    state = GAME_PLAY;
-                return true;
-            }
-        });
-    }
 
-    public boolean getShootStateBtn(){
-        return gamepad.shoot;
-    }
 
     //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){
