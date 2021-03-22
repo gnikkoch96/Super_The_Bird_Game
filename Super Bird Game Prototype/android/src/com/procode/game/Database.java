@@ -31,11 +31,11 @@ public class Database {
     //this class will insert the data to the database including the username, password,
     //email, birthday and fullName
     public void insertData(){
-        userdataMap.put("username", "kev");
-        userdataMap.put("password", "123");
-        userdataMap.put("email", "email");
-        userdataMap.put("name", "fullname");
-        userdataMap.put("birthday", "birthday");
+        userdataMap.put("username", this.username);
+        userdataMap.put("password", this.password);
+        userdataMap.put("email", this.email);
+        userdataMap.put("name", this.fullName);
+        userdataMap.put("birthday", this.birthday);
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -50,18 +50,6 @@ public class Database {
                                }
                             }
                         });
-//                rootRef.child("Users").child(username).updateChildren(userdataMap)
-//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            //check if the acount is created
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                if(task.isSuccessful()){
-//
-//                                }else{
-//
-//                                }
-//                            }
-//                        });
             }
 
             @Override
@@ -69,5 +57,10 @@ public class Database {
 
             }
         });
+    }
+
+
+    public void upDateUsername(String username){
+
     }
 }
