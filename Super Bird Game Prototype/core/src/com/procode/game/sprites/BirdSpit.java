@@ -32,7 +32,7 @@ public class BirdSpit extends Projectile implements Disposable {
         }
 
         hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
-        hitbox.hitboxBit = SuperBirdGame.BIRDSPIT_BIT;
+        //hitbox.hitboxBit = SuperBirdGame.BIRDSPIT_BIT;
     }
 
     // sets the spit initial values

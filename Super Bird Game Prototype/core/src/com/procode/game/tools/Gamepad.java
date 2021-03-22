@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.scenes.HUD;
 import com.procode.game.screens.PlayScreen;
 
 public class Gamepad {
@@ -18,6 +19,7 @@ public class Gamepad {
     public ImageButton leftArrow;
     public ImageButton rightArrow;
     public ImageButton shootButton;
+    public boolean shoot = false;
 
 
 
@@ -99,12 +101,14 @@ public class Gamepad {
         shootButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                PlayScreen.player.shoot();
+                if(HUD.state == 0)
+                    PlayScreen.player.shoot();
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                shoot = false;
             }
         });
 
