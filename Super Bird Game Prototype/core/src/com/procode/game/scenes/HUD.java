@@ -38,7 +38,7 @@ import javax.swing.JTextField;
 public class HUD implements Disposable {
     public Stage stage;
     private Viewport viewport;
-    private Table table;
+
     
     // values that get updated dynamically
     private static Integer score;
@@ -86,10 +86,6 @@ public class HUD implements Disposable {
 
 
         style.font = font;
-
-        //set the state of the game and the bird
-        state = GAME_PLAY;
-        bird_State = 0;
 
         //set the state of the game and the bird
         state = GAME_PLAY;

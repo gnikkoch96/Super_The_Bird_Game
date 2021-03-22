@@ -80,12 +80,14 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt){
+        handleInput(dt);
+
         state = HUD.state;
         player.update(dt);
-        //System.out.println("Player position: " + player.hitbox);
         enemy.update(dt);
-        //System.out.println("Enemy position: " + enemy.hitbox);
         player.hitbox.isHit(enemy.hitbox);
+
+
         // bird movement
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
@@ -149,10 +151,9 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
         game.batch.draw(background, 0, 0);
-        player.renderBullets(game.batch);
+
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
-
 
         switch(state){
             case GAME_PLAY:
@@ -163,6 +164,7 @@ public class PlayScreen implements Screen {
                 break;
 
         }
+        player.renderBullets(game.batch);
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 
