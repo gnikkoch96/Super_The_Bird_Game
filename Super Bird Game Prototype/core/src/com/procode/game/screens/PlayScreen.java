@@ -153,6 +153,7 @@ public class PlayScreen implements Screen {
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
 
+
         switch(state){
             case GAME_PLAY:
                 play(delta);

@@ -102,7 +102,7 @@ public class Gamepad {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if(HUD.state == 0)
-               PlayScreen.player.shoot();
+                    PlayScreen.player.shoot();
                 return true;
             }
 

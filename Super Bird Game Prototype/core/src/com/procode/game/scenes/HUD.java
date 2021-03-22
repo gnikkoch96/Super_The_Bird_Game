@@ -149,23 +149,8 @@ public class HUD implements Disposable {
     public boolean getShootStateBtn(){
         return gamepad.shoot;
     }
-    public void setPauseBtn(){
-        pauseBtn.addListener(new ClickListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if(state == GAME_PLAY)
-                    state = GAME_PAUSE;
-                else if(state == GAME_PAUSE)
-                    state = GAME_PLAY;
-                return true;
-            }
-        });
-    }
 
-    public boolean getShootStateBtn(){
-        return gamepad.shoot;
-    }
-    
+
 
     //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){
