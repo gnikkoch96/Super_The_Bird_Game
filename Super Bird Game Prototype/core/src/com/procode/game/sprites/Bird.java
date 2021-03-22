@@ -34,10 +34,10 @@ public class Bird implements Disposable {
     private boolean isInvincible;
 
     // bird properties
-    private int healthCount;
     private Vector2 position;
+    private int healthCount;
     private Vector2 velocity;
-    private Hitbox hitbox;
+    public Hitbox hitbox;
 
     // audio related
     private Sound spitSound;
@@ -55,6 +55,8 @@ public class Bird implements Disposable {
 
 
     public Bird(int x, int y, int birdWidth, int birdHeight) {
+        currentAnimation = new Animation();
+        shootAnimation = new Animation();
         position = new Vector2(x,y);
         velocity = new Vector2(0,0);
 
@@ -65,7 +67,6 @@ public class Bird implements Disposable {
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
         hitbox = new Hitbox(this.position, BirdWidth, BirdHeight);
-        hitbox.hitboxBit = SuperBirdGame.BIRD_BIT;
         currentState = State.IDLE;
         previousState = currentState;
 
@@ -101,14 +102,6 @@ public class Bird implements Disposable {
     public static int getBirdWidth(){return BirdWidth;}
     public static int getBirdHeight(){return BirdHeight;}
 
-    // gets the width and height of the bird
-    public Vector2 getBirdSize(){
-        return new Vector2(BirdWidth, BirdHeight);
-    }
-
-    // returns the status of the invincibility of the bird (used to re-enable the bird's collision detection)
-    public boolean getInvincible() {return this.isInvincible;}
-
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
 
@@ -119,6 +112,15 @@ public class Bird implements Disposable {
             position.y += newY;
         }
     }
+
+
+    // gets the width and height of the bird
+    public Vector2 getBirdSize(){
+        return new Vector2(BirdWidth, BirdHeight);
+    }
+
+    // returns the status of the invincibility of the bird (used to re-enable the bird's collision detection)
+    public boolean getInvincible() {return this.isInvincible;}
 
     // can only set invincible after a certain period of time has passed
     public void setInvincible(boolean isInvincible){
@@ -225,7 +227,6 @@ public class Bird implements Disposable {
         }
 
     }
-
 
     public void setBirdSize(int width, int height){
         //repositions the bird of the new size makes it go out of bounds
