@@ -1,5 +1,7 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -12,6 +14,7 @@ public class Gamepad {
     private float x; //values for position to add to the bird
     private float y;
     private float touchSensitivity; // the amount the bird moves per second the button is held
+    private InputProcessor inputProcessor;
 
     public int buttonSize; // because image is a circle only need the radius so size is a single variable
     public ImageButton upArrow; // need to be images to add on click listeners does not work well with textures
