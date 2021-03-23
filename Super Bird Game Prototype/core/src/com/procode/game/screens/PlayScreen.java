@@ -63,7 +63,7 @@ public class PlayScreen implements Screen {
         // testing only -----------------------------------------------
         int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
         int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
-        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 80;
+        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 70;
         enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
     }
 
@@ -148,7 +148,7 @@ public class PlayScreen implements Screen {
 //        }
 
         //testing only---------------------------------------
-        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState());
+        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState() + "   currentSpeed: " + enemyBird.getEnemySpeed());
         game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
     }
 

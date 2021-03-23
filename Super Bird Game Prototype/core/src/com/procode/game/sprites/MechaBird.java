@@ -78,13 +78,13 @@ public class MechaBird extends Enemy {
         attackPattern = new ArrayList<Integer>();
         setAttackPattern();
 
-        // now do the following: move the mecha bird until it reaches the screen visually, (is on the screen)
-        // idle animation will play until this position is reached.
-        setDestination();
-
         // start the attacking patterns then once it leaves the screen, or touches the bird, destroy it. (in update func)
         // remaining done in the update function
         setEnemyInitialPosition();
+
+        // now do the following: move the mecha bird until it reaches the screen visually, (is on the screen)
+        // idle animation will play until this position is reached.
+        setDestination();
     }
 
 
@@ -195,7 +195,7 @@ public class MechaBird extends Enemy {
                     // if the animation is complete then dash, also increase speed
                     if (super.currAttackState == 0 && super.enemyAttacks.get(currAttackState).isAnimFinished() == true) {
                         super.changeState(State.ATTACK, 1);
-                        super.setEnemySpeed(super.getEnemySpeed() * 5);
+                        super.setEnemySpeed(super.enemySpeed * 5);
                     }
 
                     // now dash to the end or until you hit the bird
@@ -243,10 +243,10 @@ public class MechaBird extends Enemy {
         }
         if (Math.abs(currDestination.y - super.position.y ) > .5){
             if (currDestination.y > super.position.y){
-                position.x += super.enemySpeed;
+                position.y += super.enemySpeed;
             }
             else{
-                position.x -= super.enemySpeed;
+                position.y -= super.enemySpeed;
             }
         }
     }
