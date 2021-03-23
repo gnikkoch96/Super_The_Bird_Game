@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Bird;
+import com.procode.game.sprites.MechaBird;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
@@ -29,13 +30,10 @@ public class PlayScreen implements Screen {
 
     //Sprites
     public static Bird player;
-<<<<<<< Updated upstream
-=======
-    private Background bg;
+    //private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x;
     //private EnemySpawner spawner;
     private MechaBird enemyBird;
->>>>>>> Stashed changes
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -57,8 +55,6 @@ public class PlayScreen implements Screen {
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 
         gamepad = new Gamepad(game);
-<<<<<<< Updated upstream
-=======
 
         int maxEnemies = 1;
         float spawnFrequency = 1.5f;
@@ -69,7 +65,6 @@ public class PlayScreen implements Screen {
         int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
         float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 80;
         enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
->>>>>>> Stashed changes
     }
 
     public World getWorld(){return this.world;}
@@ -87,11 +82,9 @@ public class PlayScreen implements Screen {
         // bird movement
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
-<<<<<<< Updated upstream
 
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
         player.update(dt);                                              //Updates the Animation Frame
-=======
         setBackgroundMovement();
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
                                                       //Updates the Animation Frame
@@ -127,7 +120,6 @@ public class PlayScreen implements Screen {
             moveMountain_x -= 3;
         else
             moveMountain_x = game.ANDROID_WIDTH;
->>>>>>> Stashed changes
     }
 
     @Override
@@ -135,17 +127,15 @@ public class PlayScreen implements Screen {
 
     }
 
-<<<<<<< Updated upstream
-=======
     public void play(float delta){
-        currTime += delta;
-        update(currTime);
+        //currTime += delta;
+        //update(currTime);
         //game.batch.draw(background, 0, 0);
-        game.batch.draw(bg.getBackgroundSky(),0,0);
-        game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
-        game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
-        game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+        //game.batch.draw(bg.getBackgroundSky(),0,0);
+        //game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
+        //game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
+        //game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
+        //game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         // draws all enemies on screen
         // first only test the mechabird
@@ -162,7 +152,6 @@ public class PlayScreen implements Screen {
         game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
     }
 
->>>>>>> Stashed changes
     @Override
     public void render(float delta) {
         currTime += delta;
@@ -178,11 +167,13 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+        play(delta);
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 
         //add buttons to screen
         hud.stage.draw();
+
     }
 
     @Override

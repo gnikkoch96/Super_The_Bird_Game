@@ -175,7 +175,7 @@ public class MechaBird extends Enemy {
 
                     // need to first charge up until the animation is complete
                     // if the animation is complete then dash, also increase speed
-                    if (super.currAttackState == 0 && super.enemyAttacks.get(currAttackState).animationEnded == true) {
+                    if (super.currAttackState == 0 && super.enemyAttacks.get(currAttackState).isAnimFinished() == true) {
                         super.changeState(State.ATTACK, 1);
                         super.setEnemySpeed(super.getEnemySpeed() * 4);
                     }
@@ -204,7 +204,7 @@ public class MechaBird extends Enemy {
             // if the animation is finished, destroy it
         }
         else if (super.currentState == State.DEAD){
-                if (super.deadEnemy.animationEnded == true){
+                if (super.deadEnemy.isAnimFinished() == true){
                     isDisposed = true;
                     attackPattern.clear();
                 }
