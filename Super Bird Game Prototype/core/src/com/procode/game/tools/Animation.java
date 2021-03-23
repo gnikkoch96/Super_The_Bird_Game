@@ -84,4 +84,8 @@ public class Animation {
     public void dispose(){
         anim.clear();
     }
+    public void replayLoop(){
+        currFrame = 0;
+        animationEnded = false;
+    } // if you want to play an animation again, it will reset the animation
 }

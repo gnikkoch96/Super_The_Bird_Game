@@ -29,6 +29,13 @@ public class PlayScreen implements Screen {
 
     //Sprites
     public static Bird player;
+<<<<<<< Updated upstream
+=======
+    private Background bg;
+    private int moveHills_x, moveMountain_x, moveClouds_x;
+    //private EnemySpawner spawner;
+    private MechaBird enemyBird;
+>>>>>>> Stashed changes
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -50,6 +57,19 @@ public class PlayScreen implements Screen {
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 
         gamepad = new Gamepad(game);
+<<<<<<< Updated upstream
+=======
+
+        int maxEnemies = 1;
+        float spawnFrequency = 1.5f;
+        //spawner = new EnemySpawner(maxEnemies, spawnFrequency);
+
+        // testing only -----------------------------------------------
+        int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
+        int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
+        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 80;
+        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
+>>>>>>> Stashed changes
     }
 
     public World getWorld(){return this.world;}
@@ -67,9 +87,47 @@ public class PlayScreen implements Screen {
         // bird movement
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
+<<<<<<< Updated upstream
 
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
         player.update(dt);                                              //Updates the Animation Frame
+=======
+        setBackgroundMovement();
+        gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
+                                                      //Updates the Animation Frame
+
+        // updates the spawner
+        //spawner.updateSpawner(dt);
+
+        /*if(hud.getShootStateBtn() == true) {
+           // System.out.println("Player Shoot");
+            player.shoot();
+        }*/
+
+        //testing only-----------------------------------------------
+        enemyBird.updateMechaBird(dt);
+
+        if(enemyBird.isDisposed == true){
+            enemyBird.reSpawn();
+        }
+    }
+
+    public void setBackgroundMovement(){
+        if(moveHills_x > -(game.ANDROID_WIDTH/4))
+            moveHills_x -= 3;
+        else
+            moveHills_x = game.ANDROID_WIDTH;
+
+        if(moveClouds_x > -(game.ANDROID_WIDTH/2))
+            moveClouds_x -= 3;
+        else
+            moveClouds_x = game.ANDROID_WIDTH;
+
+        if(moveMountain_x > -(game.ANDROID_WIDTH))
+            moveMountain_x -= 3;
+        else
+            moveMountain_x = game.ANDROID_WIDTH;
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -77,6 +135,34 @@ public class PlayScreen implements Screen {
 
     }
 
+<<<<<<< Updated upstream
+=======
+    public void play(float delta){
+        currTime += delta;
+        update(currTime);
+        //game.batch.draw(background, 0, 0);
+        game.batch.draw(bg.getBackgroundSky(),0,0);
+        game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
+        game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
+        game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
+        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+
+        // draws all enemies on screen
+        // first only test the mechabird
+
+//        if (spawner.enemies.size() > 0) {
+//            for (int i = 0; i < spawner.enemies.size(); i++) {
+//
+//                game.batch.draw(((MechaBird)spawner.enemies.get(i)).getMechaBirdImage(), ((MechaBird)spawner.enemies.get(i)).getMechaPos().x, ((MechaBird)spawner.enemies.get(i)).getMechaPos().y);
+//            }
+//        }
+
+        //testing only---------------------------------------
+        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState());
+        game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
+    }
+
+>>>>>>> Stashed changes
     @Override
     public void render(float delta) {
         currTime += delta;
