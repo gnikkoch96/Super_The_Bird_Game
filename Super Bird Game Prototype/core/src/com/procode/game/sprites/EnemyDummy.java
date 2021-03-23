@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
+import com.procode.game.tools.Hitbox;
 
 public class EnemyDummy implements Disposable {
     private static final long INVINCIBLE_DURATION = 2000; // value can be changed
@@ -18,6 +19,8 @@ public class EnemyDummy implements Disposable {
     private Vector2 position;
     private int healthCount;
     private Vector2 velocity;
+
+    public Hitbox hitbox;
 
     // state variables (used to prevent animations from interfering with each other)
     private State currentState;
@@ -40,6 +43,7 @@ public class EnemyDummy implements Disposable {
         healthCount = 6;
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
+        hitbox = new Hitbox(this.position, BirdWidth, BirdHeight);
         currentState = State.SPIN;
 
 
@@ -102,6 +106,7 @@ public class EnemyDummy implements Disposable {
 
     // updates the bird every frame
     public void update(float deltaTime){
+        hitbox.update(this.position);
        /*if(birdAnimation.isAnimFinished() && !birdAnimation.getIsLoop()){ // plays an animation only once (in this case SHOOT, DEAD, and DAMAGED)
             //reset to the IDLE animation
             previousState = currentState;

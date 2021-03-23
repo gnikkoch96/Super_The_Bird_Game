@@ -38,9 +38,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     private SuperBirdGame game;
     private Stage stage;
     private TextButton btnLogin, btnSignUp;
-    private TextField userName;
+    private TextField userName, password;
     private TextureAtlas atlas;
-    private TextField password;
     private Table table;
     private BitmapFont font;
     private FreeTypeFontGenerator fontGenerator;

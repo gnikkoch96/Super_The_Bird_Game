@@ -49,7 +49,7 @@ public class Gamepad {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonReleased(true);
+               buttonReleased(true);
             }
         });
 
@@ -102,7 +102,7 @@ public class Gamepad {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if(HUD.state == 0)
-               PlayScreen.player.shoot();
+                    PlayScreen.player.shoot();
                 return true;
             }
 
@@ -141,7 +141,6 @@ public class Gamepad {
             x = 0;
         }
     }
-
 
     public Vector2 getButtonInputs() {
         return new Vector2(x, y);

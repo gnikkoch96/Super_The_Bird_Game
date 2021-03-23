@@ -38,8 +38,8 @@ import javax.swing.JTextField;
 public class HUD implements Disposable {
     public Stage stage;
     private Viewport viewport;
-    private Table table;
 
+    
     // values that get updated dynamically
     private static Integer score;
 
@@ -69,13 +69,9 @@ public class HUD implements Disposable {
         leftTable.left();
         leftTable.setFillParent(true);
 
-        Table rightTable = new Table();
-        rightTable.right();
-        rightTable.setFillParent(true);
-
-        Table bottomTable = new Table();
-        bottomTable.bottom();
-        bottomTable.setFillParent(true);
+        Table scoreTable = new Table();
+        scoreTable.bottom();
+        scoreTable.setFillParent(true);
 
         // for changing the fonts when displaying score
         Skin skin = new Skin(Gdx.files.internal("comic-ui.json"));
@@ -114,7 +110,6 @@ public class HUD implements Disposable {
         leftTable.add(scoreTextLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.1)).padLeft((int) (SuperBirdGame.ANDROID_WIDTH/4.5));
         leftTable.add(scoreLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.1));
         scoreBackground.setPosition((SuperBirdGame.ANDROID_HEIGHT/2),  (SuperBirdGame.ANDROID_WIDTH/2));
-
         //set the sate of the PauseBtn
         setPauseBtn();
 
@@ -129,11 +124,9 @@ public class HUD implements Disposable {
         stage.addActor(gamepad.shootButton);
 
         //Display table to screen
-        stage.addActor(scoreBackground);
+        stage.addActor(scoreTable);
         stage.addActor(leftTable);
-        stage.addActor(rightTable);
     }
-
     public void setPauseBtn(){
         pauseBtn.addListener(new ClickListener(){
             @Override
@@ -150,6 +143,7 @@ public class HUD implements Disposable {
     public boolean getShootStateBtn(){
         return gamepad.shoot;
     }
+
 
 
     //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
