@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -92,6 +93,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         moveHills_x = game.ANDROID_WIDTH;
         moveMountain_x = game.ANDROID_WIDTH - 50;
         moveClouds_x = game.ANDROID_WIDTH;
+
+
     }
 
 

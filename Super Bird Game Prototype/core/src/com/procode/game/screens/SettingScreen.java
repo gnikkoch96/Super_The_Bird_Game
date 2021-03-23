@@ -2,49 +2,44 @@ package com.procode.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.ImageFunctions;
 
-import java.util.HashMap;
+public class SettingScreen implements Screen {
 
-
-public class ConfirmationScreen implements Screen {
     private SuperBirdGame game;
     private Stage stage;
     private Viewport viewport;
-    private Skin skin;
-    private Texture background;
     private BitmapFont font;
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
-    private Button btnContinue;
+    private Texture background;
 
-    public ConfirmationScreen(SuperBirdGame g, HashMap<String,String> map){
+    public SettingScreen(SuperBirdGame g){
         game = g;
         viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
-        //atlas = new TextureAtlas("font-export.fnt");
-        skin = new Skin(Gdx.files.internal("comic-ui.json"));
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 
         Skin skin = new Skin(Gdx.files.internal("comic-ui.json"));
         Container<Table> tableContainer = new Container<Table>();
@@ -53,7 +48,7 @@ public class ConfirmationScreen implements Screen {
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = 100;
+        fontParameter.size = 120;
 
         font = fontGenerator.generateFont(fontParameter);
 
@@ -73,56 +68,69 @@ public class ConfirmationScreen implements Screen {
         labelStyle = skin.get(Label.LabelStyle.class);
         labelStyle.font = font;
 
-        Label topLabel = new Label("Congratulations your account has been verified", labelStyle);
-
+        Label topLabel = new Label("Username:            Highest Scores:           Time:", labelStyle);
         topLabel.setAlignment(Align.center);
-        Label name = new Label("Name: " + map.remove("name"),labelStyle);
-        name.setAlignment(Align.center);
-        Label username = new Label("Username: " + map.remove("username"), labelStyle);
+        Label name = new Label("1. Max            300",labelStyle);
+        //name.setAlignment(Align.center);
+        Label username = new Label("Username: " , labelStyle);
         username.setAlignment(Align.center);
-        Label password = new Label("Password: " + map.remove("password"), labelStyle);
+        Label password = new Label("Password: " , labelStyle);
         password.setAlignment(Align.center);
-        Label email = new Label("Email: " + map.remove("email"), labelStyle);
+        Label email = new Label("Email: " , labelStyle);
         email.setAlignment(Align.center);
-
+        Label num = new Label("Num: ", labelStyle);
+        num.setAlignment(Align.center);
+        Label num1 = new Label("Num1: ", labelStyle);
+        num.setAlignment(Align.center);
+        Label num2 = new Label("Num2: ", labelStyle);
+        num.setAlignment(Align.center);
         TextButton.TextButtonStyle style_button = skin.get(TextButton.TextButtonStyle.class);
         fontParameter.size = 90;
         font = fontGenerator.generateFont(fontParameter);
         style_button.font = font;
 
-        btnContinue = new TextButton("Back", style_button);
+        Slider slider = new Slider(0,100,1,false,skin);
+        slider.setSize(viewport.getScreenWidth()/2,viewport.getScreenHeight()/2);
+        slider.setPosition(viewport.getScreenWidth()/4,(viewport.getScreenHeight()/4) - 500);
 
-        btnContinue.setSize(200,200);
-        btnContinue.setVisible(true);
+
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGB565);
+        bgPixmap.setColor(Color.WHITE);
+        bgPixmap.fill();
+        TextureRegionDrawable textureRegionDrawableBg = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
 
         Table buttonTable = new Table(skin);
-
+        table.setBackground(textureRegionDrawableBg);
+        table.setSize(500,500);
         table.row().colspan(3).expandX().fillX();
-        table.add(topLabel).fillX();
+        table.add(topLabel);
         table.row().colspan(3).expandX().fillX();
         table.add(name).fillX();
         table.row().colspan(3).expandX().fillX();
         table.add(username).fillX();
         table.row().colspan(3).expandX().fillX();
-        table.add(password).fillX();
+        table.add(password);
+
+        table.add(slider).expand(false,false);
         table.row().colspan(3).expandX().fillX();
-        table.add(email).fillX();
-        table.row().expandX().fillX();
-        table.add(buttonTable).colspan(3);
-        buttonTable.pad(16);
-        buttonTable.row().fillX().expandX();
-        buttonTable.add(btnContinue).width(cw/3.0f);
+        table.add(num1).fillX();
+        table.row().colspan(3).expandX().fillX();
+        table.add(num2).fillX();
+
+
 
 
         tableContainer.setActor(table);
-        stage.addActor(tableContainer);
 
-        btnContinue.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new LoginScreen(game));
-            }
-        });
+
+
+        ScrollPane scroll = new ScrollPane(tableContainer, skin.get(ScrollPane.ScrollPaneStyle.class));
+        scroll.setTransform(true);
+        scroll.setPosition(0,viewport.getScreenHeight()/2);
+        scroll.setSize(viewport.getScreenWidth(),viewport.getScreenHeight()/2);
+        //stage.addActor(scroll);
+        stage.addActor(slider);
+
     }
 
     @Override
@@ -137,7 +145,7 @@ public class ConfirmationScreen implements Screen {
 
         game.batch.begin();
         //render the stage and draw it
-        game.batch.draw(background, 0, 0);
+
         game.batch.end();
 
         //validateAccount();
@@ -167,8 +175,8 @@ public class ConfirmationScreen implements Screen {
 
     @Override
     public void dispose() {
-        skin.dispose();
-        background.dispose();
+        //skin.dispose();
+       // background.dispose();
         game.dispose();
         stage.dispose();
     }
