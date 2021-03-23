@@ -18,6 +18,10 @@ public class MechaBird extends Enemy {
     private Vector2 finalDestination; // used for cases where the mecha bird has a current destination to reach and another one after that
     public boolean isDisposed ; // turns true when the enemy is completely destroyed
 
+    // we want to pause an action before doing the next one
+    public float timeActionPaused;
+    public float pausedDuration;
+
 
 
     public MechaBird(int mechaBWidth, int mechaBHeight, float speed){
@@ -25,6 +29,8 @@ public class MechaBird extends Enemy {
         // super class of enemy that spawns outside of the screen view
         super(mechaBWidth, mechaBHeight, speed);
         isDisposed = false;
+        pausedDuration = 1.5f;
+        timeActionPaused = 0;
 
         // create all the animations
         // note we do not need super for variables because they are protected, just thought
@@ -44,7 +50,7 @@ public class MechaBird extends Enemy {
         // add the attacking animations to the mecha bird
         // dashing attack animation
         Animation mechaBirdDashCharge = new Animation(); // happens when mecha bird charging up for the dash
-        mechaBirdDashCharge.setAnimation("mecha bird animations//mecha bird dash ", super.enemyWidth, super.enemyHeight, 1, 6, 1.75f, false);
+        mechaBirdDashCharge.setAnimation("mecha bird animations//mecha bird dash ", super.enemyWidth, super.enemyHeight, 1, 6, 1.2f, false);
         Animation mechaBirdDashing = new Animation(); // happens when the mecha bird is charging at the bird
         mechaBirdDashing.setAnimation("mecha bird animations//mecha bird dash ", super.enemyWidth, super.enemyHeight, 7, 8, .25f, true);
 
@@ -116,7 +122,7 @@ public class MechaBird extends Enemy {
             // so the destination is the same y axis and a position in the screen
             // (will be randomized somewhat to allow for diversity)
             currDestination.y = super.position.y;
-            currDestination.x = (int) (SuperBirdGame.ANDROID_WIDTH - (super.enemyWidth * 2));
+            currDestination.x = (int) (SuperBirdGame.ANDROID_WIDTH - ((Math.random() * super.enemyWidth * 2.3) + super.enemyWidth));
         }
         else if (super.currentState == State.ATTACK){
                 // will search for the type of attack, if dash, to the end of the screen,
@@ -155,29 +161,41 @@ public class MechaBird extends Enemy {
                 updatePos();
             } else {
 
-                // sets the next attack to a destination to move to
-                if (attackPattern.get(currAttackInList) == 0){ // dash
-                    super.changeState(State.ATTACK, 0);
+                // pause before changing to a new state
+                if(timeActionPaused == 0) {
+                    timeActionPaused = deltaTime;
+                    pausedDuration = (float) Math.random() + .5f;
                 }
-                else if (attackPattern.get(currAttackInList) == 1) { // spin
-                    super.changeState(State.ATTACK, 2);
+
+                // stop for next movement for about 1 - 2 seconds
+                if(timeActionPaused + pausedDuration < deltaTime) {
+
+                    // sets the next attack to a destination to move to
+                    if (attackPattern.get(currAttackInList) == 0) { // dash
+                        super.changeState(State.ATTACK, 0);
+                    } else if (attackPattern.get(currAttackInList) == 1) { // spin
+                        super.changeState(State.ATTACK, 2);
+                    } else { // shoot
+                        super.changeState(State.ATTACK, 5);
+                    }
+                    setDestination();
                 }
-                else{ // shoot
-                    super.changeState(State.ATTACK, 5);
-                }
-                setDestination();
+
             }
         }
         else if (super.currentState == State.ATTACK) {
 
-            // will do attack based on the animation completion and the position it is in
-            if (attackPattern.get(currAttackInList) == 0) {
+            // stop for next movement before next attack in list
+            if(timeActionPaused + pausedDuration < deltaTime) {
+
+                // will do attack based on the animation completion and the position it is in
+                if (attackPattern.get(currAttackInList) == 0) {
 
                     // need to first charge up until the animation is complete
                     // if the animation is complete then dash, also increase speed
                     if (super.currAttackState == 0 && super.enemyAttacks.get(currAttackState).isAnimFinished() == true) {
                         super.changeState(State.ATTACK, 1);
-                        super.setEnemySpeed(super.getEnemySpeed() * 4);
+                        super.setEnemySpeed(super.getEnemySpeed() * 5);
                     }
 
                     // now dash to the end or until you hit the bird
@@ -190,18 +208,16 @@ public class MechaBird extends Enemy {
                         }
 
                     }
-            }
-            // for these cases, the mecha bird will follow a directed path
-            // and move onto the next attack in the list
-            else if (attackPattern.get(currAttackInList) == 1){
+                }
+                // for these cases, the mecha bird will follow a directed path
+                // and move onto the next attack in the list
+                else if (attackPattern.get(currAttackInList) == 1) {
                     //      -----------------------make attack path logic--------------------
-            }
-             else{
+                } else {
                     //      -----------------------make attack path logic--------------------
 
+                }
             }
-
-            // if the animation is finished, destroy it
         }
         else if (super.currentState == State.DEAD){
                 if (super.deadEnemy.isAnimFinished() == true){
@@ -251,6 +267,7 @@ public class MechaBird extends Enemy {
 
         // reinitialize all values
         isDisposed = false;
+        timeActionPaused = 0;
         super.enemySpeed = super.originalSpeed;
         setEnemyInitialPosition();
         super.currAttackState = 0;
