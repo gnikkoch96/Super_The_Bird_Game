@@ -39,7 +39,7 @@ public class PlayScreen implements Screen {
         //Initializing Properties
         this.game = game;
         gameCam = new OrthographicCamera();
-        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
+        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, gameCam);
         System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
         hud = new HUD(game);
         world = new World(new Vector2(0,0), true); // vector2 represents the gravity values
