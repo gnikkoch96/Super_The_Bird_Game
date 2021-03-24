@@ -13,6 +13,7 @@ import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
+import com.procode.game.sprites.MechaBird;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
@@ -36,6 +37,7 @@ public class PlayScreen implements Screen {
     public static Bird enemy;
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
+    private MechaBird enemyBird;
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -66,6 +68,16 @@ public class PlayScreen implements Screen {
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 
         gamepad = new Gamepad(game);
+
+        int maxEnemies = 1;
+        float spawnFrequency = 1.5f;
+        //spawner = new EnemySpawner(maxEnemies, spawnFrequency);
+
+        // testing only -----------------------------------------------
+        int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
+        int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
+        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 70;
+        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
     }
 
     public void handleInput(float dt){
@@ -95,6 +107,12 @@ public class PlayScreen implements Screen {
             player.shoot();
         }*/
 
+        //testing only-----------------------------------------------
+        enemyBird.updateMechaBird(dt);
+
+        if(enemyBird.isDisposed == true){
+            enemyBird.reSpawn();
+        }
     }
 
     public void setBackgroundMovement(){
@@ -132,6 +150,9 @@ public class PlayScreen implements Screen {
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.draw(enemy.getBirdImage(),enemy.getPosition().x, enemy.getPosition().y);
 
+        //testing only---------------------------------------
+        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState() + "   currentSpeed: " + enemyBird.getEnemySpeed());
+        game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
     }
 
     @Override
@@ -165,6 +186,7 @@ public class PlayScreen implements Screen {
 
         //add buttons to screen
         hud.stage.draw();
+
     }
 
     @Override
