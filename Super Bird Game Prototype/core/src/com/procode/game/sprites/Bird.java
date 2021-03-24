@@ -53,7 +53,6 @@ public class Bird implements Disposable {
         }
     };
 
-
     public Bird(int x, int y, int birdWidth, int birdHeight) {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
@@ -90,6 +89,9 @@ public class Bird implements Disposable {
         currentAnimation = idleAnimation; // idle is always the first state the bird is in
     }
 
+    // gets each of the activeSpits
+    public Array<BirdSpit> getActiveSpits(){ return this.activeSpits;}
+
     // gets the current image of the bird
     public Texture getBirdImage(){return currentAnimation.getCurrImg();}
 
@@ -102,6 +104,14 @@ public class Bird implements Disposable {
     public static int getBirdWidth(){return BirdWidth;}
     public static int getBirdHeight(){return BirdHeight;}
 
+    // gets the width and height of the bird
+    public Vector2 getBirdSize(){
+        return new Vector2(BirdWidth, BirdHeight);
+    }
+
+    // returns the status of the invincibility of the bird (used to re-enable the bird's collision detection)
+    public boolean getInvincible() {return this.isInvincible;}
+
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
 
@@ -112,15 +122,6 @@ public class Bird implements Disposable {
             position.y += newY;
         }
     }
-
-
-    // gets the width and height of the bird
-    public Vector2 getBirdSize(){
-        return new Vector2(BirdWidth, BirdHeight);
-    }
-
-    // returns the status of the invincibility of the bird (used to re-enable the bird's collision detection)
-    public boolean getInvincible() {return this.isInvincible;}
 
     // can only set invincible after a certain period of time has passed
     public void setInvincible(boolean isInvincible){

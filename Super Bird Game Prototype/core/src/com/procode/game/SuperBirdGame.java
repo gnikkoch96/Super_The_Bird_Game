@@ -16,8 +16,8 @@ import com.procode.game.screens.SplashScreen;
 import com.procode.game.sprites.Bird;
 
 public class SuperBirdGame extends Game {
-	public static final int DESKTOP_WIDTH = 1920;
-	public static final int DESKTOP_HEIGHT = 1080;
+	public static final int DESKTOP_WIDTH = 1600;
+	public static final int DESKTOP_HEIGHT = 900;
 	public static final String DESKTOP_TITLE = "Super Bird Game";
 	public SpriteBatch batch;
 
@@ -54,9 +54,11 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/bird_dead_sad.wav", Sound.class);
 		manager.load("audio/sound/bird_scream_loud.wav", Sound.class);
 		manager.load("audio/sound/bird_scream_normal.wav", Sound.class);
+		manager.load("audio/sound/spitCollision.mp3", Sound.class);
 		manager.finishLoading();
 
-		this.setScreen(new SplashScreen(this));
+//		this.setScreen(new SplashScreen(this));
+		this.setScreen(new PlayScreen(this));
 
 	}
 

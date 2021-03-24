@@ -39,14 +39,17 @@ public class Projectile implements Pool.Poolable {
             return false;
     }
 
+    public Hitbox getHitbox(){ return this.hitbox;}
+
     /**
      * Callback method when the object is freed. It is automatically called by Pool.free()
      * Must reset every meaningful field of this bullet.
      */
     @Override
     public void reset() {
-        this.position.set(0,0);
-        this.alive = false;
+
+        alive = false;
+//        collided = false;
     }
 
 }

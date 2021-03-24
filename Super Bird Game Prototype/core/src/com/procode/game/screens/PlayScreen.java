@@ -3,9 +3,12 @@ package com.procode.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -19,6 +22,7 @@ import com.procode.game.sprites.Bird;
 import com.procode.game.sprites.BirdSpit;
 import com.procode.game.sprites.EnemyDummy;
 import com.procode.game.tools.Gamepad;
+import com.procode.game.tools.Hitbox;
 import com.procode.game.tools.ImageFunctions;
 
 
@@ -41,6 +45,8 @@ public class PlayScreen implements Screen {
     public static Bird enemy;
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
+
+    private Sound collisionSound;
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -67,9 +73,10 @@ public class PlayScreen implements Screen {
         player = new Bird(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth, birdHeight);
         enemy = new Bird(SuperBirdGame.ANDROID_WIDTH/2, SuperBirdGame.ANDROID_HEIGHT/2,birdWidth,birdHeight);
 
+        collisionSound = SuperBirdGame.manager.get("audio/sound/spitCollision.mp3", Sound.class);
+
         //Setting Properties
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
-
         gamepad = new Gamepad(game);
     }
 
@@ -85,21 +92,37 @@ public class PlayScreen implements Screen {
         state = HUD.state;
         player.update(dt);
         enemy.update(dt);
-        player.hitbox.isHit(enemy.hitbox);
-
+        if(player.hitbox.isHit(enemy.hitbox)){
+            Gdx.app.log("PLAYER->ENEMY", "HIT");
+            player.damageBird(hud);
+        }
+        hitDetection(dt);
 
         // bird movement
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
         setBackgroundMovement();
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
-                                                      //Updates the Animation Frame
+
 
         /*if(hud.getShootStateBtn() == true) {
            // System.out.println("Player Shoot");
             player.shoot();
         }*/
 
+    }
+
+    public void hitDetection(float dt){
+        Array<BirdSpit> activeSpits = player.getActiveSpits();
+        for(BirdSpit spit: activeSpits){
+//            debugHitbox(spit.getHitbox());
+            // check if it hits an enemy
+            if(spit.getHitbox().isHit(enemy.hitbox) && (enemy.getInvincible() == false) && spit.isAlive()){ //--Nikko: Buggy
+                Gdx.app.log("SPIT->ENEMY", "HIT");
+                enemy.damageBird(hud);
+                spit.setCollision(true);
+            }
+        }
     }
 
     public void setBackgroundMovement(){
@@ -141,7 +164,6 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
         // empties the Screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -152,10 +174,11 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0);
 
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
-        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
+        //--DEBUG--//
+        debugHitbox(player.hitbox);
+        debugHitbox(enemy.hitbox);
 
-        switch(state){
+        switch(state){ // pauses or resumes the game
             case GAME_PLAY:
                 play(delta);
                 break;
@@ -164,13 +187,29 @@ public class PlayScreen implements Screen {
                 break;
 
         }
+        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
         player.renderBullets(game.batch);
+        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 
         //add buttons to screen
         hud.stage.draw();
     }
+
+    //--DEBUG--//
+    public void debugHitbox(Hitbox hitbox){
+        gameCam.update();
+        hitbox.shapeRenderer.setProjectionMatrix(gameCam.combined);
+        hitbox.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        hitbox.shapeRenderer.setColor(Color.RED);
+        hitbox.shapeRenderer.rect(hitbox.topleft.x/5, hitbox.topleft.y/5, hitbox.botleft.x/5, hitbox.botleft.y/5);
+        hitbox.shapeRenderer.rect(hitbox.topleft.x/5, hitbox.topleft.y/5, hitbox.topright.x/5, hitbox.topright.y/5);
+        hitbox.shapeRenderer.rect(hitbox.topright.x/5, hitbox.topright.y/5, hitbox.botright.x/5, hitbox.botright.y/5);
+        hitbox.shapeRenderer.rect(hitbox.botright.x/5, hitbox.botright.y/5, hitbox.botleft.x/5, hitbox.botleft.y/5);
+        hitbox.shapeRenderer.end();
+    }
+
 
     @Override
     public void resize(int width, int height) {
@@ -180,7 +219,6 @@ public class PlayScreen implements Screen {
     @Override
     public void pause() {
         //game.batch.draw(background, 0, 0);
-
         game.batch.draw(bg.getBackgroundSky(),0,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
