@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 import com.procode.game.tools.ImageFunctions;
@@ -47,12 +46,6 @@ public class BirdSpit extends Projectile implements Disposable {
 
         // update hitbox location
         hitbox.update(this.position);
-
-//        //--TEST--//
-//        if(hitbox.isHit()){ // if it makes contact with another hitbox, then the collision animation is played
-//            alive = false;
-//            collisionAnimation.updateFrame(dt);
-//        }
 
         if(isOutOfScreen()) // removes the spit if it exits the screen
             this.alive = false;

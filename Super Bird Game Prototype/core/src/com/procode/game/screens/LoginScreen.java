@@ -30,8 +30,6 @@ import com.procode.game.SuperBirdGame;
 import com.procode.game.sprites.Background;
 import com.procode.game.tools.ImageFunctions;
 
-import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
-
 
 public class LoginScreen extends ApplicationAdapter implements Screen {
 

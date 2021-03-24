@@ -7,17 +7,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
-import com.procode.game.sprites.BirdSpit;
-import com.procode.game.sprites.EnemyDummy;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
@@ -46,7 +41,7 @@ public class PlayScreen implements Screen {
         //Initializing Properties
         this.game = game;
         gameCam = new OrthographicCamera();
-        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
+        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, gameCam);
         System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
         hud = new HUD(game);
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
