@@ -46,7 +46,7 @@ public class PlayScreen implements Screen {
         //Initializing Properties
         this.game = game;
         gameCam = new OrthographicCamera();
-        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
+        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, gameCam);
         System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
         hud = new HUD(game);
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);

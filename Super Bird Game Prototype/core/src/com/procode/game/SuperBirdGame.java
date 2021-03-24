@@ -13,6 +13,7 @@ import com.procode.game.screens.LoadingScreen;
 import com.procode.game.screens.LoginScreen;
 import com.procode.game.screens.PlayScreen;
 import com.procode.game.screens.SettingScreen;
+import com.procode.game.screens.SettingsScreen;
 import com.procode.game.screens.SplashScreen;
 import com.procode.game.sprites.Bird;
 
@@ -57,7 +58,7 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/bird_scream_normal.wav", Sound.class);
 		manager.finishLoading();
 
-		this.setScreen(new SettingScreen(this));
+		this.setScreen(new LoadingScreen(this));
 
 	}
 
