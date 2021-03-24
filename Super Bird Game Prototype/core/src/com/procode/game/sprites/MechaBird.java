@@ -50,7 +50,7 @@ public class MechaBird extends Enemy {
         // add the attacking animations to the mecha bird
         // dashing attack animation
         Animation mechaBirdDashCharge = new Animation(); // happens when mecha bird charging up for the dash
-        mechaBirdDashCharge.setAnimation("mecha bird animations//mecha bird dash ", super.enemyWidth, super.enemyHeight, 1, 6, 1.2f, false);
+        mechaBirdDashCharge.setAnimation("mecha bird animations//mecha bird dash ", super.enemyWidth, super.enemyHeight, 1, 6, .75f, false);
         Animation mechaBirdDashing = new Animation(); // happens when the mecha bird is charging at the bird
         mechaBirdDashing.setAnimation("mecha bird animations//mecha bird dash ", super.enemyWidth, super.enemyHeight, 7, 8, .25f, true);
 
@@ -122,7 +122,7 @@ public class MechaBird extends Enemy {
             // so the destination is the same y axis and a position in the screen
             // (will be randomized somewhat to allow for diversity)
             currDestination.y = super.position.y;
-            currDestination.x = (int) (SuperBirdGame.ANDROID_WIDTH - ((Math.random() * super.enemyWidth * 2.3) + super.enemyWidth));
+            currDestination.x = (int) (SuperBirdGame.ANDROID_WIDTH - ((Math.random() * super.enemyWidth * 1.5) + super.enemyWidth));
         }
         else if (super.currentState == State.ATTACK){
                 // will search for the type of attack, if dash, to the end of the screen,
@@ -164,7 +164,7 @@ public class MechaBird extends Enemy {
                 // pause before changing to a new state
                 if(timeActionPaused == 0) {
                     timeActionPaused = deltaTime;
-                    pausedDuration = (float) Math.random() + .5f;
+                    pausedDuration = (float) Math.random() + .2f;
                 }
 
                 // stop for next movement for about 1 - 2 seconds
@@ -201,7 +201,7 @@ public class MechaBird extends Enemy {
                     // now dash to the end or until you hit the bird
                     else if (super.currAttackState == 1) {
 
-                        if (super.position.x < currDestination.x) {
+                        if (super.position.x <= currDestination.x) {
                             super.changeState(State.DEAD, -1);
                         } else {
                             updatePos();
