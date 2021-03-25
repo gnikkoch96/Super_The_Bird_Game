@@ -16,7 +16,6 @@ public class MechaBird extends Enemy {
     private int currAttackInList;
     public Vector2 currDestination; // if the mecha bird needs to reach a destination, this is
     private Vector2 finalDestination; // used for cases where the mecha bird has a current destination to reach and another one after that
-    public boolean isDisposed ; // turns true when the enemy is completely destroyed
 
     // we want to pause an action before doing the next one
     public float timeActionPaused;
@@ -28,7 +27,6 @@ public class MechaBird extends Enemy {
 
         // super class of enemy that spawns outside of the screen view
         super(mechaBWidth, mechaBHeight, speed);
-        isDisposed = false;
         pausedDuration = 1.5f;
         timeActionPaused = 0;
 
@@ -221,7 +219,6 @@ public class MechaBird extends Enemy {
         }
         else if (super.currentState == State.DEAD){
                 if (super.deadEnemy.isAnimFinished() == true){
-                    isDisposed = true;
                     attackPattern.clear();
                 }
         }
@@ -266,7 +263,6 @@ public class MechaBird extends Enemy {
     public void reSpawn(){
 
         // reinitialize all values
-        isDisposed = false;
         timeActionPaused = 0;
         super.enemySpeed = super.originalSpeed;
         setEnemyInitialPosition();
@@ -302,5 +298,7 @@ public class MechaBird extends Enemy {
     public void dispose(){
         super.dispose();
         attackPattern.clear();
+        currDestination = null;
+        finalDestination = null;
     }
 }

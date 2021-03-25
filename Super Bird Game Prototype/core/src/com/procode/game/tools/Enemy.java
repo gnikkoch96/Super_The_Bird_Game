@@ -149,10 +149,10 @@ public class Enemy implements Disposable {
 
     @Override
     public void dispose() {
-        enemyAttacks = null;
-        idleEnemy = null;
-        damagedEnemy = null;
-        deadEnemy = null;
+        enemyAttacks.clear();
+        idleEnemy.dispose();
+        damagedEnemy.dispose();
+        deadEnemy.dispose();
         position = null;
         enemyWidth = 0;
         enemyHeight = 0;
