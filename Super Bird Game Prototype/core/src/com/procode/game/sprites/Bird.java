@@ -183,7 +183,7 @@ public class Bird implements Disposable {
 
             // create spit
             BirdSpit item = spitPool.obtain();
-            item.init(this.position.x, this.position.y);
+            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
             activeSpits.add(item);
         }
     }

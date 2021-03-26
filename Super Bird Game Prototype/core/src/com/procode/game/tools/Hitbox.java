@@ -1,16 +1,20 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
+import com.procode.game.SuperBirdGame;
 
-public class Hitbox {
+public class Hitbox implements Disposable {
     public Vector2 position;
     public int width, height;
     public Vector2 topleft, topright, botleft, botright; // coordinates of corners
 
     //--DEBUG PURPOSES--//
-    public ShapeRenderer shapeRenderer;
+    private ShapeRenderer shapeRenderer;
 
     public Hitbox(Vector2 currentPos, int w, int h) {
         position = currentPos;
@@ -47,9 +51,22 @@ public class Hitbox {
         botright = new Vector2(position.x+width, position.y);
     }
 
-
+    //--DEBUG--//
+    public void debugHitbox(){
+        float width = (this.topright.x - this.topleft.x);
+        float height = (this.topleft.y  - this.botleft.y);
+        this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        this.shapeRenderer.setColor(Color.BLACK);
+        this.shapeRenderer.rect(this.position.x, this.position.y + this.height, width, height);
+        this.shapeRenderer.end();
+    }
 
     public String toString() {
         return "(" + position.x + ", " + position.y + ")";
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

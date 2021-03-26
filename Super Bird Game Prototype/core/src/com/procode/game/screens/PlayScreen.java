@@ -78,6 +78,10 @@ public class PlayScreen implements Screen {
         //Setting Properties
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
         gamepad = new Gamepad(game);
+
+        activeSpits = player.getActiveSpits();
+
+
     }
 
     public void handleInput(float dt){
@@ -112,10 +116,10 @@ public class PlayScreen implements Screen {
 
     }
 
+    public Array<BirdSpit> activeSpits;
     public void hitDetection(float dt){
-        Array<BirdSpit> activeSpits = player.getActiveSpits();
+//        Array<BirdSpit> activeSpits = player.getActiveSpits();
         for(BirdSpit spit: activeSpits){
-//            debugHitbox(spit.getHitbox());
             // check if it hits an enemy
             if(spit.getHitbox().isHit(enemy.hitbox) && (enemy.getInvincible() == false) && spit.isAlive()){ //--Nikko: Buggy
                 Gdx.app.log("SPIT->ENEMY", "HIT");
@@ -168,16 +172,10 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
         // main render
         game.batch.setProjectionMatrix(gameCam.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
         game.batch.draw(background, 0, 0);
-
-        //--DEBUG--//
-        debugHitbox(player.hitbox);
-        debugHitbox(enemy.hitbox);
-
         switch(state){ // pauses or resumes the game
             case GAME_PLAY:
                 play(delta);
@@ -185,29 +183,22 @@ public class PlayScreen implements Screen {
             case GAME_PAUSE:
                 pause();
                 break;
+        } // pause logic
 
-        }
         game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
         player.renderBullets(game.batch);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-
         //add buttons to screen
         hud.stage.draw();
-    }
 
-    //--DEBUG--//
-    public void debugHitbox(Hitbox hitbox){
-        gameCam.update();
-        hitbox.shapeRenderer.setProjectionMatrix(gameCam.combined);
-        hitbox.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        hitbox.shapeRenderer.setColor(Color.RED);
-        hitbox.shapeRenderer.rect(hitbox.topleft.x/5, hitbox.topleft.y/5, hitbox.botleft.x/5, hitbox.botleft.y/5);
-        hitbox.shapeRenderer.rect(hitbox.topleft.x/5, hitbox.topleft.y/5, hitbox.topright.x/5, hitbox.topright.y/5);
-        hitbox.shapeRenderer.rect(hitbox.topright.x/5, hitbox.topright.y/5, hitbox.botright.x/5, hitbox.botright.y/5);
-        hitbox.shapeRenderer.rect(hitbox.botright.x/5, hitbox.botright.y/5, hitbox.botleft.x/5, hitbox.botleft.y/5);
-        hitbox.shapeRenderer.end();
+        //--DEBUG--// Note: debugging hitboxes has to occur after it has rendered
+//        player.hitbox.debugHitbox();
+//        enemy.hitbox.debugHitbox();
+//        for(BirdSpit spit:activeSpits){
+//            spit.getHitbox().debugHitbox();
+//        }
     }
 
 

@@ -30,7 +30,8 @@ public class BirdSpit extends Projectile implements Disposable {
             BirdSpit.collisionAnimation = new Animation();
             BirdSpit.collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, .25f, false);
         }
-        hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
+
+        this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
     }
 
     // sets the spit initial values
@@ -58,11 +59,10 @@ public class BirdSpit extends Projectile implements Disposable {
         }
     }
 
-
     public void render(SpriteBatch batch){
         //--Nikko: doesn't need to begin or end batch as this code will be called while the spritebatch of PlayScreen.class already started the begin()
         if(!collided){
-            batch.draw(projectileImage, this.position.x + (Bird.getBirdWidth()/2), this.position.y + (Bird.getBirdHeight()/3));
+            batch.draw(projectileImage, this.position.x, this.position.y);
         }else if(!collided){
             batch.draw(collisionAnimation.getCurrImg(), this.position.x, this.position.y);
         }
