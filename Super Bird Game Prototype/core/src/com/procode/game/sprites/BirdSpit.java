@@ -16,7 +16,7 @@ public class BirdSpit extends Projectile implements Disposable {
     public BirdSpit(){
         //--Nikko: The width and height can be changed
         this.projectileWidth = 100;
-        this.projectileHeight = 80;
+        this.projectileHeight = 60;
 
         this.position = new Vector2(); // x and y are initialized in the init()
         this.velocity = 20; //--Nikko: try changing speed
@@ -36,7 +36,7 @@ public class BirdSpit extends Projectile implements Disposable {
 
     // sets the spit initial values
     public void init(float x, float y){
-        this.position.set(x, y);
+        this.position.set(x + (this.projectileWidth/2), y );
         this.alive = true;
     }
 
@@ -53,7 +53,7 @@ public class BirdSpit extends Projectile implements Disposable {
 
     public void render(SpriteBatch batch){
         //--Nikko: doesn't need to begin or end batch as this code will be called while the spritebatch of PlayScreen.class already started the begin()
-        batch.draw(projectileImage, this.position.x + (Bird.getBirdWidth()/2), this.position.y + (Bird.getBirdHeight()/3));
+        batch.draw(projectileImage, this.position.x, this.position.y);
     }
 
 

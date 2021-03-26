@@ -17,18 +17,13 @@ import com.procode.game.sprites.Bird;
 
 public class SuperBirdGame extends Game {
 	public static final int DESKTOP_WIDTH = 1920;
-	public static final int DESKTOP_HEIGHT = 1080;
+	public static final int DESKTOP_HEIGHT = 900;
 	public static final String DESKTOP_TITLE = "Super Bird Game";
 	public SpriteBatch batch;
 
 	// android configurations
 	public static int ANDROID_WIDTH, ANDROID_HEIGHT;
 	public static int num;															// nikko: what does this do?
-
-	// collision bits (used to manage the collision detections)
-	public static final short BIRD_BIT = 2;
-	public static final short ENEMY_BIT = 4;
-	public static final short BIRDSPIT_BIT = 8;
 
 	/* WARNING Using AssetManager in a static way can cause issues, especially on Android.
 	Instead you may want to pass around Assetmanager to those the classes that need it.
@@ -56,7 +51,8 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/bird_scream_normal.wav", Sound.class);
 		manager.finishLoading();
 
-		this.setScreen(new SplashScreen(this));
+//		this.setScreen(new SplashScreen(this));
+		this.setScreen(new PlayScreen(this));
 
 	}
 

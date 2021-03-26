@@ -60,7 +60,7 @@ public class PlayScreen implements Screen {
         state = GAME_PLAY;
         //Creating Sprites
         int birdWidth = SuperBirdGame.ANDROID_WIDTH/5;
-        int birdHeight = SuperBirdGame.ANDROID_HEIGHT /5;
+        int birdHeight = SuperBirdGame.ANDROID_HEIGHT/5;
         player = new Bird(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth, birdHeight);
         enemy = new Bird(SuperBirdGame.ANDROID_WIDTH/2, SuperBirdGame.ANDROID_HEIGHT/2,birdWidth,birdHeight);
 
@@ -99,8 +99,8 @@ public class PlayScreen implements Screen {
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
         setBackgroundMovement();
-        gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
-                                                      //Updates the Animation Frame
+        gameCam.position.x = player.getPosition().x + OFFSET;           // update Camera Position in relative to bird
+
 
         /*if(hud.getShootStateBtn() == true) {
            // System.out.println("Player Shoot");
@@ -110,9 +110,9 @@ public class PlayScreen implements Screen {
         //testing only-----------------------------------------------
         enemyBird.updateMechaBird(dt);
 
-        if(enemyBird.isDisposed == true){
-            enemyBird.reSpawn();
-        }
+//        if(enemyBird.isDisposed == true){
+//            enemyBird.reSpawn();
+//        }
     }
 
     public void setBackgroundMovement(){
@@ -167,10 +167,6 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
         game.batch.draw(background, 0, 0);
-
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
-        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
-
         switch(state){
             case GAME_PLAY:
                 play(delta);
@@ -180,12 +176,20 @@ public class PlayScreen implements Screen {
                 break;
 
         }
+        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
         player.renderBullets(game.batch);
+        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 
         //add buttons to screen
         hud.stage.draw();
+
+
+        //--DEBUG--// Note: debugging hitboxes has to occur after it has rendered
+        player.hitbox.debugHitbox();
+        enemy.hitbox.debugHitbox();
+
 
     }
 
