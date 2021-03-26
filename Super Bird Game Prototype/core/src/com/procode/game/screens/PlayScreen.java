@@ -3,26 +3,18 @@ package com.procode.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
-import com.procode.game.sprites.BirdSpit;
-import com.procode.game.sprites.EnemyDummy;
+import com.procode.game.sprites.MechaBird;
 import com.procode.game.tools.Gamepad;
-import com.procode.game.tools.Hitbox;
 import com.procode.game.tools.ImageFunctions;
 
 
@@ -45,14 +37,13 @@ public class PlayScreen implements Screen {
     public static Bird enemy;
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
-
-    private Sound collisionSound;
+    private MechaBird enemyBird;
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
         this.game = game;
         gameCam = new OrthographicCamera();
-        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_WIDTH, gameCam);
+        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, gameCam);
         System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
         hud = new HUD(game);
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
@@ -73,15 +64,20 @@ public class PlayScreen implements Screen {
         player = new Bird(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth, birdHeight);
         enemy = new Bird(SuperBirdGame.ANDROID_WIDTH/2, SuperBirdGame.ANDROID_HEIGHT/2,birdWidth,birdHeight);
 
-        collisionSound = SuperBirdGame.manager.get("audio/sound/spitCollision.mp3", Sound.class);
-
         //Setting Properties
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+
         gamepad = new Gamepad(game);
 
-        activeSpits = player.getActiveSpits();
+        int maxEnemies = 1;
+        float spawnFrequency = 1.5f;
+        //spawner = new EnemySpawner(maxEnemies, spawnFrequency);
 
-
+        // testing only -----------------------------------------------
+        int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
+        int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
+        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 70;
+        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
     }
 
     public void handleInput(float dt){
@@ -96,36 +92,26 @@ public class PlayScreen implements Screen {
         state = HUD.state;
         player.update(dt);
         enemy.update(dt);
-        if(player.hitbox.isHit(enemy.hitbox)){
-            Gdx.app.log("PLAYER->ENEMY", "HIT");
-            player.damageBird(hud);
-        }
-        hitDetection(dt);
+        player.hitbox.isHit(enemy.hitbox);
+
 
         // bird movement
         Vector2 birdMovement = hud.gamepad.getButtonInputs();
         player.movePosition(birdMovement.x, birdMovement.y);
         setBackgroundMovement();
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
-
+                                                      //Updates the Animation Frame
 
         /*if(hud.getShootStateBtn() == true) {
            // System.out.println("Player Shoot");
             player.shoot();
         }*/
 
-    }
+        //testing only-----------------------------------------------
+        enemyBird.updateMechaBird(dt);
 
-    public Array<BirdSpit> activeSpits;
-    public void hitDetection(float dt){
-//        Array<BirdSpit> activeSpits = player.getActiveSpits();
-        for(BirdSpit spit: activeSpits){
-            // check if it hits an enemy
-            if(spit.getHitbox().isHit(enemy.hitbox) && (enemy.getInvincible() == false) && spit.isAlive()){ //--Nikko: Buggy
-                Gdx.app.log("SPIT->ENEMY", "HIT");
-                enemy.damageBird(hud);
-                spit.setCollision(true);
-            }
+        if(enemyBird.isDisposed == true){
+            enemyBird.reSpawn();
         }
     }
 
@@ -164,43 +150,44 @@ public class PlayScreen implements Screen {
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.draw(enemy.getBirdImage(),enemy.getPosition().x, enemy.getPosition().y);
 
+        //testing only---------------------------------------
+        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState() + "   currentSpeed: " + enemyBird.getEnemySpeed());
+        game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
     }
 
     @Override
     public void render(float delta) {
+
         // empties the Screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 
         // main render
         game.batch.setProjectionMatrix(gameCam.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
         game.batch.draw(background, 0, 0);
-        switch(state){ // pauses or resumes the game
+
+        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
+
+        switch(state){
             case GAME_PLAY:
                 play(delta);
                 break;
             case GAME_PAUSE:
                 pause();
                 break;
-        } // pause logic
 
-        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
+        }
         player.renderBullets(game.batch);
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+
         //add buttons to screen
         hud.stage.draw();
 
-        //--DEBUG--// Note: debugging hitboxes has to occur after it has rendered
-        player.hitbox.debugHitbox();
-        enemy.hitbox.debugHitbox();
-        for(BirdSpit spit:activeSpits){
-            spit.getHitbox().debugHitbox();
-        }
     }
-
 
     @Override
     public void resize(int width, int height) {
@@ -210,6 +197,7 @@ public class PlayScreen implements Screen {
     @Override
     public void pause() {
         //game.batch.draw(background, 0, 0);
+
         game.batch.draw(bg.getBackgroundSky(),0,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
