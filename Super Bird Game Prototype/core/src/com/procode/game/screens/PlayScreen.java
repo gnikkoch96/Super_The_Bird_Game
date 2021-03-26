@@ -194,11 +194,11 @@ public class PlayScreen implements Screen {
         hud.stage.draw();
 
         //--DEBUG--// Note: debugging hitboxes has to occur after it has rendered
-//        player.hitbox.debugHitbox();
-//        enemy.hitbox.debugHitbox();
-//        for(BirdSpit spit:activeSpits){
-//            spit.getHitbox().debugHitbox();
-//        }
+        player.hitbox.debugHitbox();
+        enemy.hitbox.debugHitbox();
+        for(BirdSpit spit:activeSpits){
+            spit.getHitbox().debugHitbox();
+        }
     }
 
 

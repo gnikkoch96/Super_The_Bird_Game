@@ -100,10 +100,6 @@ public class Bird implements Disposable {
         return this.position;
     }
 
-    //--Nikko: I used this to locate where the spits should be rendering from
-    public static int getBirdWidth(){return BirdWidth;}
-    public static int getBirdHeight(){return BirdHeight;}
-
     // gets the width and height of the bird
     public Vector2 getBirdSize(){
         return new Vector2(BirdWidth, BirdHeight);

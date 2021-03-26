@@ -9,6 +9,8 @@ import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 
 public class Projectile implements Pool.Poolable {
+    //--Note: You have to create the projectileImage/animation in the specific projectile class and set it to static so that we can save memory usage
+
     protected int projectileWidth;
     protected int projectileHeight;
     protected float velocity; // only apply on x-axis
