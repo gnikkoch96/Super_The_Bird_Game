@@ -107,12 +107,6 @@ public class PlayScreen implements Screen {
             player.shoot();
         }*/
 
-        //testing only-----------------------------------------------
-        enemyBird.updateMechaBird(dt);
-
-//        if(enemyBird.isDisposed == true){
-//            enemyBird.reSpawn();
-//        }
     }
 
     public void setBackgroundMovement(){
