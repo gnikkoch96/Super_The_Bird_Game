@@ -9,6 +9,8 @@ import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 
 public class Projectile implements Pool.Poolable {
+    //--Note: You have to create the projectileImage/animation in the specific projectile class and set it to static so that we can save memory usage
+
     protected int projectileWidth;
     protected int projectileHeight;
     protected float velocity; // only apply on x-axis
@@ -39,14 +41,17 @@ public class Projectile implements Pool.Poolable {
             return false;
     }
 
+    public Hitbox getHitbox(){ return this.hitbox;}
+
     /**
      * Callback method when the object is freed. It is automatically called by Pool.free()
      * Must reset every meaningful field of this bullet.
      */
     @Override
     public void reset() {
-        this.position.set(0,0);
-        this.alive = false;
+
+        alive = false;
+//        collided = false;
     }
 
 }
