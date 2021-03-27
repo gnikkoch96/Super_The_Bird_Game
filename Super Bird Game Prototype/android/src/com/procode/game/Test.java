@@ -39,7 +39,7 @@ public class Test extends ApplicationAdapter {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                rootRef.child("Users").child("Maui").updateChildren(userdataMap).
+                rootRef.child("Users").child("Nikko").updateChildren(userdataMap).
                         addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

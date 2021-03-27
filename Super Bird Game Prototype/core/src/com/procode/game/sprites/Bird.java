@@ -1,5 +1,6 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -52,7 +53,6 @@ public class Bird implements Disposable {
         }
     };
 
-
     public Bird(int x, int y, int birdWidth, int birdHeight) {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
@@ -89,6 +89,9 @@ public class Bird implements Disposable {
         currentAnimation = idleAnimation; // idle is always the first state the bird is in
     }
 
+    // gets each of the activeSpits
+    public Array<BirdSpit> getActiveSpits(){ return this.activeSpits;}
+
     // gets the current image of the bird
     public Texture getBirdImage(){return currentAnimation.getCurrImg();}
 
@@ -97,9 +100,13 @@ public class Bird implements Disposable {
         return this.position;
     }
 
-    //--Nikko: I used this to locate where the spits should be rendering from
-    public static int getBirdWidth(){return BirdWidth;}
-    public static int getBirdHeight(){return BirdHeight;}
+    // gets the width and height of the bird
+    public Vector2 getBirdSize(){
+        return new Vector2(BirdWidth, BirdHeight);
+    }
+
+    // returns the status of the invincibility of the bird (used to re-enable the bird's collision detection)
+    public boolean getInvincible() {return this.isInvincible;}
 
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
@@ -111,15 +118,6 @@ public class Bird implements Disposable {
             position.y += newY;
         }
     }
-
-
-    // gets the width and height of the bird
-    public Vector2 getBirdSize(){
-        return new Vector2(BirdWidth, BirdHeight);
-    }
-
-    // returns the status of the invincibility of the bird (used to re-enable the bird's collision detection)
-    public boolean getInvincible() {return this.isInvincible;}
 
     // can only set invincible after a certain period of time has passed
     public void setInvincible(boolean isInvincible){
@@ -138,8 +136,10 @@ public class Bird implements Disposable {
         hitbox.update(this.position);
 
         if(currentAnimation.animationEnded == true){ // transitions from non-idle animation back to idle
+            Gdx.app.log("Current Animation Status isEnded: ", String.valueOf(currentAnimation.animationEnded));
             currentAnimation.setAnimFinished();
             switchAnimations(State.IDLE);
+            previousState = currentState;
             currentState = State.IDLE;
         }else{ // updates the idle animation
             currentAnimation.updateFrame(deltaTime);
@@ -172,7 +172,7 @@ public class Bird implements Disposable {
     public void shoot() {
         previousState = currentState;
         currentState = State.SHOOT;
-
+        Gdx.app.log("Previous State", previousState.toString());
         if(previousState != State.SHOOT && previousState == State.IDLE){ // to prevent overlapping of animations
             // plays sound
             spitSound.play();
@@ -181,7 +181,7 @@ public class Bird implements Disposable {
 
             // create spit
             BirdSpit item = spitPool.obtain();
-            item.init(this.position.x + (BirdWidth/2), this.position.y + item.projectileHeight);
+            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
             activeSpits.add(item);
         }
     }
@@ -205,10 +205,10 @@ public class Bird implements Disposable {
     }
 
     public void damageBird(HUD hud){
-        previousState = currentState;
-        currentState = State.DAMAGED;
-
         if(!this.isInvincible){ // bird can only get damaged when it isn't invincible
+            previousState = currentState;
+            currentState = State.DAMAGED;
+
             if(this.healthCount == 2){
 //                damageSoundLoud.play();
             }else{

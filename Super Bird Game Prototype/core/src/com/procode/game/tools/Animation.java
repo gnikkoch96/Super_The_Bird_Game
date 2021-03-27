@@ -1,5 +1,6 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
@@ -92,9 +93,5 @@ public class Animation {
             texture.dispose();
         }
     }
-    public void replayLoop(){
-        currFrame = 0;
-        animationEnded = false;
-    } // if you want to play an animation again, it will reset the animation
 }
 

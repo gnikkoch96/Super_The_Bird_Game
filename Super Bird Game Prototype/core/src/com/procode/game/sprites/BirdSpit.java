@@ -1,5 +1,6 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -11,7 +12,7 @@ import com.procode.game.tools.ImageFunctions;
 public class BirdSpit extends Projectile implements Disposable {
     // animations
     private static Texture projectileImage; // this will be the image that floats until a contact has been made
-    private static Animation collisionAnimation; // the animation will be when the spit animation is done since we want the spit to stay in its first form until a contact is made
+    public static Animation collisionAnimation; // the animation will be when the spit animation is done since we want the spit to stay in its first form until a contact is made
 
     public BirdSpit(){
         //--Nikko: The width and height can be changed
@@ -27,35 +28,54 @@ public class BirdSpit extends Projectile implements Disposable {
         if(BirdSpit.projectileImage == null) BirdSpit.projectileImage = ImageFunctions.resize("bird animations//spit projectile 1.png", this.projectileWidth, this.projectileHeight);
         if(BirdSpit.collisionAnimation == null){
             BirdSpit.collisionAnimation = new Animation();
-            BirdSpit.collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, .25f, true);
+            BirdSpit.collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, .25f, false);
         }
 
-        hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
-        //hitbox.hitboxBit = SuperBirdGame.BIRDSPIT_BIT;
+        this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
     }
 
     // sets the spit initial values
     public void init(float x, float y){
-        this.position.set(x + (this.projectileWidth/2), y );
+        this.position.set(x, y);
         this.alive = true;
     }
 
     public void update(float dt){
-        // update spit position
-        this.position.x += velocity;
+        //--NIKKO: placed it here because I didn't want it to keep calculating the position and hitbox after the spit leaves the screen
+        if(isOutOfScreen()) { // removes the spit if it exits the screen
+            this.reset();
+        }else{
+            if(this.collided){ // play the collisionAnimation w/ Pop sound
+                this.reset();
+                collisionAnimation.updateFrame(dt);
+            }else{
+                Gdx.app.log("Spit Location", Float.toString(this.position.x));
+                // update spit position
+                this.position.x += velocity;
 
-        // update hitbox location
-        hitbox.update(this.position);
-
-        if(isOutOfScreen()) // removes the spit if it exits the screen
-            this.alive = false;
+                // update hitbox location
+                this.hitbox.update(this.position);
+            }
+        }
     }
 
     public void render(SpriteBatch batch){
         //--Nikko: doesn't need to begin or end batch as this code will be called while the spritebatch of PlayScreen.class already started the begin()
-        batch.draw(projectileImage, this.position.x, this.position.y);
+        if(!collided){
+            batch.draw(projectileImage, this.position.x, this.position.y);
+        }else if(!collided){
+            batch.draw(collisionAnimation.getCurrImg(), this.position.x, this.position.y);
+        }
+//        if(this.collided){
+//            batch.draw(collisionAnimation.getCurrImg(), this.position.x, this.position.y);
+//        }else if(!collided){
+//            batch.draw(projectileImage, this.position.x + (Bird.getBirdWidth()/2), this.position.y + (Bird.getBirdHeight()/3));
+//        }
     }
 
+    public void setCollision(boolean val){
+        this.collided = val;
+    }
 
     @Override
     public void dispose() {

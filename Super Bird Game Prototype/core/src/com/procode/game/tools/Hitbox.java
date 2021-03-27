@@ -1,9 +1,12 @@
 package com.procode.game.tools;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.procode.game.SuperBirdGame;
 
 public class Hitbox implements Disposable {
     public Vector2 position;
@@ -33,7 +36,7 @@ public class Hitbox implements Disposable {
         // Check if the corner of the incoming object is inside of this hitbox
         for(Vector2 o : other_corners) {
             if((o.x >= botleft.x && o.x <= topright.x) && (o.y <= botleft.y && o.y >= topright.y)) {
-                System.out.println("BIRD JUST GOT HIT BY SOMETHING!");
+//                System.out.println("BIRD JUST GOT HIT BY SOMETHING!");
                 return true;
             }
         }
@@ -50,9 +53,11 @@ public class Hitbox implements Disposable {
 
     //--DEBUG--//
     public void debugHitbox(){
+        float width = (this.topright.x - this.topleft.x);
+        float height = (this.topleft.y  - this.botleft.y);
         this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         this.shapeRenderer.setColor(Color.BLACK);
-        this.shapeRenderer.rect(this.position.x, this.position.y, width, height);
+        this.shapeRenderer.rect(this.position.x, this.position.y + this.height, width, height);
         this.shapeRenderer.end();
     }
 

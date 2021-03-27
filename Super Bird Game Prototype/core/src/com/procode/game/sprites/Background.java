@@ -1,5 +1,6 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.ImageFunctions;
