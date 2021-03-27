@@ -96,9 +96,8 @@ public class HUD implements Disposable {
         pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.ANDROID_WIDTH/35, SuperBirdGame.ANDROID_HEIGHT/25));
         scoreBackground = new Image(ImageFunctions.resize("screen icons//score-backgroundTwo.png", SuperBirdGame.ANDROID_WIDTH/4, SuperBirdGame.ANDROID_HEIGHT/7));
         scoreTextLabel = new Label("SCORE: ", style);
-        //scoreTextLabel.setFontScale(0.5f);
         scoreLabel = new Label(score + " ", style);
-        //scoreLabel.setFontScale(0.5f);
+
 
         leftTable.add(pauseBtn).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/3).padLeft(SuperBirdGame.ANDROID_WIDTH/60);
         leftTable.add(healthBar).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/4);

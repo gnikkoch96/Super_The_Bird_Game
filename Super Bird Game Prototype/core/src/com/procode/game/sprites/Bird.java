@@ -1,5 +1,6 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -99,13 +100,7 @@ public class Bird implements Disposable {
         return this.position;
     }
 
-    // gets the width and height of the bird
-    public Vector2 getBirdSize(){
-        return new Vector2(BirdWidth, BirdHeight);
-    }
 
-    // returns the status of the invincibility of the bird (used to re-enable the bird's collision detection)
-    public boolean getInvincible() {return this.isInvincible;}
 
     //sets the new position of the bird
     public void movePosition(float newX, float newY){

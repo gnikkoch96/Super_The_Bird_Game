@@ -40,24 +40,26 @@ public class BirdSpit extends Projectile implements Disposable {
         this.alive = true;
     }
 
-    public void update(float dt){
+    public void update(float dt) {
         //--NIKKO: placed it here because I didn't want it to keep calculating the position and hitbox after the spit leaves the screen
-        if(isOutOfScreen()) { // removes the spit if it exits the screen
+        if (isOutOfScreen()) { // removes the spit if it exits the screen
             this.reset();
-        }else{
-            if(this.collided){ // play the collisionAnimation w/ Pop sound
+        } else {
+            if (this.collided) { // play the collisionAnimation w/ Pop sound
                 this.reset();
                 collisionAnimation.updateFrame(dt);
-            }else{
+            } else {
                 Gdx.app.log("Spit Location", Float.toString(this.position.x));
                 // update spit position
                 this.position.x += velocity;
 
-        // update hitbox location
-        hitbox.update(this.position);
+                // update hitbox location
+                hitbox.update(this.position);
 
-        if(isOutOfScreen()) // removes the spit if it exits the screen
-            this.alive = false;
+                if (isOutOfScreen()) // removes the spit if it exits the screen
+                    this.alive = false;
+            }
+        }
     }
 
     public void render(SpriteBatch batch){

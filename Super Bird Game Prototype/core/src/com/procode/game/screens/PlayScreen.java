@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
@@ -19,6 +20,7 @@ import com.procode.game.sprites.Bird;
 import com.procode.game.sprites.MechaBird;
 import com.procode.game.sprites.BirdSpit;
 import com.procode.game.sprites.EnemyDummy;
+import com.procode.game.tools.Enemy;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.Hitbox;
 import com.procode.game.tools.ImageFunctions;
@@ -92,7 +94,7 @@ public class PlayScreen implements Screen {
         enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
     }
 
-    }
+
 
     public void handleInput(float dt){
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
@@ -126,7 +128,7 @@ public class PlayScreen implements Screen {
         //testing only-----------------------------------------------
         enemyBird.updateMechaBird(dt);
 
-        if(enemyBird.isDisposed == true){
+        if(enemyBird.getState() == Enemy.State.DEAD)
             enemyBird.reSpawn();
     }
 
@@ -259,7 +261,7 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public void dispose() {
+    public void dispose(){
         hud.dispose();
         background.dispose();
         player.dispose();
