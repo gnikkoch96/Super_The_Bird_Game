@@ -40,7 +40,8 @@ public class PlayScreen implements Screen {
 
     private final int GAME_PLAY =0; // play the game
     private final int GAME_PAUSE = 1; // pause the game
-    //Sprites
+
+    // sprites
     public static Bird player;
     public static Bird enemy;
     private Background bg;
@@ -208,19 +209,8 @@ public class PlayScreen implements Screen {
         game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
         player.renderBullets(game.batch);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
-        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
-
-        switch(state){
-            case GAME_PLAY:
-                play(delta);
-                break;
-            case GAME_PAUSE:
-                pause();
-                break;
-
-        }
-        player.renderBullets(game.batch);
         game.batch.end();
+
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         //add buttons to screen
         hud.stage.draw();

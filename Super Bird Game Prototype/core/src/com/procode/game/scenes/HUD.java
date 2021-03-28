@@ -39,7 +39,6 @@ public class HUD implements Disposable {
     public Stage stage;
     private Viewport viewport;
 
-    
     // values that get updated dynamically
     private static Integer score;
 
@@ -78,7 +77,7 @@ public class HUD implements Disposable {
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = 100;
+        fontParameter.size = 50;
         font = fontGenerator.generateFont(fontParameter);
 
         Label.LabelStyle style = new Label.LabelStyle();
@@ -98,7 +97,6 @@ public class HUD implements Disposable {
         scoreTextLabel = new Label("SCORE: ", style);
         scoreLabel = new Label(score + " ", style);
 
-
         leftTable.add(pauseBtn).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/3).padLeft(SuperBirdGame.ANDROID_WIDTH/60);
         leftTable.add(healthBar).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/4);
 
@@ -107,13 +105,8 @@ public class HUD implements Disposable {
         leftTable.add(scoreLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.1));
         scoreTable.add(scoreBackground).padBottom((float) (SuperBirdGame.ANDROID_HEIGHT/1.1));
 
-        //--Nikko: (Changeable) I have placed the score to be in the middle of the screen as opposed to the right as the user doesn't have to look very far to see their score
-        leftTable.add(scoreTextLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.1)).padLeft((int) (SuperBirdGame.ANDROID_WIDTH/4.5));
-        leftTable.add(scoreLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.1));
-        scoreBackground.setPosition((SuperBirdGame.ANDROID_HEIGHT/2),  (SuperBirdGame.ANDROID_WIDTH/2));
         //set the sate of the PauseBtn
         setPauseBtn();
-
 
         // gamepad
         gamepad = new Gamepad(game);
