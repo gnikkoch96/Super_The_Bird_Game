@@ -21,10 +21,10 @@ public class Projectile implements Pool.Poolable {
     protected boolean alive;  // checks to see if the bullet is still on screen or hasn't hit an object
     protected boolean collided; // used to play the finishing animation of the spit (Nikko: Might remove this as we can just use the isHit() from Hitbox.class)
 
-    // single lined methods
-    public void madeContact(){
-        collided = true;
+    public void setCollision(boolean val){
+        this.collided = val;
     }
+    public boolean isCollided(){return this.collided;}
 
     // getters and setters
     public Vector2 getPosition() {
@@ -49,9 +49,8 @@ public class Projectile implements Pool.Poolable {
      */
     @Override
     public void reset() {
-
-        alive = false;
-//        collided = false;
+        this.alive = false;
+        this.collided = false;
     }
 
 }

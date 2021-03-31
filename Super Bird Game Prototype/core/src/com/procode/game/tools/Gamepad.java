@@ -43,7 +43,7 @@ public class Gamepad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float upMovement = touchSensitivity;
                 buttonPressed(upMovement, true);
-                System.out.println("UP");
+//                System.out.println("UP");
                 return true;
             }
 
@@ -58,7 +58,7 @@ public class Gamepad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float downMovement = touchSensitivity * -1;
                 buttonPressed(downMovement, true);
-                System.out.println("DOWN");
+//                System.out.println("DOWN");
                 return true;
             }
 
@@ -73,7 +73,7 @@ public class Gamepad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float leftMovement = touchSensitivity * -1;
                 buttonPressed(leftMovement, false);
-                System.out.println("LEFT");
+//                System.out.println("LEFT");
                 return true;
             }
 
@@ -88,7 +88,7 @@ public class Gamepad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float rightMovement = touchSensitivity;
                 buttonPressed(rightMovement, false);
-                System.out.println("RIGHT");
+//                System.out.println("RIGHT");
                 return true;
             }
 
