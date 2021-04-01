@@ -1,5 +1,6 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -20,10 +21,17 @@ public class Hitbox implements Disposable {
         position = currentPos;
         width = w;
         height = h;
-        topleft = new Vector2(position.x, position.y-height);
-        topright = new Vector2(position.x+width, position.y-height);
-        botleft = new Vector2(position.x, position.y);
-        botright = new Vector2(position.x+width, position.y);
+
+        // y-value is reversed
+        topleft = new Vector2(this.position.x, this.position.y + height);
+        topright = new Vector2(this.position.x+width, this.position.y + height);
+        botleft = new Vector2(this.position.x, this.position.y);
+        botright = new Vector2(this.position.x+width, this.position.y);
+
+//        topleft = new Vector2(this.position.x, this.position.y-height);
+//        topright = new Vector2(this.position.x+width, this.position.y-height);
+//        botleft = new Vector2(this.position.x, this.position.y);
+//        botright = new Vector2(this.position.x+width, this.position.y);
 
         //--DEBUG--//
         shapeRenderer = new ShapeRenderer();
@@ -35,7 +43,15 @@ public class Hitbox implements Disposable {
 
         // Check if the corner of the incoming object is inside of this hitbox
         for(Vector2 o : other_corners) {
-            if((o.x >= botleft.x && o.x <= topright.x) && (o.y <= botleft.y && o.y >= topright.y)) {
+            if((o.x >= this.botleft.x && o.x <= this.topright.x) && (o.y >= this.botleft.y && o.y <= this.topright.y)) {
+//                Gdx.app.log("This Hitbox (Enemy)", "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
+//                        + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
+//                        + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
+//                        + "topright: (" + this.topright.x + ", " + this.topright.y + ")\n");
+//                Gdx.app.log("Other Hitbox (Bullet)", "\nbotleft: (" + other.botleft.x + ", " + other.botleft.y + ")\n"
+//                        + "botright: (" + other.botright.x + ", " + other.botright.y + ")\n"
+//                        + "topleft: (" + other.topleft.x + ", " + other.topleft.y + ")\n"
+//                        + "topright: (" + other.topright.x + ", " + other.topright.y + ")\n");
 //                System.out.println("BIRD JUST GOT HIT BY SOMETHING!");
                 return true;
             }
@@ -44,20 +60,30 @@ public class Hitbox implements Disposable {
     }
 
     public void update(Vector2 newPos) {
+        float update_y = this.position.y + height;
+        float update_x = this.position.x + width;
+
         position = newPos;
-        topleft = new Vector2(position.x, position.y-height);
-        topright = new Vector2(position.x+width, position.y-height);
-        botleft = new Vector2(position.x, position.y);
-        botright = new Vector2(position.x+width, position.y);
+        topleft.set(this.position.x, update_y);
+        topright.set(update_x, update_y);
+        botleft.set(this.position.x, this.position.y);
+        botright.set(update_x, this.position.y);
+
+//        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
+//                + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
+//                + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
+//                + "topright: (" + this.topright.x + ", " + this.topright.y + ")\n");
+
     }
 
     //--DEBUG--//
     public void debugHitbox(){
-        float width = (this.topright.x - this.topleft.x);
-        float height = (this.topleft.y  - this.botleft.y);
         this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         this.shapeRenderer.setColor(Color.BLACK);
-        this.shapeRenderer.rect(this.position.x, this.position.y + this.height, width, height);
+        this.shapeRenderer.line(this.botleft, this.topleft);
+        this.shapeRenderer.line(this.botleft, this.botright);
+        this.shapeRenderer.line(this.topleft, this.topright);
+        this.shapeRenderer.line(this.botright, this.topright);
         this.shapeRenderer.end();
     }
 

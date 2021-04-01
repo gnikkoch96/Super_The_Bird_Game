@@ -12,12 +12,12 @@ import com.procode.game.tools.ImageFunctions;
 public class BirdSpit extends Projectile implements Disposable {
     // animations
     private static Texture projectileImage; // this will be the image that floats until a contact has been made
-    public static Animation collisionAnimation; // the animation will be when the spit animation is done since we want the spit to stay in its first form until a contact is made
+    private static Animation collisionAnimation; // the animation will be when the spit animation is done since we want the spit to stay in its first form until a contact is made
 
     public BirdSpit(){
         //--Nikko: The width and height can be changed
         this.projectileWidth = 100;
-        this.projectileHeight = 60;
+        this.projectileHeight = 30;
 
         this.position = new Vector2(); // x and y are initialized in the init()
         this.velocity = 20; //--Nikko: try changing speed
@@ -45,13 +45,11 @@ public class BirdSpit extends Projectile implements Disposable {
         if (isOutOfScreen()) { // removes the spit if it exits the screen
             this.reset();
         } else {
-            if (this.collided) { // play the collisionAnimation w/ Pop sound
-                this.reset();
+            if (this.isCollided()) { // collision detected
                 collisionAnimation.updateFrame(dt);
             } else {
-                Gdx.app.log("Spit Location", Float.toString(this.position.x));
                 // update spit position
-                this.position.x += velocity;
+                this.position.x += this.velocity;
 
                 // update hitbox location
                 hitbox.update(this.position);
@@ -60,12 +58,22 @@ public class BirdSpit extends Projectile implements Disposable {
                     this.alive = false;
             }
         }
+
+        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.getHitbox().botleft.x + ", " + this.getHitbox().botleft.y + ")\n"
+                + "botright: (" + this.getHitbox().botright.x + ", " + this.getHitbox().botright.y + ")\n"
+                + "topleft: (" + this.getHitbox().topleft.x + ", " + this.getHitbox().topleft.y + ")\n"
+                + "topright: (" + this.getHitbox().topright.x + ", " + this.getHitbox().topright.y + ")\n");
+
     }
 
     public void render(SpriteBatch batch){
         //--Nikko: doesn't need to begin or end batch as this code will be called while the spritebatch of PlayScreen.class already started the begin()
+
         if(!collided){
+//            Gdx.app.log("Hitbox (BotLeft)", "( " + Float.toString(this.getHitbox().botleft.x) + ", " + Float.toString(this.getHitbox().position.y) + ")");
             batch.draw(projectileImage, this.position.x, this.position.y);
+//            Gdx.app.log("Spit Location", "( " + Float.toString(this.position.x) + ", " + Float.toString(this.position.y) + ")");
+//            batch.draw(projectileImage, this.position.x, this.position.y - this.projectileHeight/2); //Nikko: switch to this when images have been adjusted
         }else if(!collided){
             batch.draw(collisionAnimation.getCurrImg(), this.position.x, this.position.y);
         }
@@ -76,9 +84,6 @@ public class BirdSpit extends Projectile implements Disposable {
 //        }
     }
 
-    public void setCollision(boolean val){
-        this.collided = val;
-    }
 
     @Override
     public void dispose() {
