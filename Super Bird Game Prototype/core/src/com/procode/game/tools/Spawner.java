@@ -35,9 +35,9 @@ public class Spawner {
 
         // initialize all variants of enemies based off of the max into the inactive enemies
         // initialize mechaBirds
-        int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
-        int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
-        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 70;
+        int mechaBirdWidth = SuperBirdGame.GAME_WIDTH / 5;
+        int mechaBirdHeight = SuperBirdGame.GAME_HEIGHT / 5;
+        float mechaBirdSpeed = SuperBirdGame.GAME_HEIGHT / 70;
         for (int i = 0;  i < maxEnemies; i++){
 
             float randSpeed = (float) (Math.random() * enemyAverageSpeed);

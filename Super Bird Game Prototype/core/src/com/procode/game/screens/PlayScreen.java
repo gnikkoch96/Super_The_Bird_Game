@@ -3,12 +3,9 @@ package com.procode.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -19,10 +16,8 @@ import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
 import com.procode.game.sprites.MechaBird;
 import com.procode.game.sprites.BirdSpit;
-import com.procode.game.sprites.EnemyDummy;
 import com.procode.game.tools.Enemy;
 import com.procode.game.tools.Gamepad;
-import com.procode.game.tools.Hitbox;
 import com.procode.game.tools.ImageFunctions;
 
 
@@ -31,8 +26,6 @@ public class PlayScreen implements Screen {
     private static final int OFFSET = 80; // offset of the camera in respect to the bird
     private SuperBirdGame game;
     private HUD hud;
-    private OrthographicCamera gameCam;
-    private Viewport gamePort;
     private Texture background;
     private float currTime;
     private int state;
@@ -55,30 +48,28 @@ public class PlayScreen implements Screen {
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
         this.game = game;
-        gameCam = new OrthographicCamera();
-        gamePort = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, gameCam);
-        System.out.println("width " + SuperBirdGame.ANDROID_WIDTH);
+        System.out.println("width " + SuperBirdGame.GAME_WIDTH);
         hud = new HUD(game);
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
         currTime = 0;
         bg = new Background(); //this is the background class that contains all textures of images for the background
 
 
         //set the starting point of the background objects
-        moveHills_x = game.ANDROID_WIDTH;
-        moveMountain_x = game.ANDROID_WIDTH;
-        moveClouds_x = game.ANDROID_WIDTH;
+        moveHills_x = game.GAME_WIDTH;
+        moveMountain_x = game.GAME_WIDTH;
+        moveClouds_x = game.GAME_WIDTH;
         //start the state with game
         state = GAME_PLAY;
         //Creating Sprites
-        int birdWidth = SuperBirdGame.ANDROID_WIDTH/5;
-        int birdHeight = SuperBirdGame.ANDROID_HEIGHT/5;
-        player = new Bird(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth, birdHeight);
-        enemy = new Bird(SuperBirdGame.ANDROID_WIDTH/2, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth,birdHeight);
+        int birdWidth = SuperBirdGame.GAME_WIDTH /5;
+        int birdHeight = SuperBirdGame.GAME_HEIGHT /5;
+        player = new Bird(SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /2, birdWidth, birdHeight);
+        enemy = new Bird(SuperBirdGame.GAME_WIDTH /2, SuperBirdGame.GAME_HEIGHT /2, birdWidth,birdHeight);
 
 
         //Setting Properties
-        gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        game.camera.setToOrtho(false, SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
         gamepad = new Gamepad(game);
         activeSpits = player.getActiveSpits();
@@ -88,9 +79,9 @@ public class PlayScreen implements Screen {
         //spawner = new EnemySpawner(maxEnemies, spawnFrequency);
 
         // testing only -----------------------------------------------
-        int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
-        int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
-        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 70;
+        int mechaBirdWidth = SuperBirdGame.GAME_WIDTH / 5;
+        int mechaBirdHeight = SuperBirdGame.GAME_HEIGHT / 5;
+        float mechaBirdSpeed = SuperBirdGame.GAME_HEIGHT / 70;
         enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
     }
 
@@ -120,7 +111,7 @@ public class PlayScreen implements Screen {
         Gdx.app.log("Bird Movement", "(" + String.valueOf(birdMovement.x) + " , " + String.valueOf(birdMovement.y) + ")");
         player.movePosition(birdMovement.x, birdMovement.y);
         setBackgroundMovement();
-        gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
+        //gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
 
         /*if(hud.getShootStateBtn() == true) {
            // System.out.println("Player Shoot");
@@ -137,20 +128,20 @@ public class PlayScreen implements Screen {
 
 
     public void setBackgroundMovement(){
-        if(moveHills_x > -(game.ANDROID_WIDTH/4))
+        if(moveHills_x > -(game.GAME_WIDTH /4))
             moveHills_x -= 3;
         else
-            moveHills_x = game.ANDROID_WIDTH;
+            moveHills_x = game.GAME_WIDTH;
 
-        if(moveClouds_x > -(game.ANDROID_WIDTH/2))
+        if(moveClouds_x > -(game.GAME_WIDTH /2))
             moveClouds_x -= 3;
         else
-            moveClouds_x = game.ANDROID_WIDTH;
+            moveClouds_x = game.GAME_WIDTH;
 
-        if(moveMountain_x > -(game.ANDROID_WIDTH))
+        if(moveMountain_x > -(game.GAME_WIDTH))
             moveMountain_x -= 3;
         else
-            moveMountain_x = game.ANDROID_WIDTH;
+            moveMountain_x = game.GAME_WIDTH;
     }
 
     @Override
@@ -184,7 +175,7 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // main render
-        game.batch.setProjectionMatrix(gameCam.combined);      //--Mess with this by comparing with and without this line of code--//
+        game.batch.setProjectionMatrix(game.camera.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
         game.batch.draw(background, 0, 0);
 
@@ -219,7 +210,8 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
     }
 
     @Override

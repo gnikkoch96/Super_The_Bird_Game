@@ -74,10 +74,10 @@ public class EnemyDummy implements Disposable {
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
 
-        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.ANDROID_WIDTH) {
+        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.GAME_WIDTH) {
             position.x += (newX);
         }
-        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.ANDROID_HEIGHT) {
+        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.GAME_HEIGHT) {
             position.y += newY;
         }
     }
@@ -190,11 +190,11 @@ public class EnemyDummy implements Disposable {
     public void setBirdSize(int width, int height){
 
         //repositions the bird of the new size makes it go out of bounds
-        if((position.x + width) > SuperBirdGame.ANDROID_WIDTH) {
-            position.x = SuperBirdGame.ANDROID_WIDTH - width;
+        if((position.x + width) > SuperBirdGame.GAME_WIDTH) {
+            position.x = SuperBirdGame.GAME_WIDTH - width;
         }
-        if((position.y + height) > SuperBirdGame.ANDROID_HEIGHT) {
-            position.y = SuperBirdGame.ANDROID_HEIGHT - height;
+        if((position.y + height) > SuperBirdGame.GAME_HEIGHT) {
+            position.y = SuperBirdGame.GAME_HEIGHT - height;
         }
 
         BirdWidth = width;

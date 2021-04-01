@@ -1,11 +1,8 @@
 package com.procode.game.sprites;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.procode.game.SuperBirdGame;
-import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 
 public class Projectile implements Pool.Poolable {
@@ -35,7 +32,7 @@ public class Projectile implements Pool.Poolable {
     }
 
     public boolean isOutOfScreen(){
-        if(this.position.x >= SuperBirdGame.ANDROID_WIDTH)
+        if(this.position.x >= SuperBirdGame.GAME_WIDTH)
             return true;
         else
             return false;

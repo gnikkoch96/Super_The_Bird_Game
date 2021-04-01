@@ -3,7 +3,6 @@ package com.procode.game.sprites;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -12,8 +11,6 @@ import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
-
-import java.lang.Math;
 
 public class Bird implements Disposable {
     private static final long INVINCIBLE_DURATION = 2000; // value can be changed
@@ -102,10 +99,10 @@ public class Bird implements Disposable {
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
 
-        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.ANDROID_WIDTH) {
+        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.GAME_WIDTH) {
             position.x += (newX);
         }
-        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.ANDROID_HEIGHT) {
+        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.GAME_HEIGHT) {
             position.y += newY;
         }
     }
@@ -267,11 +264,11 @@ public class Bird implements Disposable {
 
     public void setBirdSize(int width, int height){
         //repositions the bird of the new size makes it go out of bounds
-        if((position.x + width) > SuperBirdGame.ANDROID_WIDTH) {
-            position.x = SuperBirdGame.ANDROID_WIDTH - width;
+        if((position.x + width) > SuperBirdGame.GAME_WIDTH) {
+            position.x = SuperBirdGame.GAME_WIDTH - width;
         }
-        if((position.y + height) > SuperBirdGame.ANDROID_HEIGHT) {
-            position.y = SuperBirdGame.ANDROID_HEIGHT - height;
+        if((position.y + height) > SuperBirdGame.GAME_HEIGHT) {
+            position.y = SuperBirdGame.GAME_HEIGHT - height;
         }
         BirdWidth = width;
         BirdHeight = height;

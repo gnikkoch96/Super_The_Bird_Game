@@ -45,8 +45,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private Label txtUserName, txtPassword, message, txtFullName, txtEmail;
-    private SpriteBatch batch;
-    private Viewport viewport;
     private Texture background;
     private TextField.TextFieldStyle txtFieldStyle;
     private Label.LabelStyle labelStyle;
@@ -58,13 +56,12 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     public RegisterScreen(SuperBirdGame g){
         game = g;
 
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
+        stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         //atlas = new TextureAtlas("font-export.fnt");
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
 
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -90,13 +87,13 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
     public void userFullName(){
         txtFullName = new Label("Enter Full Name",labelStyle);
-        txtFullName.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2));
+        txtFullName.setPosition(game.GAME_WIDTH /2 - 500,(game.GAME_HEIGHT /2));
         txtFullName.setSize(300,300);
         txtFullName.setVisible(false);
 
         fullName = new TextField("", txtFieldStyle);
-        fullName.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 200);
-        fullName.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
+        fullName.setPosition(game.GAME_WIDTH /2 - (game.GAME_HEIGHT /2),(game.GAME_HEIGHT /2) - 200);
+        fullName.setSize(game.GAME_HEIGHT,game.GAME_HEIGHT /6);
         fullName.setVisible(false);
 
         stage.addActor(fullName);
@@ -105,13 +102,13 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
     public void userEmail(){
         txtEmail = new Label("Enter Email",labelStyle);
-        txtEmail.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2));
+        txtEmail.setPosition(game.GAME_WIDTH /2 - 500,(game.GAME_HEIGHT /2));
         txtEmail.setSize(300,300);
         txtEmail.setVisible(false);
 
         email = new TextField("", txtFieldStyle);
-        email.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 200);
-        email.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
+        email.setPosition(game.GAME_WIDTH /2 - (game.GAME_HEIGHT /2),(game.GAME_HEIGHT /2) - 200);
+        email.setSize(game.GAME_HEIGHT,game.GAME_HEIGHT /6);
         email.setVisible(false);
 
         stage.addActor(email);
@@ -121,13 +118,13 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     public void enterUserName(){
         //=========This is the label for user name============
         txtUserName = new Label("Create UserName",labelStyle);
-        txtUserName.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2));
+        txtUserName.setPosition(game.GAME_WIDTH /2 - 500,(game.GAME_HEIGHT /2));
         txtUserName.setSize(300,300);
 
         //=========Text field for the user name================
         userName = new TextField("", txtFieldStyle);
-        userName.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
-        userName.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 200);
+        userName.setSize(game.GAME_HEIGHT,game.GAME_HEIGHT /6);
+        userName.setPosition(game.GAME_WIDTH /2 - (game.GAME_HEIGHT /2),(game.GAME_HEIGHT /2) - 200);
 
         System.out.println(username_input);
 
@@ -148,7 +145,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         if(username_input.length() >= 0 && username_input.length() < 6){
             if(message == null) {
                 message = new Label("Username should be atleast 6 characters", ls);
-                message.setPosition(game.ANDROID_WIDTH / 2 - (game.ANDROID_HEIGHT / 2), (game.ANDROID_HEIGHT / 2) - 400);
+                message.setPosition(game.GAME_WIDTH / 2 - (game.GAME_HEIGHT / 2), (game.GAME_HEIGHT / 2) - 400);
                 message.setSize(300, 300);
                 message.setVisible(true);
                 stage.addActor(message);
@@ -171,16 +168,16 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
     public void userPassword(){
         txtPassword = new Label("Create Password",labelStyle);
-        txtPassword.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2));
+        txtPassword.setPosition(game.GAME_WIDTH /2 - 500,(game.GAME_HEIGHT /2));
         txtPassword.setSize(300,300);
         txtPassword.setVisible(false);
 
         //=========Text field for the user password =============
         password = new TextField("", txtFieldStyle);
         password.setPasswordCharacter('*');
-        password.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 200);
+        password.setPosition(game.GAME_WIDTH /2 - (game.GAME_HEIGHT /2),(game.GAME_HEIGHT /2) - 200);
         password.setPasswordMode(true);
-        password.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
+        password.setSize(game.GAME_HEIGHT,game.GAME_HEIGHT /6);
         password.setVisible(false);
 
 
@@ -199,7 +196,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         style_button.font = font;
 
         btnBack = new TextButton("Back", style_button);
-        btnBack.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 500);
+        btnBack.setPosition(game.GAME_WIDTH /2 - (game.GAME_HEIGHT /2),(game.GAME_HEIGHT /2) - 500);
         btnBack.setSize(400,200);
         btnBack.setVisible(true);
 
@@ -211,7 +208,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         btnNext = new TextButton(text, style_button);;
         //set the position and size of the button
-        btnNext.setPosition((game.ANDROID_WIDTH/2) + 300,(game.ANDROID_HEIGHT/2) - 500);
+        btnNext.setPosition((game.GAME_WIDTH /2) + 300,(game.GAME_HEIGHT /2) - 500);
         btnNext.setSize(400,200);
         btnNext.setVisible(true);
 
@@ -338,7 +335,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     }
 
     public void resize(int width, int height){
-
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
     }
 
     public void pause(){
@@ -362,7 +360,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         stage.dispose();
         atlas.dispose();
         font.dispose();
-        batch.dispose();
         skin.dispose();
     }
 

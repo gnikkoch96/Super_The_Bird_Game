@@ -1,18 +1,14 @@
 package com.procode.game.scenes;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -22,22 +18,11 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
-import com.procode.game.screens.PlayScreen;
-import com.procode.game.sprites.Bird;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
-import com.sun.corba.se.impl.orbutil.graph.Graph;
-
-import java.awt.AlphaComposite;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JTextField;
 
 public class HUD implements Disposable {
     public Stage stage;
-    private Viewport viewport;
 
     // values that get updated dynamically
     private static Integer score;
@@ -59,8 +44,7 @@ public class HUD implements Disposable {
 
     public HUD(SuperBirdGame game){
         score = 0;
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
+        stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
 
         // table is used for organizing the displays
@@ -91,19 +75,19 @@ public class HUD implements Disposable {
         bird_State = 0;
 
         // displays
-        healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5));
-        pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.ANDROID_WIDTH/35, SuperBirdGame.ANDROID_HEIGHT/25));
-        scoreBackground = new Image(ImageFunctions.resize("screen icons//score-backgroundTwo.png", SuperBirdGame.ANDROID_WIDTH/4, SuperBirdGame.ANDROID_HEIGHT/7));
+        healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /5));
+        pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.GAME_WIDTH /35, SuperBirdGame.GAME_HEIGHT /25));
+        scoreBackground = new Image(ImageFunctions.resize("screen icons//score-backgroundTwo.png", SuperBirdGame.GAME_WIDTH /4, SuperBirdGame.GAME_HEIGHT /7));
         scoreTextLabel = new Label("SCORE: ", style);
         scoreLabel = new Label(score + " ", style);
 
-        leftTable.add(pauseBtn).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/3).padLeft(SuperBirdGame.ANDROID_WIDTH/60);
-        leftTable.add(healthBar).padBottom(SuperBirdGame.ANDROID_HEIGHT/2 + SuperBirdGame.ANDROID_HEIGHT/4);
+        leftTable.add(pauseBtn).padBottom(SuperBirdGame.GAME_HEIGHT /2 + SuperBirdGame.GAME_HEIGHT /3).padLeft(SuperBirdGame.GAME_WIDTH /60);
+        leftTable.add(healthBar).padBottom(SuperBirdGame.GAME_HEIGHT /2 + SuperBirdGame.GAME_HEIGHT /4);
 
         //--Nikko: (Changeable) I have placed the score to be in the middle of the screen as opposed to the right as the user doesn't have to look very far to see their score
-        leftTable.add(scoreTextLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.1)).padLeft((int) (SuperBirdGame.ANDROID_WIDTH/4.5));
-        leftTable.add(scoreLabel).padBottom((int) (SuperBirdGame.ANDROID_HEIGHT/1.1));
-        scoreTable.add(scoreBackground).padBottom((float) (SuperBirdGame.ANDROID_HEIGHT/1.1));
+        leftTable.add(scoreTextLabel).padBottom((int) (SuperBirdGame.GAME_HEIGHT /1.1)).padLeft((int) (SuperBirdGame.GAME_WIDTH /4.5));
+        leftTable.add(scoreLabel).padBottom((int) (SuperBirdGame.GAME_HEIGHT /1.1));
+        scoreTable.add(scoreBackground).padBottom((float) (SuperBirdGame.GAME_HEIGHT /1.1));
 
         //set the sate of the PauseBtn
         setPauseBtn();
@@ -139,7 +123,7 @@ public class HUD implements Disposable {
     }
 
     public void updateHealthBar(int currentHealth){
-        Texture newHealth = ImageFunctions.resize("screen icons//bird health " + String.valueOf(currentHealth) + ".png", SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/5);
+        Texture newHealth = ImageFunctions.resize("screen icons//bird health " + String.valueOf(currentHealth) + ".png", SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /5);
         healthBar.setDrawable(new TextureRegionDrawable(new TextureRegion(newHealth)));
     }
 

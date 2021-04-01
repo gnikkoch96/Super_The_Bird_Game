@@ -28,7 +28,6 @@ import java.util.HashMap;
 public class ConfirmationScreen implements Screen {
     private SuperBirdGame game;
     private Stage stage;
-    private Viewport viewport;
     private Skin skin;
     private Texture background;
     private BitmapFont font;
@@ -38,16 +37,15 @@ public class ConfirmationScreen implements Screen {
 
     public ConfirmationScreen(SuperBirdGame g, HashMap<String,String> map){
         game = g;
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
+        stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         //atlas = new TextureAtlas("font-export.fnt");
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
         Skin skin = new Skin(Gdx.files.internal("comic-ui.json"));
         Container<Table> tableContainer = new Container<Table>();
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
@@ -57,8 +55,8 @@ public class ConfirmationScreen implements Screen {
         font = fontGenerator.generateFont(fontParameter);
 
 
-        float sw = SuperBirdGame.ANDROID_WIDTH;
-        float sh = SuperBirdGame.ANDROID_HEIGHT;
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
 
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
@@ -145,7 +143,8 @@ public class ConfirmationScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
     }
 
     @Override

@@ -27,8 +27,8 @@ public class Gamepad {
     public Gamepad(SuperBirdGame game) {
         x = 0;
         y = 0;
-        touchSensitivity = game.ANDROID_HEIGHT / 60;
-        buttonSize = game.ANDROID_HEIGHT / 10;
+        touchSensitivity = game.GAME_HEIGHT / 60;
+        buttonSize = game.GAME_HEIGHT / 10;
 
         upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", buttonSize, buttonSize);
         downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", buttonSize, buttonSize);
@@ -117,7 +117,7 @@ public class Gamepad {
         leftArrow.setPosition(0,buttonSize);
         rightArrow.setPosition(buttonSize * 2, buttonSize);
         upArrow.setPosition(buttonSize, buttonSize * 2);
-        shootButton.setPosition(SuperBirdGame.ANDROID_WIDTH - buttonSize * 3, (int)(buttonSize/1.5));
+        shootButton.setPosition(SuperBirdGame.GAME_WIDTH - buttonSize * 3, (int)(buttonSize/1.5));
     }
 
     // adds or subtracts the amount depending on the axis
