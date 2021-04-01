@@ -23,15 +23,15 @@ public class Hitbox implements Disposable {
         height = h;
 
         // y-value is reversed
-//        topleft = new Vector2(this.position.x, this.position.y + height);
-//        topright = new Vector2(this.position.x+width, this.position.y + height);
-//        botleft = new Vector2(this.position.x, this.position.y);
-//        botright = new Vector2(this.position.x+width, this.position.y);
-
-        topleft = new Vector2(this.position.x, this.position.y-height);
-        topright = new Vector2(this.position.x+width, this.position.y-height);
+        topleft = new Vector2(this.position.x, this.position.y + height);
+        topright = new Vector2(this.position.x+width, this.position.y + height);
         botleft = new Vector2(this.position.x, this.position.y);
         botright = new Vector2(this.position.x+width, this.position.y);
+
+//        topleft = new Vector2(this.position.x, this.position.y-height);
+//        topright = new Vector2(this.position.x+width, this.position.y-height);
+//        botleft = new Vector2(this.position.x, this.position.y);
+//        botright = new Vector2(this.position.x+width, this.position.y);
 
         //--DEBUG--//
         shapeRenderer = new ShapeRenderer();
@@ -43,7 +43,7 @@ public class Hitbox implements Disposable {
 
         // Check if the corner of the incoming object is inside of this hitbox
         for(Vector2 o : other_corners) {
-            if((o.x >= this.botleft.x && o.x <= this.topright.x) && (o.y <= this.botleft.y && o.y >= this.topright.y)) {
+            if((o.x >= this.botleft.x && o.x <= this.topright.x) && (o.y >= this.botleft.y && o.y <= this.topright.y)) {
 //                Gdx.app.log("This Hitbox (Enemy)", "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
 //                        + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
 //                        + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
@@ -60,7 +60,7 @@ public class Hitbox implements Disposable {
     }
 
     public void update(Vector2 newPos) {
-        float update_y = this.position.y - height;
+        float update_y = this.position.y + height;
         float update_x = this.position.x + width;
 
         position = newPos;
@@ -80,7 +80,10 @@ public class Hitbox implements Disposable {
     public void debugHitbox(){
         this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         this.shapeRenderer.setColor(Color.BLACK);
-        this.shapeRenderer.rect(this.position.x, this.position.y, width, height);
+        this.shapeRenderer.line(this.botleft, this.topleft);
+        this.shapeRenderer.line(this.botleft, this.botright);
+        this.shapeRenderer.line(this.topleft, this.topright);
+        this.shapeRenderer.line(this.botright, this.topright);
         this.shapeRenderer.end();
     }
 

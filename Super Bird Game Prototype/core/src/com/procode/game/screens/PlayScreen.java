@@ -72,7 +72,7 @@ public class PlayScreen implements Screen {
         state = GAME_PLAY;
         //Creating Sprites
         int birdWidth = SuperBirdGame.ANDROID_WIDTH/5;
-        int birdHeight = SuperBirdGame.ANDROID_HEIGHT /5;
+        int birdHeight = SuperBirdGame.ANDROID_HEIGHT/5;
         player = new Bird(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth, birdHeight);
         enemy = new Bird(SuperBirdGame.ANDROID_WIDTH/2, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth,birdHeight);
 
@@ -116,6 +116,7 @@ public class PlayScreen implements Screen {
 
         // bird movement
         birdMovement = hud.gamepad.getButtonInputs();
+        Gdx.app.log("Bird Movement", "(" + String.valueOf(birdMovement.x) + " , " + String.valueOf(birdMovement.y) + ")");
         player.movePosition(birdMovement.x, birdMovement.y);
         setBackgroundMovement();
         gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird

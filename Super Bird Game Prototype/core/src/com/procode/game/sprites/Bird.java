@@ -36,7 +36,6 @@ public class Bird implements Disposable {
     // bird properties
     private Vector2 position;
     private int healthCount;
-    private Vector2 velocity;
     public Hitbox hitbox;
 
     // audio related
@@ -58,7 +57,6 @@ public class Bird implements Disposable {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
         position = new Vector2(x,y);
-        velocity = new Vector2(0,0);
 
         isDead = false;
         isInvincible = false;
