@@ -92,9 +92,9 @@ public class PlayScreen implements Screen {
         int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
         float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 70;
         enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
+
+
     }
-
-
 
     public void handleInput(float dt){
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
@@ -133,8 +133,6 @@ public class PlayScreen implements Screen {
         if(enemyBird.getState() == Enemy.State.DEAD)
             enemyBird.reSpawn();
     }
-
-
 
     public void setBackgroundMovement(){
         if(moveHills_x > -(game.ANDROID_WIDTH/4))
@@ -204,7 +202,6 @@ public class PlayScreen implements Screen {
             spits.render(game.batch);
         }
 
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.end();
 
         //--DEBUGGING--//

@@ -28,7 +28,7 @@ public class BirdSpit extends Projectile implements Disposable {
         if(BirdSpit.projectileImage == null) BirdSpit.projectileImage = ImageFunctions.resize("bird animations//spit projectile 1.png", this.projectileWidth, this.projectileHeight);
         if(BirdSpit.collisionAnimation == null){
             BirdSpit.collisionAnimation = new Animation();
-            BirdSpit.collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, .25f, false);
+            BirdSpit.collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, 1f, false);
         }
 
         this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
@@ -41,7 +41,6 @@ public class BirdSpit extends Projectile implements Disposable {
     }
 
     public void update(float dt) {
-        //--NIKKO: placed it here because I didn't want it to keep calculating the position and hitbox after the spit leaves the screen
         if (isOutOfScreen()) { // removes the spit if it exits the screen
             this.reset();
         } else {
@@ -54,8 +53,8 @@ public class BirdSpit extends Projectile implements Disposable {
                 // update hitbox location
                 hitbox.update(this.position);
 
-                if (isOutOfScreen()) // removes the spit if it exits the screen
-                    this.alive = false;
+//                if (isOutOfScreen()) // removes the spit if it exits the screen
+//                    this.alive = false;
             }
         }
 
@@ -68,20 +67,13 @@ public class BirdSpit extends Projectile implements Disposable {
 
     public void render(SpriteBatch batch){
         //--Nikko: doesn't need to begin or end batch as this code will be called while the spritebatch of PlayScreen.class already started the begin()
+        batch.draw(projectileImage, this.position.x, this.position.y);
 
-        if(!collided){
-//            Gdx.app.log("Hitbox (BotLeft)", "( " + Float.toString(this.getHitbox().botleft.x) + ", " + Float.toString(this.getHitbox().position.y) + ")");
-            batch.draw(projectileImage, this.position.x, this.position.y);
-//            Gdx.app.log("Spit Location", "( " + Float.toString(this.position.x) + ", " + Float.toString(this.position.y) + ")");
-//            batch.draw(projectileImage, this.position.x, this.position.y - this.projectileHeight/2); //Nikko: switch to this when images have been adjusted
-        }else if(!collided){
+        if(collided){ // collided with an object
             batch.draw(collisionAnimation.getCurrImg(), this.position.x, this.position.y);
         }
-//        if(this.collided){
-//            batch.draw(collisionAnimation.getCurrImg(), this.position.x, this.position.y);
-//        }else if(!collided){
-//            batch.draw(projectileImage, this.position.x + (Bird.getBirdWidth()/2), this.position.y + (Bird.getBirdHeight()/3));
-//        }
+
+
     }
 
 
