@@ -158,14 +158,14 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //go to password
-                btnNextClicked("Email");
+                btnNextClicked("FullName");
             }
         });
 
         btnBack.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                btnBackClicked();
+                btnBackClicked("FullName");
             }
         });
 
@@ -205,14 +205,14 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //go to password
-                btnNextClicked("Register");
+                btnNextClicked("Email");
             }
         });
 
         btnBack.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                btnBackClicked();
+                btnBackClicked("Email");
             }
         });
 
@@ -234,7 +234,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         buttonTable.add(btnNext).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
 
         //adding the table into the container
-      //  tableContainer.setActor(table);
         tableContainer3.setActor(emailTable);
         tableContainer3.setVisible(false);
     }
@@ -242,44 +241,23 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     public void enterUserName(){
         //=========This is the label for user name============
         txtUserName = new Label("Create UserName",labelStyle);
-        //txtUserName.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2));
-        //txtUserName.setSize(300,300);
         txtUserName.setAlignment(Align.center);
 
         //=========Text field for the user name================
         userName = new TextField("", txtFieldStyle);
-        userName.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
-        userName.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 200);
+
 
         System.out.println(username_input);
 
-       // stage.addActor(txtUserName);
-        //set the actor UserName
-       // stage.addActor(userName);
-
-        //Adding the label and the text field in the table
-        //table.row().colspan(3).expandX().fillX();
-       // table.row().colspan(3).expandX().fillX();
         userNameTable.row().colspan(3).expandX().fillX();
         userNameTable.add(txtUserName).fillX().width((float)game.ANDROID_WIDTH/2);
         userNameTable.row().colspan(3).expandX().fillX();
         userNameTable.add(userName).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
 
-        //adding the table into the container
-        //tableContainer.setActor(table);
 
-
-        //=================Next button =====================
-        String text ="Next";
-
-        //if(email.isVisible() == true && emailTable.isVisible() == true)
-        //    text = "Register";
-
-        TextButton btnNext = new TextButton(text, style_button);
+        TextButton btnNext = new TextButton("Next", style_button);
         TextButton btnBack = new TextButton("Back", style_button);
-        //set the position and size of the button
-        btnNext.setPosition((game.ANDROID_WIDTH/2) + 300,(game.ANDROID_HEIGHT/2) - 500);
-        btnNext.setSize(400,200);
+
         btnNext.setVisible(true);
 
 
@@ -287,14 +265,14 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //go to password
-                btnNextClicked("Password");
+                btnNextClicked("Username");
             }
         });
 
         btnBack.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                btnBackClicked();
+                btnBackClicked("Username");
             }
         });
 
@@ -349,30 +327,18 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
     public void userPassword(){
         txtPassword = new Label("Create Password",labelStyle);
-        //txtPassword.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2));
-        //txtPassword.setSize(300,300);
         txtPassword.setAlignment(Align.center);
-      //  txtPassword.setVisible(false);
 
         //=========Text field for the user password =============
         password = new TextField("", txtFieldStyle);
         password.setPasswordCharacter('*');
-        password.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 200);
         password.setPasswordMode(true);
-        password.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
-      //  password.setVisible(false);
-
 
         //Adding the label and the text field in the table
         passwordTable.row().colspan(3).expandX().fillX();
         passwordTable.add(txtPassword).fillX().width((float)game.ANDROID_WIDTH/2);
         passwordTable.row().colspan(3).expandX().fillX();
         passwordTable.add(password).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
-        //then send the password into the stage
-       // stage.addActor(txtPassword);
-       // stage.addActor(password);
-        //adding the table into the container
-      //  tableContainer.setActor(table);
 
         //=================Next button =====================
 
@@ -385,14 +351,14 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //set the screen to prompt full name
-                btnNextClicked("FullName");
+                btnNextClicked("Password");
             }
         });
 
         btnBack.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                btnBackClicked();
+                btnBackClicked("Password");
             }
         });
 
@@ -400,8 +366,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         passwordTable.row().colspan(3).expandX().fillX();
         passwordTable.add(buttonTable);
-
-
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
@@ -413,20 +377,36 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     }
 
 
+    //this method will return it back from previous state
+    public void btnBackClicked(String state){
+        if(state.equals("Username")){
+            game.setScreen(new LoginScreen(game));
+        }else if(state.equals("Password")){
+            tableContainer1.setVisible(false);
+            tableContainer0.setVisible(true);
+        }else if(state.equals("FullName")){
+            tableContainer2.setVisible(false);
+            tableContainer1.setVisible(true);
+        }else if(state.equals("Email")){
+            tableContainer3.setVisible(false);
+            tableContainer2.setVisible(true);
+        }
+    }
+
 
     //this method will change the state of the screen.
     public void btnNextClicked(String state){
 
-        if(state.equals("Password")){
+        if(state.equals("Username")){
             tableContainer0.setVisible(false);
             tableContainer1.setVisible(true);
-        }else if(state.equals("FullName")){
+        }else if(state.equals("Password")){
             tableContainer1.setVisible(false);
             tableContainer2.setVisible(true);
-        }else if(state.equals("Email")){
+        }else if(state.equals("FullName")){
             tableContainer2.setVisible(false);
             tableContainer3.setVisible(true);
-        }else if(state.equals("Register")){
+        }else if(state.equals("Email")){
             game.setScreen(new ConfirmationScreen(game, new HashMap<String, String>()));
         }
 
