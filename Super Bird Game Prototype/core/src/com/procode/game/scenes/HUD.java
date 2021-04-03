@@ -18,18 +18,22 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.screens.MiniSettingScreen;
+import com.procode.game.screens.PlayScreen;
+import com.procode.game.sprites.Bird;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
 public class HUD implements Disposable {
     public Stage stage;
 
+    
     // values that get updated dynamically
     private static Integer score;
 
     // what is shown on the HUD
     private Image healthBar;
-    private Image pauseBtn;
+    private Image pauseBtn, playBtn;
     private Image scoreBackground;        // visual for when displaying the score
     private Label scoreLabel, scoreTextLabel;
     public Gamepad gamepad;               // displays the gamepad on the screen
@@ -41,6 +45,7 @@ public class HUD implements Disposable {
     public static int state;
     public int bird_State = 0;
     private final int GAME_PLAY = 0, GAME_PAUSE = 1;
+    public static MiniSettingScreen settingScreen;
 
     public HUD(SuperBirdGame game){
         score = 0;
@@ -100,11 +105,15 @@ public class HUD implements Disposable {
         stage.addActor(gamepad.rightArrow);
         stage.addActor(gamepad.shootButton);
 
-        // display table to screen
+        //set up the mini settings for the PlayScreen
+        settingScreen = new MiniSettingScreen(stage);
+
+        settingScreen.setContainerVisible(false);
+        //Display table to screen
+        stage.addActor(settingScreen.getActor());
         stage.addActor(scoreTable);
         stage.addActor(leftTable);
     }
-
     public void setPauseBtn(){
         pauseBtn.addListener(new ClickListener(){
             @Override
@@ -113,6 +122,7 @@ public class HUD implements Disposable {
                     state = GAME_PAUSE;
                 else if(state == GAME_PAUSE)
                     state = GAME_PLAY;
+
                 return true;
             }
         });
@@ -122,6 +132,9 @@ public class HUD implements Disposable {
         return gamepad.shoot;
     }
 
+
+
+    //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){
         Texture newHealth = ImageFunctions.resize("screen icons//bird health " + String.valueOf(currentHealth) + ".png", SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /5);
         healthBar.setDrawable(new TextureRegionDrawable(new TextureRegion(newHealth)));

@@ -143,5 +143,17 @@ public class Database {
     public void upDateScore(int score){
         
     }
+    /*public void upDateScore(int score){
+        rootRef.child("Users").child(this.username).child(this.score).setValue(score)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+
+                        }
+                    }
+                });
+
+    }*/
     //===================================End of Updates ============================================
 }

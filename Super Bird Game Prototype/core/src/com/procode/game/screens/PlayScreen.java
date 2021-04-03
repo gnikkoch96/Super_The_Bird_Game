@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
@@ -15,8 +17,9 @@ import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
 import com.procode.game.sprites.MechaBird;
-import com.procode.game.sprites.BirdSpit;
 import com.procode.game.tools.Enemy;
+import com.procode.game.sprites.BirdSpit;
+import com.procode.game.sprites.EnemyDummy;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
@@ -44,6 +47,7 @@ public class PlayScreen implements Screen {
     private MechaBird enemyBird;
 
     public Array<BirdSpit> activeSpits;
+
 
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
@@ -85,8 +89,6 @@ public class PlayScreen implements Screen {
         enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
     }
 
-
-
     public void handleInput(float dt){
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             player.damageBird(hud);
@@ -105,6 +107,8 @@ public class PlayScreen implements Screen {
         enemy.update(dt);
 
         player.hitDetection(enemy, hud);
+        player.hitbox.isHit(enemy.hitbox);
+
 
         // bird movement
         birdMovement = hud.gamepad.getButtonInputs();
@@ -154,6 +158,8 @@ public class PlayScreen implements Screen {
         update(currTime);
         //game.batch.draw(background, 0, 0);
 
+        HUD.settingScreen.setContainerVisible(false);
+
         game.batch.draw(bg.getBackgroundSky(),0,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
@@ -179,6 +185,8 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0);
 
+        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+
         switch(state){ // pauses or resumes the game
             case GAME_PLAY:
                 play(delta);
@@ -196,6 +204,7 @@ public class PlayScreen implements Screen {
         }
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+        player.renderBullets(game.batch);
         game.batch.end();
 
         //--DEBUGGING--//
@@ -222,6 +231,9 @@ public class PlayScreen implements Screen {
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+
+        HUD.settingScreen.setContainerVisible(true);
+
         state = HUD.state;
     }
 

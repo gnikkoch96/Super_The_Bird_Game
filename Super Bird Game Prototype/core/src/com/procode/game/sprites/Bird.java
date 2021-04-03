@@ -12,6 +12,8 @@ import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 
+import java.lang.Math;
+
 public class Bird implements Disposable {
     private static final long INVINCIBLE_DURATION = 2000; // value can be changed
     private static long timeVar;  // used for the invincible property
@@ -33,6 +35,7 @@ public class Bird implements Disposable {
     // bird properties
     private Vector2 position;
     private int healthCount;
+    private Vector2 velocity;
     public Hitbox hitbox;
 
     // audio related
@@ -49,7 +52,6 @@ public class Bird implements Disposable {
         }
     };
 
-    // constructor
     public Bird(int x, int y, int birdWidth, int birdHeight) {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
@@ -95,6 +97,10 @@ public class Bird implements Disposable {
     public Vector2 getPosition(){
         return this.position;
     }
+
+    //--Nikko: I used this to locate where the spits should be rendering from
+    public static int getBirdWidth(){return BirdWidth;}
+    public static int getBirdHeight(){return BirdHeight;}
 
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
