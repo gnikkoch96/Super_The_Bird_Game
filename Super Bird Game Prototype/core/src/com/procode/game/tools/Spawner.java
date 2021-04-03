@@ -44,14 +44,9 @@ public class Spawner {
 
         // initialize all variants of enemies based off of the max into the inactive enemies
         // initialize mechaBirds
-<<<<<<< Updated upstream
         int mechaBirdWidth = SuperBirdGame.GAME_WIDTH / 5;
         int mechaBirdHeight = SuperBirdGame.GAME_HEIGHT / 5;
         float mechaBirdSpeed = SuperBirdGame.GAME_HEIGHT / 70;
-=======
-        int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
-        int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
->>>>>>> Stashed changes
         for (int i = 0;  i < maxEnemies; i++){
 
             float randSpeed = (float) (Math.random() * enemyMaxSpeed);
@@ -151,8 +146,8 @@ public class Spawner {
             // initialize mechaBirds
             int currMax = this.maxEnemies - maxEnemies;
             this.maxEnemies = maxEnemies;
-            int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
-            int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
+            int mechaBirdWidth = SuperBirdGame.GAME_WIDTH / 5;
+            int mechaBirdHeight = SuperBirdGame.GAME_HEIGHT / 5;
             for (int i = 0;  i < currMax; i++){
 
                 float randSpeed = (float) (Math.random() * enemyMaxSpeed);

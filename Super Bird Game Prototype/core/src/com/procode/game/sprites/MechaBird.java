@@ -282,13 +282,8 @@ public class MechaBird extends Enemy {
 
     //sets the enemy position
     public void setEnemyInitialPosition(){
-<<<<<<< Updated upstream
-        super.position.x = (int) (SuperBirdGame.GAME_WIDTH + ((Math.random() * 3) * enemyWidth));
-        super.position.y = (int) ((Math.random()) * (SuperBirdGame.GAME_HEIGHT - enemyHeight * 2));
-=======
-        super.position.x = (int) (SuperBirdGame.ANDROID_WIDTH + ((Math.random() * 5) * enemyWidth));
-        super.position.y = (int) ((Math.random()) * (SuperBirdGame.ANDROID_HEIGHT - enemyHeight));
->>>>>>> Stashed changes
+        super.position.x = (int) (SuperBirdGame.GAME_WIDTH + ((Math.random() * 5) * enemyWidth));
+        super.position.y = (int) ((Math.random()) * (SuperBirdGame.GAME_HEIGHT - enemyHeight));
     }
 
 
