@@ -127,7 +127,7 @@ public class SettingsScreen implements Screen {
         //buttons();
 
         game.batch.begin();
-        game.batch.draw(volumeImage,game.ANDROID_WIDTH - (game.ANDROID_WIDTH - 700),100);
+        //game.batch.draw(volumeImage,game.ANDROID_WIDTH - (game.ANDROID_WIDTH - 700),100);
         game.batch.end();
 
         stage.act(delta);
