@@ -91,8 +91,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         style_button.font = font;
 
         //========Setting the sizes of the containers ===================
-        float sw = SuperBirdGame.ANDROID_WIDTH;
-        float sh = SuperBirdGame.ANDROID_HEIGHT;
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
 
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
@@ -168,9 +168,9 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
 
         Table buttonTable = new Table(skin);
-        fullNameTable.add(txtFullName).fillX().width((float)game.ANDROID_WIDTH/2);
+        fullNameTable.add(txtFullName).fillX().width((float)game.GAME_WIDTH/2);
         fullNameTable.row().colspan(3).expandX().fillX();
-        fullNameTable.add(fullName).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+        fullNameTable.add(fullName).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
 
         fullNameTable.row().colspan(3).expandX().fillX();
@@ -178,8 +178,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
         //adding the table into the container
      //   tableContainer.setActor(table);
@@ -218,17 +218,17 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         //Adding the label and the text field in the table
         emailTable.row().colspan(3).expandX().fillX();
-        emailTable.add(txtEmail).fillX().width((float)game.ANDROID_WIDTH/2);
+        emailTable.add(txtEmail).fillX().width((float)game.GAME_WIDTH/2);
         emailTable.row().colspan(3).expandX().fillX();
-        emailTable.add(email).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+        emailTable.add(email).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
         emailTable.row().colspan(3).expandX().fillX();
         emailTable.add(buttonTable);
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
         //adding the table into the container
         tableContainer3.setActor(emailTable);
@@ -247,9 +247,9 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         System.out.println(username_input);
 
         userNameTable.row().colspan(3).expandX().fillX();
-        userNameTable.add(txtUserName).fillX().width((float)game.ANDROID_WIDTH/2);
+        userNameTable.add(txtUserName).fillX().width((float)game.GAME_WIDTH/2);
         userNameTable.row().colspan(3).expandX().fillX();
-        userNameTable.add(userName).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+        userNameTable.add(userName).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
 
         TextButton btnNext = new TextButton("Next", style_button);
@@ -281,8 +281,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
 
 
@@ -333,7 +333,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         //Adding the label and the text field in the table
         passwordTable.row().colspan(3).expandX().fillX();
-        passwordTable.add(txtPassword).fillX().width((float)game.ANDROID_WIDTH/2);
+        passwordTable.add(txtPassword).fillX().width((float)game.GAME_WIDTH/2);
         passwordTable.row().colspan(3).expandX().fillX();
         passwordTable.add(password).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
@@ -366,8 +366,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
         tableContainer1.setVisible(false);
         tableContainer1.setActor(passwordTable);

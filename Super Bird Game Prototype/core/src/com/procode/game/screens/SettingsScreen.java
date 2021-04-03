@@ -23,7 +23,6 @@ public class SettingsScreen implements Screen {
 
     private SuperBirdGame game;
     private Stage stage;
-    private Viewport viewport;
     private BitmapFont font;
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
@@ -34,13 +33,12 @@ public class SettingsScreen implements Screen {
 
     public SettingsScreen(SuperBirdGame g){
         game = g;
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
+        stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
         Container<Table> tableContainer = new Container<Table>();
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
@@ -49,7 +47,7 @@ public class SettingsScreen implements Screen {
 
         font = fontGenerator.generateFont(fontParameter);
 
-        volumeImage = ImageFunctions.resize("screen icons//volume.png", SuperBirdGame.ANDROID_WIDTH/2, SuperBirdGame.ANDROID_HEIGHT/4);
+        volumeImage = ImageFunctions.resize("screen icons//volume.png", SuperBirdGame.GAME_WIDTH /2, SuperBirdGame.GAME_HEIGHT /4);
     }
 
     public void buttons(){
@@ -63,7 +61,7 @@ public class SettingsScreen implements Screen {
         btnEditAccount = new TextButton("Edit Account", style_button);
         skin.add("fonts", font);
         //set the position and size of the button
-        btnEditAccount.setPosition((game.ANDROID_WIDTH/2) - 500,(game.ANDROID_HEIGHT/2) + 300);
+        btnEditAccount.setPosition((game.GAME_WIDTH /2) - 500,(game.GAME_HEIGHT /2) + 300);
         btnEditAccount.setSize(1000,350);
 
         //set the listener for log in button
@@ -78,7 +76,7 @@ public class SettingsScreen implements Screen {
 
         btnChangePassword = new TextButton("Change Password", style_button);;
         //set the position and size of the button
-        btnChangePassword.setPosition((game.ANDROID_WIDTH/2) - 500,(game.ANDROID_HEIGHT/2) - 150);
+        btnChangePassword.setPosition((game.GAME_WIDTH /2) - 500,(game.GAME_HEIGHT /2) - 150);
         btnChangePassword.setSize(1000,350);
 
         //set the listener for SignUp button
@@ -94,7 +92,7 @@ public class SettingsScreen implements Screen {
         btnBack = new TextButton("Back", style_button);
         skin.add("fonts", font);
         //set the position and size of the button
-        btnBack.setPosition(game.ANDROID_WIDTH - (game.ANDROID_WIDTH - 100),(game.ANDROID_HEIGHT) - 300);
+        btnBack.setPosition(game.GAME_WIDTH - (game.GAME_WIDTH - 100),(game.GAME_HEIGHT) - 300);
         btnBack.setSize(400,200);
 
         //set the listener for log in button
@@ -127,7 +125,7 @@ public class SettingsScreen implements Screen {
         //buttons();
 
         game.batch.begin();
-        game.batch.draw(volumeImage,game.ANDROID_WIDTH - (game.ANDROID_WIDTH - 700),100);
+        game.batch.draw(volumeImage,game.GAME_WIDTH - (game.GAME_WIDTH - 700),100);
         game.batch.end();
 
         stage.act(delta);
@@ -136,7 +134,8 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
     }
 
     @Override

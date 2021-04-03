@@ -133,7 +133,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         table.row().colspan(3).expandX().fillX();
         table.add(txtUserName).fillX().width((float)game.GAME_WIDTH/2);
         table.row().colspan(3).expandX().fillX();
-        table.add(userName).fillX().width((float)game.GAME_WIDTH/2).height((floatGAME/6);
+        table.add(userName).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
         //adding the table into the container
         tableContainer.setActor(table);
@@ -214,8 +214,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         table.add(buttonTable);
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnLogin).width(((float)game.GAME_WIDTH)/6.0f).height(((floatGAME*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
-        buttonTable.add(btnSignUp).width(((float)game.GAME_WIDTH)/6.0f).height(((floatGAME*0.5f)/3.0f).expand();
+        buttonTable.add(btnLogin).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnSignUp).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
         //stage.addActor(btnLogin);
         //stage.addActor(btnSignUp);
     }

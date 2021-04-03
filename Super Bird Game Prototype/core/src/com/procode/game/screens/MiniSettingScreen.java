@@ -1,13 +1,9 @@
 package com.procode.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,12 +11,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.ImageFunctions;
@@ -31,7 +24,6 @@ public class MiniSettingScreen{
     private Stage stage;
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
-    private Viewport viewport;
     private Skin skin;
     private BitmapFont font;
     private Container<Table> tableContainer;
@@ -52,15 +44,15 @@ public class MiniSettingScreen{
         fontParameter.size = 130;
         font = fontGenerator.generateFont(fontParameter);
 
-        background = ImageFunctions.resize("background stuff/woodbg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/woodbg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
         Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGB565);
         bgPixmap.setColor(Color.WHITE);
         bgPixmap.fill();
         TextureRegionDrawable textureRegionDrawableBg = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
         //========Setting the sizes of the containers ===================
-        float sw = SuperBirdGame.ANDROID_WIDTH;
-        float sh = SuperBirdGame.ANDROID_HEIGHT;
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
 
         float cw = sw * 0.5f;
         float ch = sh * 0.8f;
@@ -81,13 +73,13 @@ public class MiniSettingScreen{
         settingsbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//settingsbtn.png"))));
 
         table.row().colspan(3).expandX().fillX();
-        table.add(playbtn).fillX().width((float)game.ANDROID_WIDTH/4).height((float)game.ANDROID_HEIGHT/6);
+        table.add(playbtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
         table.row().colspan(3).expandX().fillX();
-        table.add(playbtn).fillX().width((float)game.ANDROID_WIDTH/4).height((float)game.ANDROID_HEIGHT/6);
+        table.add(playbtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
         table.row().colspan(3).expandX().fillX();
-        table.add(settingsbtn).fillX().width((float)game.ANDROID_WIDTH/4).height((float)game.ANDROID_HEIGHT/6);
+        table.add(settingsbtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
         table.row().colspan(3).expandX().fillX();
-        table.add(quitbtn).fillX().width((float)game.ANDROID_WIDTH/4).height((float)game.ANDROID_HEIGHT/6);
+        table.add(quitbtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
 
 
        //tableContainer.setBackground(textureRegionDrawableBg);

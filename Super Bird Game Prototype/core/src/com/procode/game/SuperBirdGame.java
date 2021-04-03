@@ -24,19 +24,6 @@ public class SuperBirdGame extends Game {
 
 	public SpriteBatch batch;
 
-	// android configurations
-	public static int ANDROID_WIDTH, ANDROID_HEIGHT;
-	public static int num;															// nikko: what does this do?
-
-
-	/* WARNING Using AssetManager in a static way can cause issues, especially on Android.
-	Instead you may want to pass around Assetmanager to those the classes that need it.
-	We will use it in the static context to save time for now. */
-	public static AssetManager manager;
-
-	public SuperBirdGame(){
-		// do nothing
-	}
 
 	/* WARNING Using AssetManager in a static way can cause issues, especially on Android.
 	Instead you may want to pass around Assetmanager to those the classes that need it.
@@ -44,10 +31,6 @@ public class SuperBirdGame extends Game {
 	public static AssetManager manager;
 
 	public SuperBirdGame(){}
-	public SuperBirdGame(int width, int height){
-		this.ANDROID_WIDTH = width;
-		this.ANDROID_HEIGHT = height;
-	}
 
 	@Override
 	public void create () {

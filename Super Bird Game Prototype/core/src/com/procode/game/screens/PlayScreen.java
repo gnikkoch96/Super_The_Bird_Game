@@ -112,7 +112,7 @@ public class PlayScreen implements Screen {
 
         // bird movement
         birdMovement = hud.gamepad.getButtonInputs();
-        Gdx.app.log("Bird Movement", "(" + String.valueOf(birdMovement.x) + " , " + String.valueOf(birdMovement.y) + ")");
+        //Gdx.app.log("Bird Movement", "(" + String.valueOf(birdMovement.x) + " , " + String.valueOf(birdMovement.y) + ")");
         player.movePosition(birdMovement.x, birdMovement.y);
         setBackgroundMovement();
         //gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
@@ -169,7 +169,7 @@ public class PlayScreen implements Screen {
         game.batch.draw(enemy.getBirdImage(),enemy.getPosition().x, enemy.getPosition().y);
 
         //testing only---------------------------------------
-        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState() + "   currentSpeed: " + enemyBird.getEnemySpeed());
+//        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState() + "   currentSpeed: " + enemyBird.getEnemySpeed());
         game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
     }
 
@@ -204,12 +204,12 @@ public class PlayScreen implements Screen {
         }
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
-        player.renderBullets(game.batch);
+        //player.renderBullets(game.batch);
         game.batch.end();
 
         //--DEBUGGING--//
-        enemy.hitbox.debugHitbox();
-        player.debugHitbox();
+//        enemy.hitbox.debugHitbox();
+//        player.debugHitbox();
 
         //add buttons to screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

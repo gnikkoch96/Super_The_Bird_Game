@@ -71,7 +71,7 @@ public class ConfirmationScreen implements Screen {
         labelStyle = skin.get(Label.LabelStyle.class);
         labelStyle.font = font;
 
-        Label topLabel = new Label("Congratulations your account has been verified", labelStyle);
+        Label topLabel = new Label("Congratulations account has been verified", labelStyle);
 
         topLabel.setAlignment(Align.center);
         Label name = new Label("Name: " + map.remove("name"),labelStyle);

@@ -163,10 +163,10 @@ public class Bird implements Disposable {
         }
 
 
-        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.hitbox.botleft.x + ", " + this.hitbox.botleft.y + ")\n"
-                + "botright: (" + this.hitbox.botright.x + ", " + this.hitbox.botright.y + ")\n"
-                + "topleft: (" + this.hitbox.topleft.x + ", " + this.hitbox.topleft.y + ")\n"
-                + "topright: (" + this.hitbox.topright.x + ", " + this.hitbox.topright.y + ")\n");
+//        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.hitbox.botleft.x + ", " + this.hitbox.botleft.y + ")\n"
+//                + "botright: (" + this.hitbox.botright.x + ", " + this.hitbox.botright.y + ")\n"
+//                + "topleft: (" + this.hitbox.topleft.x + ", " + this.hitbox.topleft.y + ")\n"
+//                + "topright: (" + this.hitbox.topright.x + ", " + this.hitbox.topright.y + ")\n");
     }
 
     public void switchAnimations(State playerState){
