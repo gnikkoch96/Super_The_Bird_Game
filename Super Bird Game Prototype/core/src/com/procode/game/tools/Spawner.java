@@ -46,14 +46,13 @@ public class Spawner {
         // initialize mechaBirds
         int mechaBirdWidth = SuperBirdGame.GAME_WIDTH / 5;
         int mechaBirdHeight = SuperBirdGame.GAME_HEIGHT / 5;
-        float mechaBirdSpeed = SuperBirdGame.GAME_HEIGHT / 70;
         for (int i = 0;  i < maxEnemies; i++){
 
             float randSpeed = (float) (Math.random() * enemyMaxSpeed);
             if(randSpeed < enemyMinSpeed){
                 randSpeed = enemyMinSpeed;
             }
-            MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, randSpeed);
+            MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, (int) randSpeed);
 
             inactiveEnemies.add(mecha);
         }
@@ -154,7 +153,7 @@ public class Spawner {
                 if(randSpeed < enemyMinSpeed){
                     randSpeed = enemyMinSpeed;
                 }
-                MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, randSpeed);
+                MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, (int) randSpeed);
 
                 inactiveEnemies.add(mecha);
             }

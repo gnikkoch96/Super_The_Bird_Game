@@ -230,7 +230,7 @@ public class MechaBird extends Enemy {
     public void updatePos(){
 
         // checks if the position is close enough to the destination to stop moving
-        if (Math.abs(currDestination.x - super.position.x ) > .3){
+        if (Math.abs(currDestination.x - super.position.x ) > .5){
             if (currDestination.x > super.position.x){
                 position.x += super.enemySpeed;
             }
@@ -238,7 +238,7 @@ public class MechaBird extends Enemy {
                 position.x -= super.enemySpeed;
             }
         }
-        if (Math.abs(currDestination.y - super.position.y ) > .3){
+        if (Math.abs(currDestination.y - super.position.y ) > .5){
             if (currDestination.y > super.position.y){
                 position.y += super.enemySpeed;
             }
