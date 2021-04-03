@@ -18,10 +18,14 @@ import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
 import com.procode.game.sprites.MechaBird;
 import com.procode.game.tools.Enemy;
+<<<<<<< Updated upstream
 import com.procode.game.sprites.BirdSpit;
 import com.procode.game.sprites.EnemyDummy;
+=======
+>>>>>>> Stashed changes
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
+import com.procode.game.tools.Spawner;
 
 
 //This class will handle the Play State logic of the game
@@ -44,7 +48,8 @@ public class PlayScreen implements Screen {
     public static Bird enemy;
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
-    private MechaBird enemyBird;
+    //private MechaBird enemyBird;
+    private Spawner enemySpawner;
 
     public Array<BirdSpit> activeSpits;
 
@@ -78,6 +83,7 @@ public class PlayScreen implements Screen {
         gamepad = new Gamepad(game);
         activeSpits = player.getActiveSpits();
 
+<<<<<<< Updated upstream
         int maxEnemies = 1;
         float spawnFrequency = 1.5f;
         //spawner = new EnemySpawner(maxEnemies, spawnFrequency);
@@ -87,6 +93,21 @@ public class PlayScreen implements Screen {
         int mechaBirdHeight = SuperBirdGame.GAME_HEIGHT / 5;
         float mechaBirdSpeed = SuperBirdGame.GAME_HEIGHT / 70;
         enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
+=======
+//        // testing only -----------------------------------------------
+//        int mechaBirdWidth = SuperBirdGame.ANDROID_WIDTH / 5;
+//        int mechaBirdHeight = SuperBirdGame.ANDROID_HEIGHT / 5;
+//        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 70;
+//        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
+
+        int minEnemies = 2; // easy = 2 hard = 5
+        int maxEnemies = 10; // easy = 5 hard = 15
+        float enemyMaxSpeed =  SuperBirdGame.ANDROID_HEIGHT / 40;
+        float enemyMinSpeed = SuperBirdGame.ANDROID_HEIGHT / 80;
+        float spawnPerSec = .003f; // easy = .003f hard = 1f
+        float spawnFrequency = 2.5f; // easy = 2.5f hard = 0
+        enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency);
+>>>>>>> Stashed changes
     }
 
     public void handleInput(float dt){
@@ -123,10 +144,18 @@ public class PlayScreen implements Screen {
         }*/
 
         //testing only-----------------------------------------------
-        enemyBird.updateMechaBird(dt);
+//        enemyBird.updateMechaBird(dt);
+//
+//        if(enemyBird.getState() == Enemy.State.DEAD){
+//            enemyBird.reSpawn();
+//        }
 
+<<<<<<< Updated upstream
         if(enemyBird.getState() == Enemy.State.DEAD)
             enemyBird.reSpawn();
+=======
+        enemySpawner.updateSpawner(dt);
+>>>>>>> Stashed changes
     }
 
 
@@ -170,7 +199,18 @@ public class PlayScreen implements Screen {
 
         //testing only---------------------------------------
 //        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState() + "   currentSpeed: " + enemyBird.getEnemySpeed());
+<<<<<<< Updated upstream
         game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
+=======
+//        game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
+
+        for (int i = 0; i < enemySpawner.activeEnemies.size(); i++){
+            Texture currEnemyImg = enemySpawner.activeEnemies.get(i).getEnemyImage();
+            Vector2 enemyPos = enemySpawner.activeEnemies.get(i).getEnemyPosition();
+
+            game.batch.draw(currEnemyImg,enemyPos.x, enemyPos.y);
+        }
+>>>>>>> Stashed changes
     }
 
 
