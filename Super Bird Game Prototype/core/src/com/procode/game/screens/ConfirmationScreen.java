@@ -46,7 +46,7 @@ public class ConfirmationScreen implements Screen {
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 
-        Skin skin = new Skin(Gdx.files.internal("comic-ui.json"));
+
         Container<Table> tableContainer = new Container<Table>();
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
 

@@ -53,8 +53,8 @@ public class SettingScreen implements Screen {
         font = fontGenerator.generateFont(fontParameter);
 
 
-        float sw = SuperBirdGame.ANDROID_WIDTH;
-        float sh = SuperBirdGame.ANDROID_HEIGHT;
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
 
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
@@ -128,7 +128,8 @@ public class SettingScreen implements Screen {
         scroll.setTransform(true);
         scroll.setPosition(0,viewport.getScreenHeight()/2);
         scroll.setSize(viewport.getScreenWidth(),viewport.getScreenHeight()/2);
-        //stage.addActor(scroll);
+        stage.addActor(tableContainer);
+        stage.addActor(scroll);
         stage.addActor(slider);
 
     }

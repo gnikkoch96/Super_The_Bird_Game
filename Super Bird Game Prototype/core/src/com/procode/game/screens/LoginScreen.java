@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
@@ -41,7 +43,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     private TextButton btnLogin, btnSignUp;
     private TextField userName, password;
     private TextureAtlas atlas;
-    private Table table;
+    private Table table, buttonTable;
     private BitmapFont font;
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
@@ -55,6 +57,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     private Skin skin;
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x, getMoveClouds_y;
+    private Container<Table> tableContainer;
 
     public LoginScreen(SuperBirdGame g){
         game = g;
@@ -94,42 +97,82 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         moveMountain_x = game.ANDROID_WIDTH - 50;
         moveClouds_x = game.ANDROID_WIDTH;
 
+        //========Setting the sizes of the containers ===================
+        float sw = SuperBirdGame.ANDROID_WIDTH;
+        float sh = SuperBirdGame.ANDROID_HEIGHT;
+
+        float cw = sw * 0.7f;
+        float ch = sh * 0.6f;
+
+        tableContainer = new Container<Table>();
+        tableContainer.setSize(sw,sh);
+        //tableContainer.setPosition((sw-cw)/2.0f, (sh-ch));
+        tableContainer.setPosition(0,0);
+        table = new Table(skin);
+
+        buttonTable = new Table(skin);
 
     }
 
 
     public void userName(){
+
+
         //=========This is the label for user name============
         txtUserName = new Label("Enter Username",labelStyle);
-        txtUserName.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) + 150 );
+        txtUserName.setAlignment(Align.center);
+        //txtUserName.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) + 150 );
         txtUserName.setSize(300,300);
 
         //=========Text field for the user name================
         userName = new TextField("", txtFieldStyle);
-        userName.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
-        userName.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2));
+        //userName.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
+        //userName.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2));
 
 
-        stage.addActor(txtUserName);
+       // stage.addActor(txtUserName);
         //set the actor UserName
-        stage.addActor(userName);
+        //.addActor(userName);
+
+        //Adding the label and the text field in the table
+        table.row().colspan(3).expandX().fillX();
+        table.row().colspan(3).expandX().fillX();
+        table.row().colspan(3).expandX().fillX();
+        table.add(txtUserName).fillX().width((float)game.ANDROID_WIDTH/2);
+        table.row().colspan(3).expandX().fillX();
+        table.add(userName).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+
+        //adding the table into the container
+        tableContainer.setActor(table);
+
+
     }
 
     public void userPassword(){
         txtPassword = new Label("Enter Password",labelStyle);
-        txtPassword.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) - 200 );
-        txtPassword.setSize(300,300);
+        txtPassword.setAlignment(Align.center);
+       // txtPassword.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) - 200 );
+     //   txtPassword.setSize(300,300);
 
         //=========Text field for the user password =============
         password = new TextField("", txtFieldStyle);
         password.setPasswordCharacter('*');
-        password.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 350);
+     //   password.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 350);
         password.setPasswordMode(true);
-        password.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
+    //    password.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
 
         //then send the password into the stage
-        stage.addActor(txtPassword);
-        stage.addActor(password);
+       // stage.addActor(txtPassword);
+       // stage.addActor(password);
+
+        //Adding the label and the text field in the table
+        table.row().colspan(3).expandX().fillX();
+        table.add(txtPassword).fillX().width((float)game.ANDROID_WIDTH/2);
+        table.row().colspan(3).expandX().fillX();
+        table.add(password).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+
+        //adding the table into the container
+        tableContainer.setActor(table);
     }
 
     //this method contains all the buttons such as Login and SignUp
@@ -144,8 +187,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         btnLogin = new TextButton("Log In", style_button);
         skin.add("fonts", font);
         //set the position and size of the button
-        btnLogin.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 550);
-        btnLogin.setSize(400,200);
+       // btnLogin.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 550);
+       // btnLogin.setSize(400,200);
 
         //set the listener for log in button
         btnLogin.addListener(new ClickListener(){
@@ -157,9 +200,10 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         //=================Button Sign Up =====================
 
         btnSignUp = new TextButton("Sign Up", style_button);;
+
         //set the position and size of the button
-        btnSignUp.setPosition((game.ANDROID_WIDTH/2) + 300,(game.ANDROID_HEIGHT/2) - 550);
-        btnSignUp.setSize(400,200);
+        //btnSignUp.setPosition((game.ANDROID_WIDTH/2) + 300,(game.ANDROID_HEIGHT/2) - 550);
+        //btnSignUp.setSize(400,200);
 
         //set the listener for SignUp button
         btnSignUp.addListener(new ClickListener(){
@@ -171,8 +215,14 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
         //=====================================================
 
-        stage.addActor(btnLogin);
-        stage.addActor(btnSignUp);
+        table.row().expandX().fillX();
+        table.add(buttonTable);
+        buttonTable.pad(16);
+        buttonTable.row().fillX().expandX();
+        buttonTable.add(btnLogin).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
+        buttonTable.add(btnSignUp).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        //stage.addActor(btnLogin);
+        //stage.addActor(btnSignUp);
     }
 
     public void btnLoginClicked(){
@@ -192,6 +242,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         userName();
         userPassword();
         buttons();
+        //set the table container with all the labels, textfields and buttons
+        stage.addActor(tableContainer);
     }
 
     public void upDate(){
