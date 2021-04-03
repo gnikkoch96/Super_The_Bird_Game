@@ -42,6 +42,7 @@ public class PlayScreen implements Screen {
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
 
+
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
         this.game = game;
@@ -66,6 +67,8 @@ public class PlayScreen implements Screen {
         int birdHeight = SuperBirdGame.ANDROID_HEIGHT /5;
         player = new Bird(SuperBirdGame.ANDROID_WIDTH/7, SuperBirdGame.ANDROID_HEIGHT/2, birdWidth, birdHeight);
         enemy = new Bird(SuperBirdGame.ANDROID_WIDTH/2, SuperBirdGame.ANDROID_HEIGHT/2,birdWidth,birdHeight);
+
+
 
         //Setting Properties
         gameCam.setToOrtho(false, SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
@@ -129,6 +132,8 @@ public class PlayScreen implements Screen {
         update(currTime);
         //game.batch.draw(background, 0, 0);
 
+        HUD.settingScreen.setContainerVisible(false);
+
         game.batch.draw(bg.getBackgroundSky(),0,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
@@ -186,6 +191,9 @@ public class PlayScreen implements Screen {
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+
+        HUD.settingScreen.setContainerVisible(true);
+
         state = HUD.state;
     }
 
