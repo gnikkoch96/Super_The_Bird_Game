@@ -99,8 +99,25 @@ public class PlayScreen implements Screen {
             player.damageBird(hud);
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.Z) || Gdx.input.isKeyPressed(Input.Keys.Z) ||
+                Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.E) ||
+                Gdx.input.isKeyJustPressed(Input.Keys.O) || Gdx.input.isKeyPressed(Input.Keys.O)){
             player.shoot();
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.W)){
+            player.movePosition(0,gamepad.touchSensitivity);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.A)){
+            player.movePosition(-gamepad.touchSensitivity,0);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.S)){
+            player.movePosition(0, -gamepad.touchSensitivity);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.D)){
+            player.movePosition(gamepad.touchSensitivity,0);
         }
     }
 
