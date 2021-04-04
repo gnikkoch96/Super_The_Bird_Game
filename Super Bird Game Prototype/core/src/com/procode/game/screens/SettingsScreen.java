@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -30,6 +31,9 @@ public class SettingsScreen implements Screen {
     private TextButton.TextButtonStyle style_button;
     private Skin skin;
     private TextButton btnEditAccount, btnChangePassword, btnBack;
+    private Container<Table> tableContainer;
+    private Table table;
+    private Image volumes;
 
     public SettingsScreen(SuperBirdGame g){
         game = g;
@@ -37,65 +41,70 @@ public class SettingsScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
-        Container<Table> tableContainer = new Container<Table>();
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = 120;
 
-        font = fontGenerator.generateFont(fontParameter);
-
-        volumeImage = ImageFunctions.resize("screen icons//volume.png", SuperBirdGame.GAME_WIDTH /2, SuperBirdGame.GAME_HEIGHT /4);
-    }
-
-    public void buttons(){
-        //setting style for the button and resizing the font
         style_button = skin.get(TextButton.TextButtonStyle.class);
         fontParameter.size = 100;
         font = fontGenerator.generateFont(fontParameter);
         style_button.font = font;
 
-        //==================Button Edit Account =====================
+        volumes = new Image(new Texture("screen icons//volume.png"));
+
+        volumeImage = ImageFunctions.resize("screen icons//volume.png", SuperBirdGame.GAME_WIDTH /2, SuperBirdGame.GAME_HEIGHT /4);
+    }
+
+    //this method will design and alight the buttons in the table and table container
+    public void buttons(){
+
         btnEditAccount = new TextButton("Edit Account", style_button);
-        skin.add("fonts", font);
-        //set the position and size of the button
-        btnEditAccount.setPosition((game.GAME_WIDTH /2) - 500,(game.GAME_HEIGHT /2) + 300);
-        btnEditAccount.setSize(1000,350);
 
-        //set the listener for log in button
-        btnEditAccount.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                //btnLoginClicked();
-            }
-        });
-        //=================Button End Edit Account =====================
-        //=================Button Change Password =====================
+        btnChangePassword = new TextButton("Change Password", style_button);
 
-        btnChangePassword = new TextButton("Change Password", style_button);;
-        //set the position and size of the button
-        btnChangePassword.setPosition((game.GAME_WIDTH /2) - 500,(game.GAME_HEIGHT /2) - 150);
-        btnChangePassword.setSize(1000,350);
-
-        //set the listener for SignUp button
-        btnChangePassword.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-               // btnSignUpClicked();
-            }
-        });
-
-        //==================Button End Change Password=================================
-        //==================Button Back ==============================================
         btnBack = new TextButton("Back", style_button);
-        skin.add("fonts", font);
-        //set the position and size of the button
-        btnBack.setPosition(game.GAME_WIDTH - (game.GAME_WIDTH - 100),(game.GAME_HEIGHT) - 300);
-        btnBack.setSize(400,200);
 
-        //set the listener for log in button
+        //=================Table Containers and Tables =================================
+
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
+
+        float cw = sw * 0.7f;
+        float ch = sh * 0.8f;
+
+        tableContainer = new Container<Table>();
+        tableContainer.setSize(cw,ch);
+        tableContainer.setPosition((sw-cw)/2.0f, (sh-ch));
+
+
+        table = new Table(skin);
+        table.row().colspan(3).expandX().fillX();
+        table.add(btnBack).fillX().width((float)game.GAME_WIDTH /6).height((float)game.GAME_HEIGHT /6).padRight(cw).padTop(50);
+        table.row().colspan(3).expandX().fillX();
+        table.add(btnEditAccount).fillX().width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6);
+        table.row().colspan(3).expandX().fillX();
+        table.add(btnChangePassword).fillX().width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padTop(50);
+        table.row().colspan(3).expandX().fillX();
+        table.add(volumes).fillX().width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padTop(50);
+        tableContainer.setActor(table);
+        //==============================================================================
+
+
+
+        buttonListeners();
+
+        stage.addActor(tableContainer);
+
+
+    }
+
+    //this method contains all the Clicklistener for the buttons
+    public void buttonListeners(){
+
+
+        //set the listener back to the home screen
         btnBack.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -103,14 +112,24 @@ public class SettingsScreen implements Screen {
                 game.setScreen(new HomeScreen(game));
             }
         });
-        //==================End of Button back =========================================
 
 
-        stage.addActor(btnEditAccount);
-        stage.addActor(btnChangePassword);
-        stage.addActor(btnBack);
+        //set the listener for SignUp button
+        btnChangePassword.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                // btnSignUpClicked();
+            }
+        });
 
 
+        //set the listener for edit account button
+        btnEditAccount.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                //btnLoginClicked();
+            }
+        });
     }
 
     @Override
@@ -125,7 +144,7 @@ public class SettingsScreen implements Screen {
         //buttons();
 
         game.batch.begin();
-        game.batch.draw(volumeImage,game.GAME_WIDTH - (game.GAME_WIDTH - 700),100);
+        //game.batch.draw(volumeImage,game.GAME_WIDTH - (game.GAME_WIDTH - 700),100);
         game.batch.end();
 
         stage.act(delta);
