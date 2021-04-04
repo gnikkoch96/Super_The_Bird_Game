@@ -1,9 +1,12 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.screens.PlayScreen;
@@ -35,7 +38,19 @@ public class Gamepad {
         leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", buttonSize, buttonSize);
         rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", buttonSize, buttonSize);
 
+        // pressed icons
+        Texture upButtonPressed = ImageFunctions.resize("screen icons//pressed up button.png", buttonSize, buttonSize);
+        upArrow.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(upButtonPressed));
+        Texture downButtonPressed = ImageFunctions.resize("screen icons//pressed down button.png", buttonSize, buttonSize);
+        downArrow.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(downButtonPressed));
+        Texture leftButtonPressed = ImageFunctions.resize("screen icons//pressed left button.png", buttonSize, buttonSize);
+        leftArrow.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(leftButtonPressed));
+        Texture rightButtonPressed = ImageFunctions.resize("screen icons//pressed right button.png", buttonSize, buttonSize);
+        rightArrow.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(rightButtonPressed));
+
         shootButton = ImageFunctions.resizeImageButton("screen icons//shoot button.png", (int)(buttonSize * 1.5), (int)(buttonSize * 1.5));
+        Texture shootButtonPressed = ImageFunctions.resize("screen icons//pressed shoot button.png", buttonSize, buttonSize);
+        shootButton.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(shootButtonPressed));
 
         // add listeners
         upArrow.addListener(new ClickListener() {
