@@ -52,6 +52,10 @@ public class Gamepad {
         Texture shootButtonPressed = ImageFunctions.resize("screen icons//pressed shoot button.png", buttonSize, buttonSize);
         shootButton.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(shootButtonPressed));
 
+
+
+
+
         // add listeners
         upArrow.addListener(new ClickListener() {
             @Override

@@ -176,6 +176,15 @@ public class PlayScreen implements Screen {
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.draw(enemy.getBirdImage(),enemy.getPosition().x, enemy.getPosition().y);
 
+        hud.gamepad.upArrow.setVisible(true);
+        hud.gamepad.downArrow.setVisible(true);
+        hud.gamepad.leftArrow.setVisible(true);
+        hud.gamepad.rightArrow.setVisible(true);
+        hud.gamepad.shootButton.setVisible(true);
+        hud.pauseBtn.setVisible(true);
+
+        state = HUD.state;
+
         //testing only---------------------------------------
 //        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState() + "   currentSpeed: " + enemyBird.getEnemySpeed());
 //        game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
@@ -248,6 +257,14 @@ public class PlayScreen implements Screen {
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         HUD.settingScreen.setContainerVisible(true);
+        HUD.settingScreen.Buttons();
+
+        hud.gamepad.upArrow.setVisible(false);
+        hud.gamepad.downArrow.setVisible(false);
+        hud.gamepad.leftArrow.setVisible(false);
+        hud.gamepad.rightArrow.setVisible(false);
+        hud.gamepad.shootButton.setVisible(false);
+        hud.pauseBtn.setVisible(false);
 
         state = HUD.state;
     }

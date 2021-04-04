@@ -8,14 +8,17 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.scenes.HUD;
 import com.procode.game.tools.ImageFunctions;
 
 public class MiniSettingScreen{
@@ -72,6 +75,15 @@ public class MiniSettingScreen{
         quitbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//quitbtn.png"))));
         settingsbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//settingsbtn.png"))));
 
+
+        playbtn.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                //btnLoginClicked();
+                HUD.state = 0;
+            }
+        });
+
         table.row().colspan(3).expandX().fillX();
         table.add(playbtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
         table.row().colspan(3).expandX().fillX();
@@ -91,6 +103,19 @@ public class MiniSettingScreen{
 
 
 
+
+
+
+    }
+
+    public void Buttons(){
+        playbtn.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                //btnLoginClicked();
+                HUD.state = 0;
+            }
+        });
     }
 
     public void setContainerVisible(boolean e){

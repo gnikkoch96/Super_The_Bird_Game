@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -33,7 +34,7 @@ public class HUD implements Disposable {
 
     // what is shown on the HUD
     private Image healthBar;
-    private Image pauseBtn, playBtn;
+    public ImageButton pauseBtn, playBtn;
     private Image scoreBackground;        // visual for when displaying the score
     private Label scoreLabel, scoreTextLabel;
     public Gamepad gamepad;               // displays the gamepad on the screen
@@ -81,7 +82,7 @@ public class HUD implements Disposable {
 
         // displays
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /5));
-        pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.GAME_WIDTH /35, SuperBirdGame.GAME_HEIGHT /25));
+        pauseBtn = ImageFunctions.resizeImageButton("screen icons//pause button.png", SuperBirdGame.GAME_WIDTH /35, SuperBirdGame.GAME_HEIGHT /25);
         scoreBackground = new Image(ImageFunctions.resize("screen icons//score-backgroundTwo.png", SuperBirdGame.GAME_WIDTH /4, SuperBirdGame.GAME_HEIGHT /7));
         scoreTextLabel = new Label("SCORE: ", style);
         scoreLabel = new Label(score + " ", style);
@@ -99,6 +100,7 @@ public class HUD implements Disposable {
 
         // gamepad
         gamepad = new Gamepad(game);
+
         stage.addActor(gamepad.upArrow);
         stage.addActor(gamepad.downArrow);
         stage.addActor(gamepad.leftArrow);
@@ -127,6 +129,7 @@ public class HUD implements Disposable {
             }
         });
     }
+
 
     public boolean getShootStateBtn(){
         return gamepad.shoot;
