@@ -112,20 +112,10 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
         //=========This is the label for user name============
         txtUserName = new Label("Enter Username",labelStyle);
-        txtUserName.setPosition(game.GAME_WIDTH /2 - 500,(game.GAME_HEIGHT /2) + 150 );
         txtUserName.setAlignment(Align.center);
-        //txtUserName.setPosition(game.GAME_WIDTH/2 - 500,GAME/2) + 150 );
-        txtUserName.setSize(300,300);
 
         //=========Text field for the user name================
         userName = new TextField("", txtFieldStyle);
-        userName.setSize(game.GAME_HEIGHT,game.GAME_HEIGHT /6);
-        userName.setPosition(game.GAME_WIDTH /2 - (game.GAME_HEIGHT /2),(game.GAME_HEIGHT /2));
-
-
-       // stage.addActor(txtUserName);
-        //set the actor UserName
-        //.addActor(userName);
 
         //Adding the label and the text field in the table
         table.row().colspan(3).expandX().fillX();
@@ -143,23 +133,13 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
     public void userPassword(){
         txtPassword = new Label("Enter Password",labelStyle);
-        txtPassword.setPosition(game.GAME_WIDTH /2 - 500,(game.GAME_HEIGHT /2) - 200 );
-        txtPassword.setSize(300,300);
         txtPassword.setAlignment(Align.center);
-       // txtPassword.setPosition(game.GAME_WIDTH/2 - 500,GAME/2) - 200 );
-     //   txtPassword.setSize(300,300);
+
 
         //=========Text field for the user password =============
         password = new TextField("", txtFieldStyle);
         password.setPasswordCharacter('*');
-     //   password.setPosition(game.GAME_WIDTH/2 - GAME/2),GAME/2) - 350);
         password.setPasswordMode(true);
-    //    password.setSizeGAM/6);
-
-        //then send the password into the stage
-       // stage.addActor(txtPassword);
-       // stage.addActor(password);
-
         //Adding the label and the text field in the table
         table.row().colspan(3).expandX().fillX();
         table.add(txtPassword).fillX().width((float)game.GAME_WIDTH/2);
@@ -182,9 +162,6 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         btnLogin = new TextButton("Log In", style_button);
         skin.add("fonts", font);
         //set the position and size of the button
-       // btnLogin.setPosition(game.GAME_WIDTH/2 - GAME/2),GAME/2) - 550);
-       // btnLogin.setSize(400,200);
-
         //set the listener for log in button
         btnLogin.addListener(new ClickListener(){
             @Override
@@ -214,8 +191,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         table.add(buttonTable);
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnLogin).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
-        buttonTable.add(btnSignUp).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnLogin).width(((float)game.GAME_WIDTH)/5.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnSignUp).width(((float)game.GAME_WIDTH)/5.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
         //stage.addActor(btnLogin);
         //stage.addActor(btnSignUp);
     }

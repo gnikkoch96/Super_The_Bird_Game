@@ -274,7 +274,7 @@ public class PlayScreen implements Screen {
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         HUD.settingScreen.setContainerVisible(true);
-        HUD.settingScreen.Buttons();
+        hud.settingScreen.Buttons();
 
         hud.gamepad.upArrow.setVisible(false);
         hud.gamepad.downArrow.setVisible(false);
