@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.procode.game.screens.LoginScreen;
 import com.procode.game.screens.SplashScreen;
 
 public class SuperBirdGame extends Game {
@@ -54,7 +55,7 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/spitCollision.mp3", Sound.class);
 		manager.finishLoading();
 
-		this.setScreen(new SplashScreen(this));
+		this.setScreen(new LoginScreen(this));
 	}
 
 	@Override
