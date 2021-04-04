@@ -12,7 +12,7 @@ import com.procode.game.tools.ImageFunctions;
 public class BirdSpit extends Projectile implements Disposable {
     // animations
     private static Texture projectileImage; // this will be the image that floats until a contact has been made
-    private static Animation collisionAnimation; // the animation will be when the spit animation is done since we want the spit to stay in its first form until a contact is made
+    private Animation collisionAnimation; // the animation will be when the spit animation is done since we want the spit to stay in its first form until a contact is made
 
     public BirdSpit(){
         //--Nikko: The width and height can be changed
@@ -26,12 +26,19 @@ public class BirdSpit extends Projectile implements Disposable {
 
         //--Nikko: To save memory from creating a new texture and animation for each new spit
         if(BirdSpit.projectileImage == null) BirdSpit.projectileImage = ImageFunctions.resize("bird animations//spit projectile 1.png", this.projectileWidth, this.projectileHeight);
-        if(BirdSpit.collisionAnimation == null){
-            BirdSpit.collisionAnimation = new Animation();
-            BirdSpit.collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, 1f, false);
-        }
+//        if(BirdSpit.collisionAnimation == null){
+//            BirdSpit.collisionAnimation = new Animation();
+//            BirdSpit.collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, 1f, false);
+//        }
+
+        collisionAnimation = new Animation();
+        collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, 1f, false);
 
         this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
+    }
+
+    public Animation getCollisionAnimation() {
+        return collisionAnimation;
     }
 
     // sets the spit initial values
@@ -40,37 +47,43 @@ public class BirdSpit extends Projectile implements Disposable {
         this.alive = true;
     }
 
+    //--TEST--/
     public void update(float dt) {
         if (isOutOfScreen()) { // removes the spit if it exits the screen
-            this.reset();
-        } else {
+            this.alive = false;
+        }else {
+            Gdx.app.log("Collision Status:", String.valueOf(this.isCollided()));
+
+            //--TEST--//
             if (this.isCollided()) { // collision detected
                 collisionAnimation.updateFrame(dt);
-            } else {
+                Gdx.app.log("CollisionAnimation Frame #: ", String.valueOf(collisionAnimation.getCurrFrameIndex()));
+            }else {
                 // update spit position
                 this.position.x += this.velocity;
 
                 // update hitbox location
                 hitbox.update(this.position);
 
-//                if (isOutOfScreen()) // removes the spit if it exits the screen
-//                    this.alive = false;
+
             }
         }
 
-        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.getHitbox().botleft.x + ", " + this.getHitbox().botleft.y + ")\n"
-                + "botright: (" + this.getHitbox().botright.x + ", " + this.getHitbox().botright.y + ")\n"
-                + "topleft: (" + this.getHitbox().topleft.x + ", " + this.getHitbox().topleft.y + ")\n"
-                + "topright: (" + this.getHitbox().topright.x + ", " + this.getHitbox().topright.y + ")\n");
+//        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.getHitbox().botleft.x + ", " + this.getHitbox().botleft.y + ")\n"
+//                + "botright: (" + this.getHitbox().botright.x + ", " + this.getHitbox().botright.y + ")\n"
+//                + "topleft: (" + this.getHitbox().topleft.x + ", " + this.getHitbox().topleft.y + ")\n"
+//                + "topright: (" + this.getHitbox().topright.x + ", " + this.getHitbox().topright.y + ")\n");
 
     }
 
     public void render(SpriteBatch batch){
         //--Nikko: doesn't need to begin or end batch as this code will be called while the spritebatch of PlayScreen.class already started the begin()
-        batch.draw(projectileImage, this.position.x, this.position.y);
 
-        if(collided){ // collided with an object
+
+        if(this.isCollided()){ // collided with an object
             batch.draw(collisionAnimation.getCurrImg(), this.position.x, this.position.y);
+        }else{
+            batch.draw(projectileImage, this.position.x, this.position.y);
         }
 
 

@@ -86,9 +86,8 @@ public class Bird implements Disposable {
         shootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, .1f, false);
         damageAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 8, .45f, false);
         deadAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 1, 7, .50f, false);
-        invincibleIdleAnimation.setAnimation("bird animations//invincible animations//idle//invincible ", BirdWidth, BirdHeight, 1, 8, .25f, true);
-        invincibleShootAnimation.setAnimation("bird animations//invincible animations//shoot//invincible shoot ", BirdWidth, BirdHeight, 1, 6, .05f, false);
-
+        invincibleIdleAnimation.setAnimation("bird animations//invincible animations//idle//invincible ", BirdWidth, BirdHeight, 1, 8, 0.25f, true);
+        invincibleShootAnimation.setAnimation("bird animations//invincible animations//shoot//invincible shoot ", BirdWidth, BirdHeight, 1, 6, .1f, false);
         currentAnimation = idleAnimation; // idle is always the first state the bird is in
     }
 
@@ -155,7 +154,12 @@ public class Bird implements Disposable {
 
         // manage spits that exit the screen
         for(BirdSpit spit: activeSpits){
-            if(spit.isOutOfScreen() || spit.isCollided()){
+//            if(spit.isOutOfScreen() || spit.isCollided()){
+//                spitPool.free(spit);
+//                activeSpits.removeValue(spit, true);
+//            }
+
+            if(spit.isOutOfScreen() || spit.getCollisionAnimation().animationEnded){
                 spitPool.free(spit);
                 activeSpits.removeValue(spit, true);
             }
@@ -213,11 +217,18 @@ public class Bird implements Disposable {
             switchAnimations(State.SHOOT);
 
             // create spit
-            BirdSpit item = spitPool.obtain();
+//            BirdSpit item = spitPool.obtain();
+////            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
+//            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+//            activeSpits.add(item);
+//            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+
+            BirdSpit item = new BirdSpit();
 //            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
             item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
             activeSpits.add(item);
-//            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+            Gdx.app.log("Spits Left:", String.valueOf(activeSpits.size));
+
         }
     }
 

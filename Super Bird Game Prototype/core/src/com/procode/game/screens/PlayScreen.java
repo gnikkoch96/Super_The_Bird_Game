@@ -40,7 +40,7 @@ public class PlayScreen implements Screen {
     private Vector2 birdMovement;
     private Gamepad gamepad;
 
-    private final int GAME_PLAY =0; // play the game
+    private final int GAME_PLAY = 0; // play the game
     private final int GAME_PAUSE = 1; // pause the game
 
     // sprites
@@ -204,9 +204,9 @@ public class PlayScreen implements Screen {
 
         game.batch.end();
 
-        //--DEBUGGING--//
-        enemy.hitbox.debugHitbox();
-        player.debugHitbox();
+//        //--DEBUGGING--//
+//        enemy.hitbox.debugHitbox();
+//        player.debugHitbox();
 
         //add buttons to screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
