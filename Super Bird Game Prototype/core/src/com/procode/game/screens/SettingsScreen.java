@@ -106,6 +106,7 @@ public class SettingsScreen implements Screen {
         //==================End of Button back =========================================
 
 
+
         stage.addActor(btnEditAccount);
         stage.addActor(btnChangePassword);
         stage.addActor(btnBack);
