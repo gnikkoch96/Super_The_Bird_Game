@@ -76,13 +76,6 @@ public class MiniSettingScreen{
         settingsbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//settingsbtn.png"))));
 
 
-        playbtn.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                //btnLoginClicked();
-                HUD.state = 0;
-            }
-        });
 
         table.row().colspan(3).expandX().fillX();
         table.add(playbtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
@@ -116,6 +109,15 @@ public class MiniSettingScreen{
                 HUD.state = 0;
             }
         });
+
+        quitbtn.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                //this will switch the state in to GAME_QUIT which will exit the game back to homescreen
+                HUD.state = 4;
+            }
+        });
+
     }
 
     public void setContainerVisible(boolean e){

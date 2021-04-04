@@ -38,6 +38,7 @@ public class PlayScreen implements Screen {
 
     private final int GAME_PLAY =0; // play the game
     private final int GAME_PAUSE = 1; // pause the game
+    private final int GAME_QUIT = 4; // quit the game
 
     // sprites
     public static Bird player;
@@ -48,6 +49,8 @@ public class PlayScreen implements Screen {
     private Spawner enemySpawner;
 
     public Array<BirdSpit> activeSpits;
+
+
 
 
     public PlayScreen(SuperBirdGame game){
@@ -284,6 +287,11 @@ public class PlayScreen implements Screen {
         hud.pauseBtn.setVisible(false);
 
         state = HUD.state;
+
+        //set the screen into homescreen
+        if(state == GAME_QUIT){
+            game.setScreen(new HomeScreen(game));
+        }
     }
 
     @Override

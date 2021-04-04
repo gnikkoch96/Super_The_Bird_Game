@@ -45,7 +45,7 @@ public class HUD implements Disposable {
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     public static int state;
     public int bird_State = 0;
-    private final int GAME_PLAY = 0, GAME_PAUSE = 1;
+    private final int GAME_PLAY = 0, GAME_PAUSE = 1, GAME_QUIT = 4;
     public static MiniSettingScreen settingScreen;
 
     public HUD(SuperBirdGame game){
