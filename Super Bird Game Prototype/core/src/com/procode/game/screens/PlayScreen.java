@@ -100,7 +100,8 @@ public class PlayScreen implements Screen {
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.Z) || Gdx.input.isKeyPressed(Input.Keys.Z) ||
-                Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.E)){
+                Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.E) ||
+                Gdx.input.isKeyJustPressed(Input.Keys.O) || Gdx.input.isKeyPressed(Input.Keys.O)){
             player.shoot();
         }
 
