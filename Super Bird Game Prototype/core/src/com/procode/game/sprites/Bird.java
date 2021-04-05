@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
+import com.procode.game.screens.SettingsScreen;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 
@@ -19,6 +20,9 @@ public class Bird implements Disposable {
     private static long timeVar;  // used for the invincible property
     private static int BirdWidth;
     private static int BirdHeight;
+
+    //volume changes
+    private float volume;
 
     // states
     public enum State {IDLE, SHOOT, DAMAGED, DEAD}
@@ -135,6 +139,11 @@ public class Bird implements Disposable {
 
     // updates the bird every frame
     public void update(float deltaTime){
+
+        //this method captures the changes on the volume from the settings
+        setVolume();
+
+
         if(currentAnimation.animationEnded == true){ // transitions from non-idle animation back to idle
 //            Gdx.app.log("Current Animation Status isEnded: ", String.valueOf(currentAnimation.animationEnded));
             currentAnimation.setAnimFinished();
@@ -219,7 +228,7 @@ public class Bird implements Disposable {
 //        Gdx.app.log("Previous State", previousState.toString());
         if(previousState != State.SHOOT && previousState == State.IDLE){ // to prevent overlapping of animations
             // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
-            spitSound.play();
+            spitSound.play(volume);
 
             switchAnimations(State.SHOOT);
 
@@ -239,7 +248,7 @@ public class Bird implements Disposable {
 
         switchAnimations(State.DEAD);
 
-        deadSoundSad.play();
+        deadSoundSad.play(volume);
 
         // set the screen to game over screen
 
@@ -253,7 +262,7 @@ public class Bird implements Disposable {
             if(this.healthCount == 2){
 //                damageSoundLoud.play();
             }else{
-                damageSoundNormal.play();
+                damageSoundNormal.play(volume);
             }
 
             timeVar = System.currentTimeMillis(); // update time var to current time value every time the bird gets damaged
@@ -280,6 +289,32 @@ public class Bird implements Disposable {
         BirdHeight = height;
     }
 
+    //this method changes the volume from the static integer from SettingsScreen
+    //the changes occur whenever the user clicks the right and left buttons of volume
+    //from the SettingsScreen and later on from MiniSettingScreen on PlayScreen
+    public void setVolume(){
+        //this if statement captures the changes on the volume from the settings
+        if(SettingsScreen.volumeChanges == 1)
+            volume = 0.1f;
+        else if(SettingsScreen.volumeChanges == 2)
+            volume = 0.2f;
+        else if(SettingsScreen.volumeChanges == 3)
+            volume = 0.3f;
+        else if(SettingsScreen.volumeChanges == 4)
+            volume = 0.4f;
+        else if(SettingsScreen.volumeChanges == 5)
+            volume = 0.5f;
+        else if(SettingsScreen.volumeChanges == 6)
+            volume = 0.6f;
+        else if(SettingsScreen.volumeChanges == 7)
+            volume = 0.7f;
+        else if(SettingsScreen.volumeChanges == 8)
+            volume = 0.8f;
+        else if(SettingsScreen.volumeChanges == 9)
+            volume = 0.9f;
+        else if(SettingsScreen.volumeChanges == 10)
+            volume = 1.0f;
+    }
 
 
 

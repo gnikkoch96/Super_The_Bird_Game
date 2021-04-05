@@ -425,18 +425,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             tableContainer0.setVisible(false);
             tableContainer1.setVisible(true);
 
-         //   userNameTable.setVisible(false);
-         //   txtUserName.setVisible(false);
-           // userName.setVisible(false);
-          //  passwordTable.setVisible(true);
-           // txtPassword.setVisible(true);
-          //  password.setVisible(true);
-          //  btnBack.setVisible(true);
-           // if (message != null)
-          //      message.setVisible(false);
-            //game.setScreen(new PlayScreen(game));
 
-            //}else if(validateAccount() == true && password.isVisible() == true){
         }else if(validateAccount() == true && passwordTable.isVisible() == true) {
             passwordTable.setVisible(false);
             txtPassword.setVisible(false);
@@ -446,8 +435,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             txtFullName.setVisible(true);
             btnBack.setVisible(true);
 
-
-            //}else if(validateAccount() == true && fullName.isVisible() == true){
         }else if(validateAccount() == true && fullNameTable.isVisible() == true){
             fullNameTable.setVisible(false);
             txtFullName.setVisible(false);
