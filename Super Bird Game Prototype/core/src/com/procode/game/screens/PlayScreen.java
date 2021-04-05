@@ -200,6 +200,7 @@ public class PlayScreen implements Screen {
         // render projectiles
         for(BirdSpit spits: activeSpits){
             spits.render(game.batch);
+            BirdSpit.collisionParticle.draw(game.batch, delta);
         }
 
         game.batch.end();

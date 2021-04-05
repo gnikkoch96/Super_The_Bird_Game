@@ -154,15 +154,15 @@ public class Bird implements Disposable {
 
         // manage spits that exit the screen
         for(BirdSpit spit: activeSpits){
-//            if(spit.isOutOfScreen() || spit.isCollided()){
-//                spitPool.free(spit);
-//                activeSpits.removeValue(spit, true);
-//            }
-
-            if(spit.isOutOfScreen() || spit.getCollisionAnimation().animationEnded){
+            if(spit.isOutOfScreen() || spit.isCollided()){
                 spitPool.free(spit);
                 activeSpits.removeValue(spit, true);
             }
+
+//            if(spit.isOutOfScreen() || spit.getCollisionAnimation().animationEnded){
+//                spitPool.free(spit);
+//                activeSpits.removeValue(spit, true);
+//            }
         }
     }
 
@@ -217,17 +217,17 @@ public class Bird implements Disposable {
             switchAnimations(State.SHOOT);
 
             // create spit
-//            BirdSpit item = spitPool.obtain();
-////            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
-//            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
-//            activeSpits.add(item);
-//            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
-
-            BirdSpit item = new BirdSpit();
+            BirdSpit item = spitPool.obtain();
 //            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
             item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
             activeSpits.add(item);
-            Gdx.app.log("Spits Left:", String.valueOf(activeSpits.size));
+            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+
+//            BirdSpit item = new BirdSpit();
+////            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
+//            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+//            activeSpits.add(item);
+//            Gdx.app.log("Spits Left:", String.valueOf(activeSpits.size));
 
         }
     }

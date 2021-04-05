@@ -107,7 +107,7 @@ public class HUD implements Disposable {
 
         //set the sate of the PauseBtn
         setPauseBtn();
-
+        
         // gamepad
         gamepad = new Gamepad(game);
         stage.addActor(gamepad.upArrow);
