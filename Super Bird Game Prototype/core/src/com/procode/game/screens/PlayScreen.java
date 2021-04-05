@@ -36,7 +36,7 @@ public class PlayScreen implements Screen {
     private Vector2 birdMovement;
     private Gamepad gamepad;
 
-    private final int GAME_PLAY =0; // play the game
+    private final int GAME_PLAY = 0; // play the game
     private final int GAME_PAUSE = 1; // pause the game
 
     // sprites
@@ -137,8 +137,6 @@ public class PlayScreen implements Screen {
         enemySpawner.updateSpawner(dt);
     }
 
-
-
     public void setBackgroundMovement(){
         if(moveHills_x > -(game.GAME_WIDTH /4))
             moveHills_x -= 3;
@@ -216,6 +214,7 @@ public class PlayScreen implements Screen {
         // render projectiles
         for(BirdSpit spits: activeSpits){
             spits.render(game.batch);
+            BirdSpit.collisionParticle.draw(game.batch, delta);
         }
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
