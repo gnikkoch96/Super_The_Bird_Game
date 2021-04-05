@@ -109,10 +109,12 @@ public class HUD implements Disposable {
 
         //set up the mini settings for the PlayScreen
         settingScreen = new MiniSettingScreen(stage);
-
         settingScreen.setContainerVisible(false);
+        settingScreen.setSettingsContainerVisible(false);
+
         //Display table to screen
         stage.addActor(settingScreen.getActor());
+        stage.addActor(settingScreen.getSettingsActor());
         stage.addActor(scoreTable);
         stage.addActor(leftTable);
     }

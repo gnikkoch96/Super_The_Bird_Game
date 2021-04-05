@@ -16,10 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.tools.ImageFunctions;
+
+import javax.swing.plaf.nimbus.State;
 
 public class MiniSettingScreen{
 
@@ -29,11 +30,12 @@ public class MiniSettingScreen{
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private Skin skin;
     private BitmapFont font;
-    private Container<Table> tableContainer;
+    private Container<Table> tableContainer, settingsContainer;
     private Table table, buttonTable;
     private Texture background;
     private SpriteBatch batch;
-    public ImageButton playbtn, quitbtn, settingsbtn;
+    public ImageButton playbtn, quitbtn, settingsbtn, savebtn;
+    public static int state = 0;
 
 
     public MiniSettingScreen(Stage s){
@@ -62,6 +64,10 @@ public class MiniSettingScreen{
 
         batch = new SpriteBatch();
 
+        settingsContainer = new Container<Table>();
+        settingsContainer.setSize(cw,ch);
+        settingsContainer.setPosition((sw-cw)/2.0f, (sh-ch)/2.0f);
+
         tableContainer = new Container<Table>();
         tableContainer.setSize(cw,ch);
         tableContainer.setPosition((sw-cw)/2.0f, (sh-ch)/2.0f);
@@ -71,11 +77,18 @@ public class MiniSettingScreen{
         buttonTable = new Table(skin);
 
 
-        playbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//playbtn.png"))));
-        quitbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//quitbtn.png"))));
-        settingsbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//settingsbtn.png"))));
+        playbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//play button.png"))));
+        quitbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//quit button.png"))));
+        settingsbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//option button.png"))));
+        savebtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//savebtn.png"))));
 
-
+        //buttons pressed
+        Texture playPressed = new Texture("screen icons//play buttonsmashed.png");
+        playbtn.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(playPressed));
+        Texture quitPressed = new Texture("screen icons//broken quit button.png");
+        quitbtn.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(quitPressed));
+        Texture settingsPressed = new Texture("screen icons//settings buttonsmashed.png");
+        settingsbtn.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(settingsPressed));
 
         table.row().colspan(3).expandX().fillX();
         table.add(playbtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
@@ -94,11 +107,6 @@ public class MiniSettingScreen{
 
         tableContainer.setActor(table);
 
-
-
-
-
-
     }
 
     public void Buttons(){
@@ -110,11 +118,33 @@ public class MiniSettingScreen{
             }
         });
 
+        settingsbtn.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if(SettingsScreen.volumeChanges != 10){
+
+                }
+                    //volumeChanges += 1;
+                state = 1;
+                System.out.println("settings");
+
+            }
+
+
+        });
+
         quitbtn.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //this will switch the state in to GAME_QUIT which will exit the game back to homescreen
                 HUD.state = 4;
+            }
+        });
+
+        savebtn.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                state = 0;
             }
         });
 
@@ -124,8 +154,16 @@ public class MiniSettingScreen{
         tableContainer.setVisible(e);
     }
 
+    public void setSettingsContainerVisible(boolean e){settingsContainer.setVisible(e); }
+
     public Container<Table> getActor(){
         return tableContainer;
+    }
+
+    //this method will return a table container of volume and change background
+    public Container<Table> getSettingsActor(){
+        settings();
+        return settingsContainer;
     }
 
     public Stage getStage(){
@@ -134,7 +172,26 @@ public class MiniSettingScreen{
     }
 
 
+    //=================This is container for the Settings in the PlayScreen ========================
 
+    public void settings(){
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
+
+        float cw = sw * 0.5f;
+        float ch = sh * 0.8f;
+
+        Table table = new Table(skin);
+        Table buttonTable = new Table(skin);
+
+        table.add(savebtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
+        table.row().colspan(3).expandX().fillX();
+
+        settingsContainer.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("background stuff/menu.png"))));
+
+        settingsContainer.setActor(table);
+    }
+    //=========================End of Container ====================================================
 
 
 }

@@ -186,7 +186,7 @@ public class PlayScreen implements Screen {
         update(currTime);
         //game.batch.draw(background, 0, 0);
 
-        HUD.settingScreen.setContainerVisible(false);
+        hud.settingScreen.setContainerVisible(false);
 
         game.batch.draw(bg.getBackgroundSky(),0,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
@@ -276,8 +276,15 @@ public class PlayScreen implements Screen {
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
-        HUD.settingScreen.setContainerVisible(true);
+        hud.settingScreen.setContainerVisible(true);
         hud.settingScreen.Buttons();
+
+        //this will set the screen into the setting screen
+        //1 is the id number for setting screen view on play screen
+        if(hud.settingScreen.state == 1)
+            hud.settingScreen.setSettingsContainerVisible(true);
+        else
+            hud.settingScreen.setSettingsContainerVisible(false);
 
         hud.gamepad.upArrow.setVisible(false);
         hud.gamepad.downArrow.setVisible(false);
