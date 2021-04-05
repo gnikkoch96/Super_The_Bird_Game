@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.tools.ImageFunctions;
+import com.procode.game.tools.Volume;
 
 import javax.swing.plaf.nimbus.State;
 
@@ -34,8 +36,9 @@ public class MiniSettingScreen{
     private Table table, buttonTable;
     private Texture background;
     private SpriteBatch batch;
-    public ImageButton playbtn, quitbtn, settingsbtn, savebtn;
+    public ImageButton playbtn, quitbtn, settingsbtn, savebtn, leftVolumeBtn, rightVolumeBtn;
     public static int state = 0;
+    private Volume volume;
 
 
     public MiniSettingScreen(Stage s){
@@ -64,9 +67,12 @@ public class MiniSettingScreen{
 
         batch = new SpriteBatch();
 
+        volume = new Volume();
+
         settingsContainer = new Container<Table>();
         settingsContainer.setSize(cw,ch);
         settingsContainer.setPosition((sw-cw)/2.0f, (sh-ch)/2.0f);
+
 
         tableContainer = new Container<Table>();
         tableContainer.setSize(cw,ch);
@@ -148,6 +154,44 @@ public class MiniSettingScreen{
             }
         });
 
+
+    }
+
+    //this volume button needs to be separated from the other buttons due to its nature
+    public void volumeButtons(){
+        rightVolumeBtn.addListener(new ClickListener(){
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if(SettingsScreen.volumeChanges != 10) {
+                    SettingsScreen.volumeChanges += 1;
+                    volume.setVolume(SettingsScreen.volumeChanges);
+                }
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+
+            }
+
+        });
+
+        leftVolumeBtn.addListener(new ClickListener(){
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if(SettingsScreen.volumeChanges != 1) {
+                    SettingsScreen.volumeChanges -= 1;
+                    volume.setVolume(SettingsScreen.volumeChanges);
+                }
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+
+            }
+
+        });
     }
 
     public void setContainerVisible(boolean e){
@@ -184,10 +228,29 @@ public class MiniSettingScreen{
         Table table = new Table(skin);
         Table buttonTable = new Table(skin);
 
-        table.add(savebtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
-        table.row().colspan(3).expandX().fillX();
 
-        settingsContainer.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("background stuff/menu.png"))));
+        leftVolumeBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//left_volumebtn.png"))));
+        rightVolumeBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//right_volumebtn.png"))));
+
+        //this is for the volume image label
+        Image volumeLabel = new Image(new Texture("screen icons//volumeLabel.png"));
+
+        //set the initial volume from the setting screen
+        volume.setVolume(SettingsScreen.volumeChanges);
+        table.row().colspan(3).expandX().fillX();
+        table.add(volumeLabel).fillX().width(cw /4.0f).height(ch /8.0f);
+        table.row().colspan(3).expandX().fillX();
+        table.add(buttonTable).colspan(3);
+        table.row().colspan(3).expandX().fillX();
+        table.add(savebtn).fillX().width(cw /4).height(ch /6);
+
+        buttonTable.row().fillX().expandX();
+        buttonTable.add(leftVolumeBtn).width(cw/4.0f).height(ch / 8.0f);//.padLeft(ch/12.0f);//.width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padTop(50).padLeft(500);
+        buttonTable.add(volume.getVolume()).width(cw/4.0f).height(ch / 6.0f);
+        buttonTable.add(rightVolumeBtn).width(cw/4.0f).height(ch / 8.0f);//.padRight(ch/12.0f);
+
+        System.out.println("volumchanges = " + SettingsScreen.volumeChanges);
+        settingsContainer.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("background stuff/settingsScreen.png"))));
 
         settingsContainer.setActor(table);
     }

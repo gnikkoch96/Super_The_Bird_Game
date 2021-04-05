@@ -178,7 +178,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void show() {
-
+        hud.settingScreen.volumeButtons();
     }
 
     public void play(float delta){
@@ -277,12 +277,14 @@ public class PlayScreen implements Screen {
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         hud.settingScreen.setContainerVisible(true);
+        //activate the buttons
         hud.settingScreen.Buttons();
 
         //this will set the screen into the setting screen
         //1 is the id number for setting screen view on play screen
-        if(hud.settingScreen.state == 1)
+        if(hud.settingScreen.state == 1) {
             hud.settingScreen.setSettingsContainerVisible(true);
+        }
         else
             hud.settingScreen.setSettingsContainerVisible(false);
 
