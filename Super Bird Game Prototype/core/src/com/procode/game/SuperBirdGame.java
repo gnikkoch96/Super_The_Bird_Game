@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.screens.LoginScreen;
 import com.procode.game.screens.PlayScreen;
+import com.procode.game.screens.Scoreboard;
 import com.procode.game.screens.SettingsScreen;
 import com.procode.game.screens.SplashScreen;
 
