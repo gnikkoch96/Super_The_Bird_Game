@@ -209,7 +209,7 @@ public class PlayScreen implements Screen {
                 break;
         }
 
-        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
+//        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
 
         // render projectiles
         for(BirdSpit spits: activeSpits){

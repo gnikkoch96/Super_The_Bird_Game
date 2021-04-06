@@ -182,6 +182,8 @@ public class Bird implements Disposable {
 //                activeSpits.removeValue(spit, true);
 //            }
         }
+
+        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitbox_offset.x + " , " + this.hitbox_offset.y);
     }
 
     // can only set invincible after a certain period of time has passed
@@ -228,7 +230,8 @@ public class Bird implements Disposable {
             // create spit
             BirdSpit item = spitPool.obtain();
 //            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
-            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+//            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+            item.init(this.position.x + (int)(BirdWidth/1.5), this.position.y + (int)(BirdWidth/3.8)); //Nikko: change to this when the image has been adjusted
             activeSpits.add(item);
             Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
 

@@ -22,7 +22,6 @@ public class Hitbox implements Disposable {
         width = w;
         height = h;
 
-        // y-value is reversed
         topleft = new Vector2(this.position.x, this.position.y + height);
         topright = new Vector2(this.position.x+width, this.position.y + height);
         botleft = new Vector2(this.position.x, this.position.y);
@@ -31,6 +30,7 @@ public class Hitbox implements Disposable {
         //--DEBUG--//
         shapeRenderer = new ShapeRenderer();
     }
+
     public boolean isHit(Hitbox other) {
         // Use an array to check all 4 corners of incoming objects
         Vector2[] other_corners = {other.topleft, other.topright, other.botleft, other.botright};
