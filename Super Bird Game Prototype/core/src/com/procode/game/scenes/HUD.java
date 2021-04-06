@@ -26,8 +26,6 @@ import com.procode.game.tools.ImageFunctions;
 
 public class HUD implements Disposable {
     public Stage stage;
-
-    
     // values that get updated dynamically
     private static Integer score;
 
@@ -71,8 +69,6 @@ public class HUD implements Disposable {
 
         Label.LabelStyle style = new Label.LabelStyle();
         style = skin.get(Label.LabelStyle.class);
-
-
         style.font = font;
 
         //set the state of the game and the bird
@@ -96,7 +92,7 @@ public class HUD implements Disposable {
 
         //set the sate of the PauseBtn
         setPauseBtn();
-        
+
         // gamepad
         gamepad = new Gamepad(game);
         stage.addActor(gamepad.upArrow);
@@ -105,14 +101,16 @@ public class HUD implements Disposable {
         stage.addActor(gamepad.rightArrow);
         stage.addActor(gamepad.shootButton);
 
-        //set up the mini settings for the PlayScreen
-        settingScreen = new MiniSettingScreen(stage);
-
-        settingScreen.setContainerVisible(false);
         //Display table to screen
-        stage.addActor(settingScreen.getActor());
         stage.addActor(scoreTable);
         stage.addActor(leftTable);
+
+        //set up the mini settings for the PlayScreen
+        settingScreen = new MiniSettingScreen(stage);
+        settingScreen.setContainerVisible(false);
+        stage.addActor(settingScreen.getActor());
+
+
     }
     public void setPauseBtn(){
         pauseBtn.addListener(new ClickListener(){

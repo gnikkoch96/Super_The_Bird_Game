@@ -17,6 +17,22 @@ public class Hitbox implements Disposable {
     //--DEBUG PURPOSES--//
     private ShapeRenderer shapeRenderer;
 
+    // adjusted hitboxes
+    public Hitbox(float x, float y, int w, int h) {
+        position = new Vector2(x, y);
+        width = w;
+        height = h;
+
+        // y-value is reversed
+        topleft = new Vector2(this.position.x, this.position.y + height);
+        topright = new Vector2(this.position.x+width, this.position.y + height);
+        botleft = new Vector2(this.position.x, this.position.y);
+        botright = new Vector2(this.position.x+width, this.position.y);
+
+        //--DEBUG--//
+        shapeRenderer = new ShapeRenderer();
+    }
+
     public Hitbox(Vector2 currentPos, int w, int h) {
         position = currentPos;
         width = w;
@@ -31,7 +47,6 @@ public class Hitbox implements Disposable {
         //--DEBUG--//
         shapeRenderer = new ShapeRenderer();
     }
-
     public boolean isHit(Hitbox other) {
         // Use an array to check all 4 corners of incoming objects
         Vector2[] other_corners = {other.topleft, other.topright, other.botleft, other.botright};

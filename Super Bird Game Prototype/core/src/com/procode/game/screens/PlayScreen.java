@@ -222,8 +222,8 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         //--DEBUGGING--//
-//        enemy.hitbox.debugHitbox();
-//        player.debugHitbox();
+        enemy.hitbox.debugHitbox();
+        player.debugHitbox();
 
         //add buttons to screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

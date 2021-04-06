@@ -63,7 +63,7 @@ public class Bird implements Disposable {
         healthCount = 6;
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
-        hitbox = new Hitbox(this.position, BirdWidth, BirdHeight);
+        hitbox = new Hitbox((float) (this.position.x + ((int) BirdWidth/2)), this.position.y, (int) (BirdWidth/2.5), BirdHeight);
         currentState = State.IDLE;
         previousState = currentState;
 
