@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.scenes.HUD;
 
 public class Hitbox implements Disposable {
     public Vector2 position;
@@ -77,7 +78,8 @@ public class Hitbox implements Disposable {
     }
 
     //--DEBUG--//
-    public void debugHitbox(){
+    public void debugHitbox(HUD hud){
+        shapeRenderer.setProjectionMatrix(hud.stage.getCamera().combined);
         this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         this.shapeRenderer.setColor(Color.BLACK);
         this.shapeRenderer.line(this.botleft, this.topleft);

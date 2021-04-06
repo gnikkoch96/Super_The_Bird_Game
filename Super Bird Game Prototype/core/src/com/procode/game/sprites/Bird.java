@@ -196,11 +196,11 @@ public class Bird implements Disposable {
     }
 
     // debugs the hitboxes of anything related to the bird
-    public void debugHitbox(){
+    public void debugHitbox(HUD hud){
         //--DEBUG--// Note: debugging hitboxes has to occur after it has rendered
-        this.hitbox.debugHitbox();
+        this.hitbox.debugHitbox(hud);
         for(BirdSpit spit:activeSpits){
-            spit.getHitbox().debugHitbox();
+            spit.getHitbox().debugHitbox(hud);
         }
     }
 
