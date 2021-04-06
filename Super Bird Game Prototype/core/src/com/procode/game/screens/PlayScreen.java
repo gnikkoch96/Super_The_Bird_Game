@@ -218,7 +218,6 @@ public class PlayScreen implements Screen {
         }
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
-        //player.renderBullets(game.batch);
         game.batch.end();
 
         //--DEBUGGING--//

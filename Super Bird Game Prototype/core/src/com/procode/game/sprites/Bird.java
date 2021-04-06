@@ -34,6 +34,7 @@ public class Bird implements Disposable {
 
     // bird properties
     private Vector2 position;
+    private Vector2 hitbox_offset;
     private int healthCount;
     private Vector2 velocity;
     public Hitbox hitbox;
@@ -63,7 +64,8 @@ public class Bird implements Disposable {
         healthCount = 6;
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
-        hitbox = new Hitbox((float) (this.position.x + ((int) BirdWidth/2)), this.position.y, (int) (BirdWidth/2.5), BirdHeight);
+        hitbox_offset = new Vector2((float) (x + (int)(BirdWidth/15)), y);
+        hitbox = new Hitbox(this.hitbox_offset, (int) (BirdWidth/3), BirdHeight);
         currentState = State.IDLE;
         previousState = currentState;
 
@@ -165,7 +167,8 @@ public class Bird implements Disposable {
         }
 
         // updates bird hitbox
-        this.hitbox.update(this.position);
+        this.hitbox_offset.set((float) (this.position.x + (int)(BirdWidth/15)), this.position.y);
+        this.hitbox.update(this.hitbox_offset);
 
         // manage spits that exit the screen
         for(BirdSpit spit: activeSpits){
