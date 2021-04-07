@@ -46,7 +46,8 @@ public class Bird implements Disposable {
 
     // projectiles (w/ memory management)
     private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
-    private final Pool<BirdSpit> spitPool = new Pool<BirdSpit>(){ // spit pool (16 by default)
+    private final Pool<BirdSpit> spitPool = new Pool<BirdSpit>(16){ // spit pool (16 by default)
+
         @Override
         protected BirdSpit newObject() {
             return new BirdSpit();
@@ -183,7 +184,7 @@ public class Bird implements Disposable {
 //            }
         }
 
-        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitbox_offset.x + " , " + this.hitbox_offset.y);
+//        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitbox_offset.x + " , " + this.hitbox_offset.y);
     }
 
     // can only set invincible after a certain period of time has passed

@@ -214,15 +214,15 @@ public class PlayScreen implements Screen {
         // render projectiles
         for(BirdSpit spits: activeSpits){
             spits.render(game.batch);
-            BirdSpit.collisionParticle.draw(game.batch, delta);
+//            BirdSpit.collisionParticle.draw(game.batch, delta);
         }
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
         game.batch.end();
 
         //--DEBUGGING--//
-        enemy.hitbox.debugHitbox();
-        player.debugHitbox();
+//        enemy.hitbox.debugHitbox();
+//        player.debugHitbox();
 
         //add buttons to screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

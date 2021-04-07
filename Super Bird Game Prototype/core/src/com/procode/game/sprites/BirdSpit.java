@@ -13,8 +13,7 @@ import com.procode.game.tools.ImageFunctions;
 public class BirdSpit extends Projectile implements Disposable {
     // animations
     private static Texture projectileImage; // this will be the image that floats until a contact has been made
-    private Animation collisionAnimation; // the animation will be when the spit animation is done since we want the spit to stay in its first form until a contact is made
-    public static ParticleEffect collisionParticle;
+
 
     public BirdSpit(){
         //--Nikko: The width and height can be changed
@@ -28,28 +27,15 @@ public class BirdSpit extends Projectile implements Disposable {
 
         //--Nikko: To save memory from creating a new texture and animation for each new spit
         if(BirdSpit.projectileImage == null) BirdSpit.projectileImage = ImageFunctions.resize("bird animations//spit projectile 1.png", this.projectileWidth, this.projectileHeight);
-//        if(BirdSpit.collisionAnimation == null){
-//            BirdSpit.collisionAnimation = new Animation();
-//            BirdSpit.collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, 1f, false);
-//        }
-
-        if(BirdSpit.collisionParticle == null){
-            collisionParticle = new ParticleEffect();
-            collisionParticle.load(Gdx.files.internal("effects/liquid.p"), Gdx.files.internal("bird animations"));
 
 
-        }
+        collisionParticle = new ParticleEffect();
+        collisionParticle.load(Gdx.files.internal("effects/liquid2.p"), Gdx.files.internal("bird animations"));
 
-        collisionAnimation = new Animation();
-        collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, 1f, false);
+
 
         this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
 
-        deltaTime = 0;
-    }
-
-    public Animation getCollisionAnimation() {
-        return collisionAnimation;
     }
 
     // sets the spit initial values
@@ -61,16 +47,14 @@ public class BirdSpit extends Projectile implements Disposable {
     //--TEST--/
     private float deltaTime;
     public void update(float dt) {
-        deltaTime = dt;
         if (isOutOfScreen()) { // removes the spit if it exits the screen
             this.alive = false;
         }else {
-            Gdx.app.log("Collision Status:", String.valueOf(this.isCollided()));
-
+            collisionParticle.update(dt);
             //--TEST--//
-            if (this.isCollided()) { // collision detected
+            if (this.isCollided() || !this.collisionParticle.isComplete()) { // collision detected
 //                collisionAnimation.updateFrame(dt);
-//                collisionParticle.update(dt);
+                collisionParticle.update(dt);
             }else {
                 // update spit position
                 this.position.x += this.velocity;
@@ -91,16 +75,18 @@ public class BirdSpit extends Projectile implements Disposable {
 
     public void render(SpriteBatch batch){
         //--Nikko: doesn't need to begin or end batch as this code will be called while the spritebatch of PlayScreen.class already started the begin()
-
-
-        if(this.isCollided()){ // collided with an object
-//            batch.draw(collisionAnimation.getCurrImg(), this.position.x, this.position.y);
+        Gdx.app.log("isCollided:", String.valueOf(this.isCollided()));
+        Gdx.app.log("particle is complete:", String.valueOf(collisionParticle.isComplete()));
+        if(this.isCollided()){
             collisionParticle.setPosition(this.position.x, this.position.y);
             collisionParticle.start();
-
+            collisionParticle.draw(batch);
         }else{
-            batch.draw(projectileImage, this.position.x, this.position.y);
+            collisionParticle.draw(batch);
         }
+
+        batch.draw(projectileImage, this.position.x, this.position.y);
+
 
 
     }
@@ -109,6 +95,6 @@ public class BirdSpit extends Projectile implements Disposable {
     @Override
     public void dispose() {
         projectileImage.dispose();
-        collisionAnimation.dispose();
+        collisionParticle.dispose();
     }
 }
