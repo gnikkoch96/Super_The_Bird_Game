@@ -71,10 +71,10 @@ public class Bird implements Disposable {
                 return new BirdSpit(gameCamera);
             }
         };
-        hitboxPositionOffset = new Vector2((float) (x + (int)(BirdWidth/15)), y);
+        hitboxPosOffset = new Vector2((float) (x + (int)(BirdWidth/15)), y);
         hitboxBoundsOffset = new Vector2((int) (BirdWidth/3), this.BirdHeight);
-        hitbox = newhitboxPosOffset; Hitbox(this.hitboxPositionOffset, hitboxBoundsOffset.x, hitboxBoundsOffset.y, gameCamera);
-        currentState = State.IDLE;hitboxPosOffset;
+        hitbox = new Hitbox(this.hitboxPosOffset, (int) hitboxBoundsOffset.x, (int) hitboxBoundsOffset.y, gameCamera);
+        currentState = State.IDLE;
         previousState = currentState;
 
         // getting sounds
@@ -181,8 +181,7 @@ public class Bird implements Disposable {
 
         // updates bird hitbox
         this.hitboxBoundsOffset.set((float) (this.position.x + (int)(BirdWidth/15)), this.position.y);
-        this.hitbox.updathitboxPosOffset;e(this.hitboxBoundsOffset);
-hitboxPosOffset;
+        this.hitbox.update(this.hitboxBoundsOffset);
         // manage spits that exit the screen
         for(BirdSpit spit: activeSpits){
             if(spit.isOutOfScreen() || spit.isCollided()){
@@ -197,7 +196,7 @@ hitboxPosOffset;
         }
 
         Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitboxBoundsOffset.x + " , " + this.hitboxBoundsOffset.y);
-    }hitboxPosOffset;
+    }
 
     // can only set invincible after a certain period of time has passed
     public void setInvincible(boolean isInvincible){
