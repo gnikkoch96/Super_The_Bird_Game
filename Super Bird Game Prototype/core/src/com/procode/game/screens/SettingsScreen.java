@@ -223,11 +223,6 @@ public class SettingsScreen implements Screen {
         });
 
 
-
-        stage.addActor(btnEditAccount);
-        stage.addActor(btnChangePassword);
-        stage.addActor(btnBack);
-
         leftVolumeBtn.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
