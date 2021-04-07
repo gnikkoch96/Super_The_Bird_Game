@@ -3,7 +3,6 @@ package com.procode.game.sprites;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -35,7 +34,9 @@ public class Bird implements Disposable {
 
     // bird properties
     private Vector2 position;
+    private Vector2 hitbox_offset;
     private int healthCount;
+    private Vector2 velocity;
     public Hitbox hitbox;
 
     // audio related
@@ -52,7 +53,6 @@ public class Bird implements Disposable {
         }
     };
 
-    // constructor
     public Bird(int x, int y, int birdWidth, int birdHeight) {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
@@ -64,7 +64,8 @@ public class Bird implements Disposable {
         healthCount = 6;
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
-        hitbox = new Hitbox(this.position, BirdWidth, BirdHeight);
+        hitbox_offset = new Vector2((float) (x + (int)(BirdWidth/15)), y);
+        hitbox = new Hitbox(this.hitbox_offset, (int) (BirdWidth/3), BirdHeight);
         currentState = State.IDLE;
         previousState = currentState;
 
@@ -101,6 +102,22 @@ public class Bird implements Disposable {
     public Vector2 getPosition(){
         return this.position;
     }
+
+    //--Nikko: I used this to locate where the spits should be rendering from
+    public static int getBirdWidth(){return BirdWidth;}
+    public static int getBirdHeight(){return BirdHeight;}
+
+    //sets the new position of the bird
+    public void movePosition(float newX, float newY){
+
+        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.GAME_WIDTH) {
+            position.x += (newX);
+        }
+        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.GAME_HEIGHT) {
+            position.y += newY;
+        }
+    }
+
 
     // gets the width and height of the bird
     public Vector2 getBirdSize(){
@@ -150,7 +167,8 @@ public class Bird implements Disposable {
         }
 
         // updates bird hitbox
-        this.hitbox.update(this.position);
+        this.hitbox_offset.set((float) (this.position.x + (int)(BirdWidth/15)), this.position.y);
+        this.hitbox.update(this.hitbox_offset);
 
         // manage spits that exit the screen
         for(BirdSpit spit: activeSpits){
@@ -164,6 +182,8 @@ public class Bird implements Disposable {
 //                activeSpits.removeValue(spit, true);
 //            }
         }
+
+        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitbox_offset.x + " , " + this.hitbox_offset.y);
     }
 
     // can only set invincible after a certain period of time has passed
@@ -177,16 +197,7 @@ public class Bird implements Disposable {
         }
     }
 
-    //sets the new position of the bird
-    public void movePosition(float newX, float newY){
 
-        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.ANDROID_WIDTH) {
-            position.x += (newX);
-        }
-        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.ANDROID_HEIGHT) {
-            position.y += newY;
-        }
-    }
 
     public void switchAnimations(State playerState){
         switch(playerState){
@@ -219,7 +230,8 @@ public class Bird implements Disposable {
             // create spit
             BirdSpit item = spitPool.obtain();
 //            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
-            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+//            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+            item.init(this.position.x + (int)(BirdWidth/1.5), this.position.y + (int)(BirdWidth/3.8)); //Nikko: change to this when the image has been adjusted
             activeSpits.add(item);
             Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
 
@@ -270,11 +282,11 @@ public class Bird implements Disposable {
 
     public void setBirdSize(int width, int height){
         //repositions the bird of the new size makes it go out of bounds
-        if((position.x + width) > SuperBirdGame.ANDROID_WIDTH) {
-            position.x = SuperBirdGame.ANDROID_WIDTH - width;
+        if((position.x + width) > SuperBirdGame.GAME_WIDTH) {
+            position.x = SuperBirdGame.GAME_WIDTH - width;
         }
-        if((position.y + height) > SuperBirdGame.ANDROID_HEIGHT) {
-            position.y = SuperBirdGame.ANDROID_HEIGHT - height;
+        if((position.y + height) > SuperBirdGame.GAME_HEIGHT) {
+            position.y = SuperBirdGame.GAME_HEIGHT - height;
         }
         BirdWidth = width;
         BirdHeight = height;

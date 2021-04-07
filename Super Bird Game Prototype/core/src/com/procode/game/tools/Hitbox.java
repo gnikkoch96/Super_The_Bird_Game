@@ -22,7 +22,6 @@ public class Hitbox implements Disposable {
         width = w;
         height = h;
 
-        // y-value is reversed
         topleft = new Vector2(this.position.x, this.position.y + height);
         topright = new Vector2(this.position.x+width, this.position.y + height);
         botleft = new Vector2(this.position.x, this.position.y);
@@ -56,10 +55,10 @@ public class Hitbox implements Disposable {
         botleft.set(this.position.x, this.position.y);
         botright.set(update_x, this.position.y);
 
-//        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
-//                + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
-//                + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
-//                + "topright: (" + this.topright.x + ", " + this.topright.y + ")\n");
+        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
+                + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
+                + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
+                + "topright: (" + this.topright.x + ", " + this.topright.y + ")\n");
 
     }
 

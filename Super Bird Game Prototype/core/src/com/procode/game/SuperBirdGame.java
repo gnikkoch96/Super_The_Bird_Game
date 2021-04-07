@@ -1,29 +1,29 @@
 package com.procode.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.procode.game.scenes.HUD;
-import com.procode.game.screens.LoadingScreen;
-import com.procode.game.screens.LoginScreen;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.screens.PlayScreen;
 import com.procode.game.screens.SplashScreen;
-import com.procode.game.sprites.Bird;
 
 public class SuperBirdGame extends Game {
-	public static final int DESKTOP_WIDTH = 1920;
-	public static final int DESKTOP_HEIGHT = 1080;
 	public static final String DESKTOP_TITLE = "Super Bird Game";
-	public SpriteBatch batch;
+	public static int DESKTOP_WIDTH = 1920;
+	public static int DESKTOP_HEIGHT = 1080;
 
-	// android configurations
-	public static int ANDROID_WIDTH, ANDROID_HEIGHT;
-	public static int num;															// nikko: what does this do?
+	public static int GAME_WIDTH = 1920;
+	public static int GAME_HEIGHT = 1080;
+
+	public static OrthographicCamera camera;
+	public static Viewport viewport;
+	public static float aspectRatio;
+
+	public SpriteBatch batch;
 
 
 	/* WARNING Using AssetManager in a static way can cause issues, especially on Android.
@@ -32,16 +32,18 @@ public class SuperBirdGame extends Game {
 	public static AssetManager manager;
 
 	public SuperBirdGame(){}
-	public SuperBirdGame(int width, int height){
-		this.ANDROID_WIDTH = width;
-		this.ANDROID_HEIGHT = height;
-		System.out.println("width: " + width);
-		System.out.println("height: " + height);
-	}
 
 	@Override
 	public void create () {
+		camera = new OrthographicCamera();
+		camera.position.set(GAME_WIDTH/2, GAME_HEIGHT/2, 0);
+
+		aspectRatio = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
+		viewport = new FillViewport(GAME_WIDTH * aspectRatio, GAME_HEIGHT, camera);
+		viewport.apply();
+
 		batch = new SpriteBatch();
+		batch.setProjectionMatrix(camera.combined);
 
 		// asset manager stuff
 		manager = new AssetManager();
@@ -55,6 +57,12 @@ public class SuperBirdGame extends Game {
 
 //		this.setScreen(new SplashScreen(this));
 		this.setScreen(new PlayScreen(this));
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		camera.position.set(GAME_WIDTH/2, GAME_HEIGHT/2, 0);
 	}
 
 	@Override

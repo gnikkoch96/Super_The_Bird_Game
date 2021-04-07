@@ -71,16 +71,16 @@ public class LoadingScreen extends Game implements Screen {
     @Override
     public void show() {
 
-        background = ImageFunctions.resize("screen icons//superbird.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("screen icons//superbird.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
         stage = new Stage();
 
         healthBar = new ProgressBar(0.0f, 5.0f, 0.10f, false, skin);
         healthBar.setValue(0.0f);
         healthBar.setAnimateDuration(0.25f);
-        healthBar.setBounds(10, 10, SuperBirdGame.ANDROID_WIDTH/4, 20);
+        healthBar.setBounds(10, 10, SuperBirdGame.GAME_WIDTH /4, 20);
         //healthBar.setPosition(500,500);
-        healthBar.setPosition(500,SuperBirdGame.ANDROID_HEIGHT/4);
+        healthBar.setPosition(500,SuperBirdGame.GAME_HEIGHT /4);
         stage.addActor(healthBar);
 
 
@@ -112,6 +112,8 @@ public class LoadingScreen extends Game implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
         healthBar.setSize(width/2, height/4 -200);
         healthBar.setPosition(width/4,height/4 );
     }

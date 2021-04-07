@@ -138,7 +138,7 @@ public class Enemy implements Disposable {
     // and has not passed the bird
     public boolean onScreen(){
         if (((position.x + enemyWidth) > 0) &&
-                ((position.y + enemyHeight) < SuperBirdGame.ANDROID_HEIGHT) &&
+                ((position.y + enemyHeight) < SuperBirdGame.GAME_HEIGHT) &&
                 ((position.y + enemyHeight) > 0)){
             return true;
         }
