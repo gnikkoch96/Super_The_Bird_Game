@@ -36,7 +36,7 @@ public class MiniSettingScreen{
     private Table table, buttonTable;
     private Texture background;
     private SpriteBatch batch;
-    public ImageButton playbtn, quitbtn, settingsbtn, savebtn, leftVolumeBtn, rightVolumeBtn;
+    public ImageButton playbtn, quitbtn, settingsbtn, savebtn, leftVolumeBtn, rightVolumeBtn, orangeBackground, blueBackground;
     public static int state = 0;
     private Volume volume;
 
@@ -87,6 +87,8 @@ public class MiniSettingScreen{
         quitbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//quit button.png"))));
         settingsbtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//option button.png"))));
         savebtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("screen icons//savebtn.png"))));
+        orangeBackground = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("background stuff//orange_bg.png"))));
+        blueBackground = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("background stuff//bluebg.png"))));
 
         //buttons pressed
         Texture playPressed = new Texture("screen icons//play buttonsmashed.png");
@@ -95,6 +97,11 @@ public class MiniSettingScreen{
         quitbtn.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(quitPressed));
         Texture settingsPressed = new Texture("screen icons//settings buttonsmashed.png");
         settingsbtn.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(settingsPressed));
+        Texture orangeBackgroundPressed = new Texture("background stuff//orange_bg_clicked.png");
+        orangeBackground.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(orangeBackgroundPressed));
+        Texture blueBackgroundPressed = new Texture("background stuff//bluebg_clicked.png");
+        blueBackground.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(blueBackgroundPressed));
+
 
         table.row().colspan(3).expandX().fillX();
         table.add(playbtn).fillX().width((float)game.GAME_WIDTH /4).height((float)game.GAME_HEIGHT /6);
@@ -176,6 +183,7 @@ public class MiniSettingScreen{
 
         });
 
+
         leftVolumeBtn.addListener(new ClickListener(){
 
             @Override
@@ -184,6 +192,40 @@ public class MiniSettingScreen{
                     SettingsScreen.volumeChanges -= 1;
                     volume.setVolume(SettingsScreen.volumeChanges);
                 }
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+
+            }
+
+        });
+
+
+        //these buttons would be separated soon
+        blueBackground.addListener(new ClickListener(){
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+                PlayScreen.changeBackground = "blue";
+
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+
+            }
+
+        });
+
+
+        orangeBackground.addListener(new ClickListener(){
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+                PlayScreen.changeBackground = "orange";
                 return true;
             }
             @Override
@@ -238,18 +280,25 @@ public class MiniSettingScreen{
         //set the initial volume from the setting screen
         volume.setVolume(SettingsScreen.volumeChanges);
         table.row().colspan(3).expandX().fillX();
-        table.add(volumeLabel).fillX().width(cw /4.0f).height(ch /8.0f);
+        table.add(volumeLabel).fillX().width(cw /4.0f).height(ch /9.0f);
+        table.row().colspan(3).expandX().fillX();
+        table.add(volumeLabel).fillX().width(cw /4.0f).height(ch /9.0f);
         table.row().colspan(3).expandX().fillX();
         table.add(buttonTable).colspan(3);
         table.row().colspan(3).expandX().fillX();
-        table.add(savebtn).fillX().width(cw /4).height(ch /6);
+        table.add(savebtn).fillX().width(cw /4).height(ch /6).padTop(35);
+
+
 
         buttonTable.row().fillX().expandX();
         buttonTable.add(leftVolumeBtn).width(cw/4.0f).height(ch / 8.0f);//.padLeft(ch/12.0f);//.width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padTop(50).padLeft(500);
         buttonTable.add(volume.getVolume()).width(cw/4.0f).height(ch / 6.0f);
         buttonTable.add(rightVolumeBtn).width(cw/4.0f).height(ch / 8.0f);//.padRight(ch/12.0f);
-
-        System.out.println("volumchanges = " + SettingsScreen.volumeChanges);
+        buttonTable.row().fillX().expandX();
+        buttonTable.add(blueBackground).width(cw/4.0f).height(ch / 8.0f);
+        buttonTable.add(orangeBackground).width(cw/4.0f).height(ch / 8.0f);//.padRight(ch/12.0f);
+        buttonTable.row().fillX().expandX();
+        //System.out.println("volumchanges = " + SettingsScreen.volumeChanges);
         settingsContainer.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("background stuff/settingsScreen.png"))));
 
         settingsContainer.setActor(table);

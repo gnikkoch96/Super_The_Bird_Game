@@ -49,6 +49,7 @@ public class PlayScreen implements Screen {
     private Spawner enemySpawner;
 
     public Array<BirdSpit> activeSpits;
+    public static String changeBackground = "orange";
 
 
 
@@ -61,6 +62,7 @@ public class PlayScreen implements Screen {
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
         currTime = 0;
         bg = new Background(); //this is the background class that contains all textures of images for the background
+
 
 
         //set the starting point of the background objects
@@ -188,7 +190,7 @@ public class PlayScreen implements Screen {
 
         hud.settingScreen.setContainerVisible(false);
 
-        game.batch.draw(bg.getBackgroundSky(),0,0);
+       // game.batch.draw(bg.getBackgroundSky(),0,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
@@ -221,13 +223,18 @@ public class PlayScreen implements Screen {
     @Override
     public void render(float delta) {
         // empties the Screen
-        Gdx.gl.glClearColor(255/255f, 127/255f, 39/255f,1);
+
+        if(changeBackground.equals("orange"))
+            Gdx.gl.glClearColor(255/255f, 127/255f, 39/255f,1);
+        else if(changeBackground.equals("blue"))
+            Gdx.gl.glClearColor(0/255f, 255/255f, 255/255f,1);
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // main render
         game.batch.setProjectionMatrix(game.camera.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
-        game.batch.draw(background, 0, 0);
+        //game.batch.draw(background, 0, 0);
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
@@ -270,7 +277,7 @@ public class PlayScreen implements Screen {
     @Override
     public void pause() {
         //game.batch.draw(background, 0, 0);
-        game.batch.draw(bg.getBackgroundSky(),0,0);
+      //  game.batch.draw(bg.getBackgroundSky(),0,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
