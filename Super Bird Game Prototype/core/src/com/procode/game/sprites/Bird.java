@@ -35,7 +35,7 @@ public class Bird implements Disposable {
 
     // boolean vars for bird (used in the damagedBird())
     private boolean isDead;
-    private boolean isInvincible;
+    public boolean isInvincible;
 
     // bird properties
     private Vector2 position;
@@ -71,9 +71,10 @@ public class Bird implements Disposable {
                 return new BirdSpit(gameCamera);
             }
         };
-        hitboxPosOffset = new Vector2((float) (x + (int)(BirdWidth/15)), y);
-        hitboxBoundsOffset = new Vector2((int) (BirdWidth/3), this.BirdHeight);
-        hitbox = new Hitbox(this.hitboxPosOffset, (int) hitboxBoundsOffset.x, (int) hitboxBoundsOffset.y, gameCamera);
+        this.hitboxPosOffset = new Vector2((float) (x + (int)(BirdWidth/8)), (float) (y +  (this.BirdHeight)));
+        this.hitboxBoundsOffset = new Vector2((int) (BirdWidth/3), ((int)(this.BirdHeight) - (this.BirdHeight/4)));
+        hitbox = new Hitbox(this.hitboxPosOffset, (int) this.hitboxBoundsOffset.x, (int) this.hitboxBoundsOffset.y, gameCamera);
+
         currentState = State.IDLE;
         previousState = currentState;
 
@@ -180,8 +181,8 @@ public class Bird implements Disposable {
         }
 
         // updates bird hitbox
-        this.hitboxBoundsOffset.set((float) (this.position.x + (int)(BirdWidth/15)), this.position.y);
-        this.hitbox.update(this.hitboxBoundsOffset);
+        this.hitboxPosOffset.set((float) (position.x + (int)(BirdWidth/8)), (float) (position.y +  (this.BirdHeight / 10)));
+        this.hitbox.update(this.hitboxPosOffset);
         // manage spits that exit the screen
         for(BirdSpit spit: activeSpits){
             if(spit.isOutOfScreen() || spit.isCollided()){

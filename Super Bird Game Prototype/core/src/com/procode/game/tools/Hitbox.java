@@ -92,6 +92,17 @@ public class Hitbox implements Disposable {
         return "(" + position.x + ", " + position.y + ")";
     }
 
+    public void resize(int width, int height){
+
+        this.width = width;
+        this.height = height;
+
+        topleft = new Vector2(this.position.x, this.position.y + height);
+        topright = new Vector2(this.position.x+width, this.position.y + height);
+        botleft = new Vector2(this.position.x, this.position.y);
+        botright = new Vector2(this.position.x+width, this.position.y);
+    }
+
     @Override
     public void dispose() {
 
