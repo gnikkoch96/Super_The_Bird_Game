@@ -45,7 +45,7 @@ public class BirdSpit extends Projectile implements Disposable {
 
         this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight, gameCamera);
         collisionAnimation = new Animation();
-        collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 2, 3, 1f, false);
+        collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 1, 3, 1f, false);
 
         deltaTime = 0;
     }

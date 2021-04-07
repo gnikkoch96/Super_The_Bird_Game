@@ -13,7 +13,7 @@ public class Projectile implements Pool.Poolable {
     protected float velocity; // only apply on x-axis
 
     // collision detection
-    protected Hitbox hitbox;
+    public Hitbox hitbox;
     protected Vector2 position;
     protected boolean alive;  // checks to see if the bullet is still on screen or hasn't hit an object
     protected boolean collided; // used to play the finishing animation of the spit (Nikko: Might remove this as we can just use the isHit() from Hitbox.class)

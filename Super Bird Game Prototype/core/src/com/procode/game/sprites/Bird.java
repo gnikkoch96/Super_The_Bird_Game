@@ -12,9 +12,11 @@ import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.screens.SettingsScreen;
 import com.procode.game.tools.Animation;
+import com.procode.game.tools.Enemy;
 import com.procode.game.tools.Hitbox;
 
 import java.lang.Math;
+import java.util.List;
 
 public class Bird implements Disposable {
     private static final long INVINCIBLE_DURATION = 2000; // value can be changed
@@ -51,7 +53,7 @@ public class Bird implements Disposable {
     private Sound deadSound, deadSoundSad;
 
     // projectiles (w/ memory management)
-    private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
+    public final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
     private final Pool<BirdSpit> spitPool;
 
     public Bird(int x, int y, int birdWidth, int birdHeight, final Camera gameCamera) {
@@ -71,7 +73,7 @@ public class Bird implements Disposable {
                 return new BirdSpit(gameCamera);
             }
         };
-        this.hitboxPosOffset = new Vector2((float) (x + (int)(BirdWidth/8)), (float) (y +  (this.BirdHeight)));
+        this.hitboxPosOffset = new Vector2((float) (x + (int)(BirdWidth/8)), (float) (y +  (this.BirdHeight/10)));
         this.hitboxBoundsOffset = new Vector2((int) (BirdWidth/3), ((int)(this.BirdHeight) - (this.BirdHeight/4)));
         hitbox = new Hitbox(this.hitboxPosOffset, (int) this.hitboxBoundsOffset.x, (int) this.hitboxBoundsOffset.y, gameCamera);
 
@@ -197,6 +199,17 @@ public class Bird implements Disposable {
         }
 
         Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitboxBoundsOffset.x + " , " + this.hitboxBoundsOffset.y);
+    }
+
+
+    // detects hits from enemies
+    public void updateHitDetection(List<Enemy> enemies, HUD hud){
+
+        // checks if the player hit an enemy
+        for (int i = 0; i < enemies.size(); i++){
+            Enemy currEnemy = enemies.get(i);
+            hitDetection(currEnemy, hud);
+        }
     }
 
     // can only set invincible after a certain period of time has passed
@@ -341,19 +354,16 @@ public class Bird implements Disposable {
     }
 
     // manages all hit detection related to the bird character (Nikko: Change Bird -> List<Enemy> once it starts working)
-    public void hitDetection(Bird enemy, HUD hud){
+    public void hitDetection(Enemy enemy, HUD hud){
         if(this.hitbox.isHit(enemy.hitbox)){
 //            Gdx.app.log("PLAYER->ENEMY", "HIT");
             this.damageBird(hud);
         }
 
-        //Nikko: When we have more enemies, I will need to nest another for loop to loop through enemy array
-        for(BirdSpit spit: activeSpits){
-            // check if it hits an enemy
-            if(enemy.hitbox.isHit(spit.getHitbox())){
-//                Gdx.app.log("SPIT->ENEMY", "HIT");
-                enemy.damageBird(hud);
-                spit.setCollision(true);
+        for (int i = 0; i < activeSpits.size; i++){
+            if(activeSpits.get(i).hitbox.isHit(enemy.hitbox) ||
+                    enemy.hitbox.isHit(activeSpits.get(i).hitbox)){
+                activeSpits.get(i).setCollision(true);
             }
         }
     }

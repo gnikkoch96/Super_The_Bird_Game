@@ -42,7 +42,6 @@ public class PlayScreen implements Screen {
 
     // sprites
     public static Bird player;
-    public static Bird enemy;
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
     //private MechaBird enemyBird;
@@ -73,7 +72,6 @@ public class PlayScreen implements Screen {
         int birdWidth = SuperBirdGame.GAME_WIDTH /5;
         int birdHeight = SuperBirdGame.GAME_HEIGHT /5;
         player = new Bird(SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /2, birdWidth, birdHeight, hud.stage.getCamera());
-        enemy = new Bird(SuperBirdGame.GAME_WIDTH /2, SuperBirdGame.GAME_HEIGHT /2, birdWidth,birdHeight, hud.stage.getCamera());
 
 
         //Setting Properties
@@ -90,11 +88,11 @@ public class PlayScreen implements Screen {
 
         int minEnemies = 2; // easy = 2 hard = 5
         int maxEnemies = 10; // easy = 5 hard = 15
-        float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40, hard = /10
-        float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80, hard = /40
-        float spawnPerSec = 1f; // easy = .01f hard = 1f
-        float spawnFrequency = 0f; // easy = 2.5f hard = 0
-        enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency);
+        float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 80; // desired max speed = game height / 40, hard = /10
+        float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 100; // desired min speed = game height / 80, hard = /40
+        float spawnPerSec = .01f; // easy = .01f hard = 1f
+        float spawnFrequency = 2.5f; // easy = 2.5f hard = 0
+        enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera());
     }
 
     public void handleInput(float dt){
@@ -129,10 +127,7 @@ public class PlayScreen implements Screen {
 
         state = HUD.state;
         player.update(dt);
-        enemy.update(dt);
-
-        player.hitDetection(enemy, hud);
-        player.hitbox.isHit(enemy.hitbox);
+        player.updateHitDetection(enemySpawner.activeEnemies, hud);
 
 
         // bird movement
@@ -154,7 +149,7 @@ public class PlayScreen implements Screen {
 //            enemyBird.reSpawn();
 //        }
 
-        enemySpawner.updateSpawner(dt);
+        enemySpawner.updateSpawner(dt, player.hitbox, player.activeSpits);
     }
 
     public void setBackgroundMovement(){
@@ -192,7 +187,6 @@ public class PlayScreen implements Screen {
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
-        game.batch.draw(enemy.getBirdImage(),enemy.getPosition().x, enemy.getPosition().y);
 
         hud.gamepad.upArrow.setVisible(true);
         hud.gamepad.downArrow.setVisible(true);
@@ -250,12 +244,15 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         //--DEBUGGING--//
-        enemy.hitbox.debugHitbox();
         player.debugHitbox();
+        for (int i = 0; i < enemySpawner.activeEnemies.size(); i++){
+            enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
+        }
 
         //add buttons to screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+
     }
 
 
