@@ -1,10 +1,13 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Enemy;
+import com.procode.game.tools.Hitbox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +23,25 @@ public class MechaBird extends Enemy {
     // we want to pause an action before doing the next one
     public float timeActionPaused;
     public float pausedDuration;
+    private Camera gameCamera;
+    private int spitHits;
+
+    // keep track of spits that have already hit
+    List<BirdSpit> playerSpitsAlreadyHit;
 
 
 
-    public MechaBird(int mechaBWidth, int mechaBHeight, float speed){
+    public MechaBird(int mechaBWidth, int mechaBHeight, float speed, Camera gameCamera){
 
         // super class of enemy that spawns outside of the screen view
         super(mechaBWidth, mechaBHeight, speed);
         pausedDuration = 1.5f;
         timeActionPaused = 0;
+        spitHits = 7;
+
+        // stuff for hitbox
+        this.gameCamera = gameCamera;
+        playerSpitsAlreadyHit = new ArrayList<BirdSpit>();
 
         // create all the animations
         // note we do not need super for variables because they are protected, just thought
@@ -40,7 +53,7 @@ public class MechaBird extends Enemy {
         super.damagedEnemy = null;
 
         super.deadEnemy = new Animation();
-        super.deadEnemy.setAnimation( "mecha bird animations//mecha bird dead ", super.enemyWidth, super.enemyHeight, 1, 4, .5f, false);
+        super.deadEnemy.setAnimation( "mecha bird animations//mecha bird dead ", (int) (super.enemyWidth * 1.5), (int) (super.enemyHeight * 1.5), 1, 4, .3f, false);
 
         currDestination = new Vector2();
         finalDestination = new Vector2();
@@ -80,9 +93,20 @@ public class MechaBird extends Enemy {
         // remaining done in the update function
         setEnemyInitialPosition();
 
+        // set the hitbox
+        super.hitboxPosOffset = new Vector2(super.enemyWidth / 6, super.enemyHeight / 8 );
+        super.hitboxBoundsOffset = new Vector2((int) (super.enemyWidth/ 1.5), ((int)(super.enemyHeight) - (super.enemyHeight/3)));
+        super.hitbox = new Hitbox(new Vector2((int)(super.position.x + super.hitboxPosOffset.x), (int)(super.position.y + super.hitboxPosOffset.y)), (int) super.hitboxBoundsOffset.x, (int) super.hitboxBoundsOffset.y, gameCamera);
+
         // now do the following: move the mecha bird until it reaches the screen visually, (is on the screen)
         // idle animation will play until this position is reached.
         setDestination();
+    }
+
+
+
+    public void resetHitbox(){
+
     }
 
 
@@ -148,7 +172,9 @@ public class MechaBird extends Enemy {
 
 
     // updates the frames, state and position depending on the situation
-    public void updateMechaBird(float deltaTime){
+    // need to pass in the player hitbox to see if there is a collision
+    public void updateMechaBird(float deltaTime, Hitbox playerHitbox, Array<BirdSpit> playerSpits){
+
         super.update(deltaTime); // updates the frames
 
         // now update the position and state depending on current state and other factors
@@ -160,13 +186,13 @@ public class MechaBird extends Enemy {
             } else {
 
                 // pause before changing to a new state
-                if(timeActionPaused == 0) {
+                if (timeActionPaused == 0) {
                     timeActionPaused = deltaTime;
                     pausedDuration = (float) Math.random() + .2f;
                 }
 
                 // stop for next movement for about 1 - 2 seconds
-                if(timeActionPaused + pausedDuration < deltaTime) {
+                if (timeActionPaused + pausedDuration < deltaTime) {
 
                     // sets the next attack to a destination to move to
                     if (attackPattern.get(currAttackInList) == 0) { // dash
@@ -184,10 +210,13 @@ public class MechaBird extends Enemy {
         else if (super.currentState == State.ATTACK) {
 
             // stop for next movement before next attack in list
-            if(timeActionPaused + pausedDuration < deltaTime) {
+            if (timeActionPaused + pausedDuration < deltaTime) {
 
                 // will do attack based on the animation completion and the position it is in
                 if (attackPattern.get(currAttackInList) == 0) {
+
+                    // resize hitbox to fit the attack
+                    super.hitbox.resize((int) hitboxBoundsOffset.x, (int) (hitboxBoundsOffset.y / 2));
 
                     // need to first charge up until the animation is complete
                     // if the animation is complete then dash, also increase speed
@@ -199,9 +228,23 @@ public class MechaBird extends Enemy {
                     // now dash to the end or until you hit the bird
                     else if (super.currAttackState == 1) {
 
-                        if (super.position.x <= currDestination.x) {
+                        // loop through the array of active spits to see if there is a collision
+                        // if so decrement the amount of hits by 1
+                        // if it reaches 0 or less, then destroy the enemy
+                        for(int i = 0; i < playerSpits.size; i++){
+                            BirdSpit currSpit = playerSpits.get(i);
+                            Hitbox currSpitBox = currSpit.hitbox;
+                            if ((super.hitbox.isHit(currSpitBox) || currSpitBox.isHit(super.hitbox)) && !playerSpitsAlreadyHit.contains(currSpit) ){
+                                playerSpitsAlreadyHit.add(currSpit);
+                                spitHits -= 1;
+                            }
+                        }
+
+                        if (super.position.x <= currDestination.x || super.hitbox.isHit(playerHitbox) ||
+                                playerHitbox.isHit(super.hitbox) || spitHits <= 0) {
                             super.changeState(State.DEAD, -1);
-                        } else {
+                        }
+                        else {
                             updatePos();
                         }
 
@@ -211,22 +254,30 @@ public class MechaBird extends Enemy {
                 // and move onto the next attack in the list
                 else if (attackPattern.get(currAttackInList) == 1) {
                     //      -----------------------make attack path logic--------------------
-                } else {
+                }
+                else {
                     //      -----------------------make attack path logic--------------------
 
                 }
             }
         }
-        else if (super.currentState == State.DEAD){
-                if (super.deadEnemy.isAnimFinished() == true){
-                    attackPattern.clear();
-                }
+        else if (super.currentState == State.DEAD) {
+
+            // resize hitbox to fit the attack
+            super.hitbox.resize((int) (hitboxBoundsOffset.x * 1.5), (int) (hitboxBoundsOffset.y * 1.5));
+
+            if (super.deadEnemy.isAnimFinished() == true) {
+                playerSpitsAlreadyHit.clear();
+                attackPattern.clear();
+                super.hitbox = null;
+            }
         }
     }
 
 
 
     // is called to update the position to the current destination
+    // also updates the position of the hitbox
     public void updatePos(){
 
         // checks if the position is close enough to the destination to stop moving
@@ -245,6 +296,17 @@ public class MechaBird extends Enemy {
             else{
                 position.y -= super.enemySpeed;
             }
+        }
+        updateHitboxPos();
+    }
+
+
+
+    // updates the hitbox pos
+    public void updateHitboxPos() {
+        // update the hitbox position if it isnt null
+        if (super.hitbox != null) {
+            super.hitbox.update(new Vector2((int) (super.position.x + super.hitboxPosOffset.x), (int) (super.position.y + super.hitboxPosOffset.y)));
         }
     }
 
@@ -273,21 +335,26 @@ public class MechaBird extends Enemy {
 
         // make animations be able to play again if they are not looped
         deadEnemy.replayLoop();
-        for (int i = 0; i < super.enemyAttacks.size(); i++){
+        for (int i = 0; i < super.enemyAttacks.size(); i++) {
             enemyAttacks.get(i).replayLoop();
         }
+
+        // update the hitbox pos by replacing it
+        super.hitbox = new Hitbox(new Vector2((int)(super.position.x + super.hitboxPosOffset.x), (int)(super.position.y + super.hitboxPosOffset.y)), (int) super.hitboxBoundsOffset.x, (int) super.hitboxBoundsOffset.y, gameCamera);
+        spitHits = 3;
     }
 
 
 
     //sets the enemy position
     public void setEnemyInitialPosition(){
-        super.position.x = (int) (SuperBirdGame.GAME_WIDTH + ((Math.random() * 5) * enemyWidth));
+        super.position.x = (int) (SuperBirdGame.GAME_WIDTH + ((Math.random() * 5) * enemyWidth) + enemyWidth * 4);
         super.position.y = (int) ((Math.random()) * (SuperBirdGame.GAME_HEIGHT - enemyHeight));
     }
 
 
 
+    // gets the position
     public Vector2 getMechaPos(){
         return super.position;
     }

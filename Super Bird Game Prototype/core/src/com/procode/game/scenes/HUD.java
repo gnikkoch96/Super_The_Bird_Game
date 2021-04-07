@@ -27,8 +27,6 @@ import com.procode.game.tools.ImageFunctions;
 
 public class HUD implements Disposable {
     public Stage stage;
-
-    
     // values that get updated dynamically
     private static Integer score;
 
@@ -72,8 +70,6 @@ public class HUD implements Disposable {
 
         Label.LabelStyle style = new Label.LabelStyle();
         style = skin.get(Label.LabelStyle.class);
-
-
         style.font = font;
 
         //set the state of the game and the bird
@@ -107,6 +103,10 @@ public class HUD implements Disposable {
         stage.addActor(gamepad.rightArrow);
         stage.addActor(gamepad.shootButton);
 
+        //Display table to screen
+        stage.addActor(scoreTable);
+        stage.addActor(leftTable);
+
         //set up the mini settings for the PlayScreen
         settingScreen = new MiniSettingScreen(stage);
         settingScreen.setContainerVisible(false);
@@ -130,11 +130,6 @@ public class HUD implements Disposable {
                 return true;
             }
         });
-    }
-
-
-    public boolean getShootStateBtn(){
-        return gamepad.shoot;
     }
 
 

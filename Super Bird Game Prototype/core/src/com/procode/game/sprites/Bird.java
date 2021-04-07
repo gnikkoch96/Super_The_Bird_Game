@@ -2,6 +2,7 @@ package com.procode.game.sprites;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -11,13 +12,15 @@ import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
 import com.procode.game.screens.SettingsScreen;
 import com.procode.game.tools.Animation;
+import com.procode.game.tools.Enemy;
 import com.procode.game.tools.Hitbox;
 
 import java.lang.Math;
+import java.util.List;
 
 public class Bird implements Disposable {
     private static final long INVINCIBLE_DURATION = 2000; // value can be changed
-    private static long timeVar;  // used for the invincible property
+    public static long timeVar;  // used for the invincible property
     private static int BirdWidth;
     private static int BirdHeight;
 
@@ -26,7 +29,7 @@ public class Bird implements Disposable {
 
     // states
     public enum State {IDLE, SHOOT, DAMAGED, DEAD}
-    private Animation currentAnimation, idleAnimation, shootAnimation, damageAnimation, deadAnimation;
+    private Animation currentAnimation, idleAnimation, shootAnimation, damageAnimation, deadAnimation, invincibleIdleAnimation, invincibleShootAnimation;
 
     // state variables (used to prevent animations from interfering with each other)
     private State currentState;
@@ -34,10 +37,12 @@ public class Bird implements Disposable {
 
     // boolean vars for bird (used in the damagedBird())
     private boolean isDead;
-    private boolean isInvincible;
+    public boolean isInvincible;
 
     // bird properties
     private Vector2 position;
+    private Vector2 hitboxBoundsOffset;
+    private Vector2 hitboxPosOffset;
     private int healthCount;
     private Vector2 velocity;
     public Hitbox hitbox;
@@ -48,15 +53,10 @@ public class Bird implements Disposable {
     private Sound deadSound, deadSoundSad;
 
     // projectiles (w/ memory management)
-    private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
-    private final Pool<BirdSpit> spitPool = new Pool<BirdSpit>(){ // spit pool (16 by default)
-        @Override
-        protected BirdSpit newObject() {
-            return new BirdSpit();
-        }
-    };
+    public final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
+    private final Pool<BirdSpit> spitPool;
 
-    public Bird(int x, int y, int birdWidth, int birdHeight) {
+    public Bird(int x, int y, int birdWidth, int birdHeight, final Camera gameCamera) {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
         position = new Vector2(x,y);
@@ -67,7 +67,16 @@ public class Bird implements Disposable {
         healthCount = 6;
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
-        hitbox = new Hitbox(this.position, BirdWidth, BirdHeight);
+        spitPool = new Pool<BirdSpit>(){ // spit pool (16 by default)
+            @Override
+            protected BirdSpit newObject() {
+                return new BirdSpit(gameCamera);
+            }
+        };
+        this.hitboxPosOffset = new Vector2((float) (x + (int)(BirdWidth/8)), (float) (y +  (this.BirdHeight/10)));
+        this.hitboxBoundsOffset = new Vector2((int) (BirdWidth/3), ((int)(this.BirdHeight) - (this.BirdHeight/4)));
+        hitbox = new Hitbox(this.hitboxPosOffset, (int) this.hitboxBoundsOffset.x, (int) this.hitboxBoundsOffset.y, gameCamera);
+
         currentState = State.IDLE;
         previousState = currentState;
 
@@ -83,11 +92,14 @@ public class Bird implements Disposable {
         shootAnimation = new Animation();
         damageAnimation = new Animation();
         deadAnimation = new Animation();
+        invincibleIdleAnimation = new Animation();
+        invincibleShootAnimation = new Animation();
         idleAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
         shootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, .1f, false);
         damageAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 8, .45f, false);
         deadAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 1, 7, .50f, false);
-
+        invincibleIdleAnimation.setAnimation("bird animations//invincible animations//idle//invincible ", BirdWidth, BirdHeight, 1, 8, 0.25f, true);
+        invincibleShootAnimation.setAnimation("bird animations//invincible animations//shoot//invincible shoot ", BirdWidth, BirdHeight, 1, 6, .1f, false);
         currentAnimation = idleAnimation; // idle is always the first state the bird is in
     }
 
@@ -126,16 +138,8 @@ public class Bird implements Disposable {
     // returns the status of the invincibility of the bird (used to re-enable the bird's collision detection)
     public boolean getInvincible() {return this.isInvincible;}
 
-    // can only set invincible after a certain period of time has passed
-    public void setInvincible(boolean isInvincible){
-        if(isInvincible){
-            this.isInvincible = true;
-        }else{ // only change to non-invincible when x (or INVINCIBLE_DURATION) seconds pass after getting damaged
-            if(System.currentTimeMillis() >= timeVar + INVINCIBLE_DURATION){
-                this.isInvincible = false;
-            }
-        }
-    }
+    // returns current state of the bird
+    public State getCurrentState(){return this.currentState;}
 
     // updates the bird every frame
     public void update(float deltaTime){
@@ -147,12 +151,30 @@ public class Bird implements Disposable {
         if(currentAnimation.animationEnded == true){ // transitions from non-idle animation back to idle
 //            Gdx.app.log("Current Animation Status isEnded: ", String.valueOf(currentAnimation.animationEnded));
             currentAnimation.setAnimFinished();
-            switchAnimations(State.IDLE);
             previousState = currentState;
+
+            if(!this.isInvincible){
+                switchAnimations(State.IDLE);
+            }else{ // is currently invincible
+                if(previousState == State.SHOOT){
+                    currentAnimation = invincibleShootAnimation;
+                }else{
+                    currentAnimation = invincibleIdleAnimation;
+                }
+            }
+
             currentState = State.IDLE;
+
         }else{ // updates the idle animation
-            currentAnimation.updateFrame(deltaTime);
             setInvincible(false);
+            if(!this.isInvincible){ // switch to non-invincible animations
+                if(currentState == State.SHOOT){
+                    switchAnimations(State.SHOOT);
+                }else if(currentState == State.IDLE){
+                    switchAnimations(State.IDLE);
+                }
+            }
+            currentAnimation.updateFrame(deltaTime);
         }
 
         // updates projectiles
@@ -161,22 +183,47 @@ public class Bird implements Disposable {
         }
 
         // updates bird hitbox
-        this.hitbox.update(this.position);
-
+        this.hitboxPosOffset.set((float) (position.x + (int)(BirdWidth/8)), (float) (position.y +  (this.BirdHeight / 10)));
+        this.hitbox.update(this.hitboxPosOffset);
         // manage spits that exit the screen
         for(BirdSpit spit: activeSpits){
             if(spit.isOutOfScreen() || spit.isCollided()){
                 spitPool.free(spit);
                 activeSpits.removeValue(spit, true);
             }
+
+//            if(spit.isOutOfScreen() || spit.getCollisionAnimation().animationEnded){
+//                spitPool.free(spit);
+//                activeSpits.removeValue(spit, true);
+//            }
         }
 
-
-//        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.hitbox.botleft.x + ", " + this.hitbox.botleft.y + ")\n"
-//                + "botright: (" + this.hitbox.botright.x + ", " + this.hitbox.botright.y + ")\n"
-//                + "topleft: (" + this.hitbox.topleft.x + ", " + this.hitbox.topleft.y + ")\n"
-//                + "topright: (" + this.hitbox.topright.x + ", " + this.hitbox.topright.y + ")\n");
+        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitboxBoundsOffset.x + " , " + this.hitboxBoundsOffset.y);
     }
+
+
+    // detects hits from enemies
+    public void updateHitDetection(List<Enemy> enemies, HUD hud){
+
+        // checks if the player hit an enemy
+        for (int i = 0; i < enemies.size(); i++){
+            Enemy currEnemy = enemies.get(i);
+            hitDetection(currEnemy, hud);
+        }
+    }
+
+    // can only set invincible after a certain period of time has passed
+    public void setInvincible(boolean isInvincible){
+        if(isInvincible){
+            this.isInvincible = true;
+        }else{ // only change to non-invincible when x (or INVINCIBLE_DURATION) seconds pass after getting damaged
+            if(System.currentTimeMillis() >= timeVar + INVINCIBLE_DURATION){
+                this.isInvincible = false;
+            }
+        }
+    }
+
+
 
     public void switchAnimations(State playerState){
         switch(playerState){
@@ -195,37 +242,11 @@ public class Bird implements Disposable {
         }
     }
 
-    // debugs the hitboxes of anything related to the bird
-    public void debugHitbox(){
-        //--DEBUG--// Note: debugging hitboxes has to occur after it has rendered
-        this.hitbox.debugHitbox();
-        for(BirdSpit spit:activeSpits){
-            spit.getHitbox().debugHitbox();
-        }
-    }
 
-    // manages all hit detection related to the bird character (Nikko: Change Bird -> List<Enemy> once it starts working)
-    public void hitDetection(Bird enemy, HUD hud){
-        if(this.hitbox.isHit(enemy.hitbox)){
-//            Gdx.app.log("PLAYER->ENEMY", "HIT");
-            this.damageBird(hud);
-        }
-
-        //Nikko: When we have more enemies, I will need to nest another for loop to loop through enemy array
-        for(BirdSpit spit: activeSpits){
-            // check if it hits an enemy
-            if(enemy.hitbox.isHit(spit.getHitbox())){
-//                Gdx.app.log("SPIT->ENEMY", "HIT");
-                enemy.damageBird(hud);
-                spit.setCollision(true);
-            }
-        }
-    }
 
     public void shoot() {
         previousState = currentState;
         currentState = State.SHOOT;
-//        Gdx.app.log("Previous State", previousState.toString());
         if(previousState != State.SHOOT && previousState == State.IDLE){ // to prevent overlapping of animations
             // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
             spitSound.play(volume);
@@ -235,9 +256,17 @@ public class Bird implements Disposable {
             // create spit
             BirdSpit item = spitPool.obtain();
 //            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
-            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+//            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+            item.init(this.position.x + (int)(BirdWidth/1.5), this.position.y + (int)(BirdWidth/3.8)); //Nikko: change to this when the image has been adjusted
             activeSpits.add(item);
-//            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+
+//            BirdSpit item = new BirdSpit();
+////            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
+//            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+//            activeSpits.add(item);
+//            Gdx.app.log("Spits Left:", String.valueOf(activeSpits.size));
+
         }
     }
 
@@ -268,7 +297,7 @@ public class Bird implements Disposable {
             timeVar = System.currentTimeMillis(); // update time var to current time value every time the bird gets damaged
             setInvincible(true);
             switchAnimations(State.DAMAGED);
-//            this.healthCount--;
+//            this.healthCount--; //Nikko--turn this on when you are not debugging
             if(this.healthCount <= 0){
                 this.deadBird(hud);
             }
@@ -315,7 +344,29 @@ public class Bird implements Disposable {
         else if(SettingsScreen.volumeChanges == 10)
             volume = 1.0f;
     }
+    // debugs the hitboxes of anything related to the bird
+    public void debugHitbox(){
+        //--DEBUG--// Note: debugging hitboxes has to occur after it has rendered
+        this.hitbox.debugHitbox();
+        for(BirdSpit spit:activeSpits){
+            spit.getHitbox().debugHitbox();
+        }
+    }
 
+    // manages all hit detection related to the bird character (Nikko: Change Bird -> List<Enemy> once it starts working)
+    public void hitDetection(Enemy enemy, HUD hud){
+        if(this.hitbox.isHit(enemy.hitbox)){
+//            Gdx.app.log("PLAYER->ENEMY", "HIT");
+            this.damageBird(hud);
+        }
+
+        for (int i = 0; i < activeSpits.size; i++){
+            if(activeSpits.get(i).hitbox.isHit(enemy.hitbox) ||
+                    enemy.hitbox.isHit(activeSpits.get(i).hitbox)){
+                activeSpits.get(i).setCollision(true);
+            }
+        }
+    }
 
 
     @Override
