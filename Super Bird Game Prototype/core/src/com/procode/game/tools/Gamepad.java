@@ -1,16 +1,20 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.scenes.HUD;
 import com.procode.game.screens.PlayScreen;
 
 public class Gamepad {
     private float x; //values for position to add to the bird
     private float y;
-    private float touchSensitivity; // the amount the bird moves per second the button is held
+    public float touchSensitivity; // the amount the bird moves per second the button is held
 
     public int buttonSize; // because image is a circle only need the radius so size is a single variable
     public ImageButton upArrow; // need to be images to add on click listeners does not work well with textures
@@ -26,15 +30,31 @@ public class Gamepad {
     public Gamepad(SuperBirdGame game) {
         x = 0;
         y = 0;
-        touchSensitivity = game.ANDROID_HEIGHT / 60;
-        buttonSize = game.ANDROID_HEIGHT / 10;
+        touchSensitivity = game.GAME_HEIGHT / 60;
+        buttonSize = game.GAME_HEIGHT / 10;
 
         upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", buttonSize, buttonSize);
         downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", buttonSize, buttonSize);
         leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", buttonSize, buttonSize);
         rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", buttonSize, buttonSize);
 
+        // pressed icons
+        Texture upButtonPressed = ImageFunctions.resize("screen icons//pressed up button.png", buttonSize, buttonSize);
+        upArrow.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(upButtonPressed));
+        Texture downButtonPressed = ImageFunctions.resize("screen icons//pressed down button.png", buttonSize, buttonSize);
+        downArrow.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(downButtonPressed));
+        Texture leftButtonPressed = ImageFunctions.resize("screen icons//pressed left button.png", buttonSize, buttonSize);
+        leftArrow.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(leftButtonPressed));
+        Texture rightButtonPressed = ImageFunctions.resize("screen icons//pressed right button.png", buttonSize, buttonSize);
+        rightArrow.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(rightButtonPressed));
+
         shootButton = ImageFunctions.resizeImageButton("screen icons//shoot button.png", (int)(buttonSize * 1.5), (int)(buttonSize * 1.5));
+        Texture shootButtonPressed = ImageFunctions.resize("screen icons//pressed shoot button.png", buttonSize, buttonSize);
+        shootButton.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(shootButtonPressed));
+
+
+
+
 
         // add listeners
         upArrow.addListener(new ClickListener() {
@@ -42,13 +62,13 @@ public class Gamepad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float upMovement = touchSensitivity;
                 buttonPressed(upMovement, true);
-                System.out.println("UP");
+//                System.out.println("UP");
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonReleased(true);
+               buttonReleased(true);
             }
         });
 
@@ -57,7 +77,7 @@ public class Gamepad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float downMovement = touchSensitivity * -1;
                 buttonPressed(downMovement, true);
-                System.out.println("DOWN");
+//                System.out.println("DOWN");
                 return true;
             }
 
@@ -72,7 +92,7 @@ public class Gamepad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float leftMovement = touchSensitivity * -1;
                 buttonPressed(leftMovement, false);
-                System.out.println("LEFT");
+//                System.out.println("LEFT");
                 return true;
             }
 
@@ -87,7 +107,7 @@ public class Gamepad {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 float rightMovement = touchSensitivity;
                 buttonPressed(rightMovement, false);
-                System.out.println("RIGHT");
+//                System.out.println("RIGHT");
                 return true;
             }
 
@@ -100,8 +120,8 @@ public class Gamepad {
         shootButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-               PlayScreen.player.shoot();
-
+                if(HUD.state == 0)
+                    PlayScreen.player.shoot();
                 return true;
             }
 
@@ -116,7 +136,7 @@ public class Gamepad {
         leftArrow.setPosition(0,buttonSize);
         rightArrow.setPosition(buttonSize * 2, buttonSize);
         upArrow.setPosition(buttonSize, buttonSize * 2);
-        shootButton.setPosition(SuperBirdGame.ANDROID_WIDTH - buttonSize * 3, (int)(buttonSize/1.5));
+        shootButton.setPosition(SuperBirdGame.GAME_WIDTH - buttonSize * 3, (int)(buttonSize/1.5));
     }
 
     // adds or subtracts the amount depending on the axis
@@ -132,7 +152,6 @@ public class Gamepad {
     }
 
     // called when button is released
-    // resets values of inputs to 0 (because not being pressed)
     public void buttonReleased(boolean isYAxis){
         if (isYAxis){
             y = 0;
@@ -142,12 +161,10 @@ public class Gamepad {
         }
     }
 
-    // returns the detected inputs
     public Vector2 getButtonInputs() {
         return new Vector2(x, y);
     }
 
-    // disposes all variables and images when no longer in use
     public void dispose(){
         x = 0;
         y = 0;

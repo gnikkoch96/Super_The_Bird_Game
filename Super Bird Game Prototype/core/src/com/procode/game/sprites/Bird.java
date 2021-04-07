@@ -1,26 +1,33 @@
 package com.procode.game.sprites;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Pool;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.scenes.HUD;
+import com.procode.game.screens.SettingsScreen;
 import com.procode.game.tools.Animation;
+import com.procode.game.tools.Hitbox;
+
 import java.lang.Math;
 
 public class Bird implements Disposable {
     private static final long INVINCIBLE_DURATION = 2000; // value can be changed
     private static long timeVar;  // used for the invincible property
-
-    public enum State {IDLE, SHOOT, DAMAGED, DEAD}
-    private Animation birdAnimation, shootAnimation;  // takes in an animation class to allow for changing of animation played and other settings
     private static int BirdWidth;
     private static int BirdHeight;
-    private Vector2 position;
-    private int healthCount;
-    private Vector2 velocity;
+
+    //volume changes
+    private float volume;
+
+    // states
+    public enum State {IDLE, SHOOT, DAMAGED, DEAD}
+    private Animation currentAnimation, idleAnimation, shootAnimation, damageAnimation, deadAnimation;
 
     // state variables (used to prevent animations from interfering with each other)
     private State currentState;
@@ -30,11 +37,25 @@ public class Bird implements Disposable {
     private boolean isDead;
     private boolean isInvincible;
 
-    public Bird(int x, int y, int birdWidth, int birdHeight) {
-        birdAnimation = new Animation();
+    // bird properties
+    private Vector2 position;
+    private int healthCount;
+    private Vector2 velocity;
+    public Hitbox hitbox;
+
+    // audio related
+    private Sound spitSound;
+    private Sound damageSoundNormal, damageSoundLoud;
+    private Sound deadSound, deadSoundSad;
+
+    // projectiles (w/ memory management)
+    private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
+    private final Pool<BirdSpit> spitPool;
+
+    public Bird(int x, int y, int birdWidth, int birdHeight, final Camera gameCamera) {
+        currentAnimation = new Animation();
         shootAnimation = new Animation();
         position = new Vector2(x,y);
-        velocity = new Vector2(0,0);
 
         isDead = false;
         isInvincible = false;
@@ -42,38 +63,58 @@ public class Bird implements Disposable {
         healthCount = 6;
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
+        spitPool = new Pool<BirdSpit>(){ // spit pool (16 by default)
+            @Override
+            protected BirdSpit newObject() {
+                return new BirdSpit(gameCamera);
+            }
+        };
+        hitbox = new Hitbox(this.position, BirdWidth, BirdHeight, gameCamera);
         currentState = State.IDLE;
         previousState = currentState;
 
-        // sets the current animation to the idle bird
-        birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
-        shootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, 0.1f, false);
+        // getting sounds
+        spitSound = SuperBirdGame.manager.get("audio/sound/spit.wav", Sound.class);
+        damageSoundNormal = SuperBirdGame.manager.get("audio/sound/bird_scream_normal.wav", Sound.class);
+        damageSoundLoud = SuperBirdGame.manager.get("audio/sound/bird_scream_loud.wav", Sound.class);
+        deadSound = SuperBirdGame.manager.get("audio/sound/bird_dead.wav", Sound.class);
+        deadSoundSad = SuperBirdGame.manager.get("audio/sound/bird_dead_sad.wav", Sound.class);
+
+        // initializes animation variables (memory management)
+        idleAnimation = new Animation();
+        shootAnimation = new Animation();
+        damageAnimation = new Animation();
+        deadAnimation = new Animation();
+        idleAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
+        shootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, .1f, false);
+        damageAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 8, .45f, false);
+        deadAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 1, 7, .50f, false);
+
+        currentAnimation = idleAnimation; // idle is always the first state the bird is in
     }
 
+    // gets each of the activeSpits
+    public Array<BirdSpit> getActiveSpits(){ return this.activeSpits;}
 
     // gets the current image of the bird
-    public Texture getBirdImage(){
-
-        if(currentState == State.IDLE)
-        return birdAnimation.getCurrImg();
-        else if(currentState == State.SHOOT)
-        return shootAnimation.getCurrImg();
-
-        return birdAnimation.getCurrImg();
-    }
+    public Texture getBirdImage(){return currentAnimation.getCurrImg();}
 
     // gets the position of the bird
     public Vector2 getPosition(){
         return this.position;
     }
 
+    //--Nikko: I used this to locate where the spits should be rendering from
+    public static int getBirdWidth(){return BirdWidth;}
+    public static int getBirdHeight(){return BirdHeight;}
+
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
 
-        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.ANDROID_WIDTH) {
+        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.GAME_WIDTH) {
             position.x += (newX);
         }
-        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.ANDROID_HEIGHT) {
+        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.GAME_HEIGHT) {
             position.y += newY;
         }
     }
@@ -96,65 +137,112 @@ public class Bird implements Disposable {
                 this.isInvincible = false;
             }
         }
-
     }
-
 
     // updates the bird every frame
     public void update(float deltaTime){
-       /*if(birdAnimation.isAnimFinished() && !birdAnimation.getIsLoop()){ // plays an animation only once (in this case SHOOT, DEAD, and DAMAGED)
-            //reset to the IDLE animation
+
+        //this method captures the changes on the volume from the settings
+        setVolume();
+
+
+        if(currentAnimation.animationEnded == true){ // transitions from non-idle animation back to idle
+//            Gdx.app.log("Current Animation Status isEnded: ", String.valueOf(currentAnimation.animationEnded));
+            currentAnimation.setAnimFinished();
+            switchAnimations(State.IDLE);
             previousState = currentState;
             currentState = State.IDLE;
-            switchAnimations(State.IDLE);
-            birdAnimation.setAnimationEnded(false); // fixes the transition issue
-        }else{//continue updating the frame
-            birdAnimation.updateFrame(deltaTime);
+        }else{ // updates the idle animation
+            currentAnimation.updateFrame(deltaTime);
             setInvincible(false);
-        }*/
-        if(currentState == State.SHOOT) {
-            shootAnimation.updateFrame(deltaTime);
-
-            //shootAnimation.setAnimationEnded(false);
-            if(shootAnimation.animationEnded == true) {
-                currentState = State.IDLE;
-                shootAnimation.setAnimFinished();
-
-            }
-        }else if(currentState == State.IDLE) {
-            birdAnimation.updateFrame(deltaTime);
         }
 
-        setInvincible(false);
+        // updates projectiles
+        for(BirdSpit spit : activeSpits){
+            spit.update(deltaTime);
+        }
 
+        // updates bird hitbox
+        this.hitbox.update(this.position);
+
+        // manage spits that exit the screen
+        for(BirdSpit spit: activeSpits){
+            if(spit.isOutOfScreen() || spit.isCollided()){
+                spitPool.free(spit);
+                activeSpits.removeValue(spit, true);
+            }
+        }
+
+
+//        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.hitbox.botleft.x + ", " + this.hitbox.botleft.y + ")\n"
+//                + "botright: (" + this.hitbox.botright.x + ", " + this.hitbox.botright.y + ")\n"
+//                + "topleft: (" + this.hitbox.topleft.x + ", " + this.hitbox.topleft.y + ")\n"
+//                + "topright: (" + this.hitbox.topright.x + ", " + this.hitbox.topright.y + ")\n");
     }
 
     public void switchAnimations(State playerState){
         switch(playerState){
             case IDLE:
-                birdAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
+                currentAnimation = idleAnimation;
                 break;
             case SHOOT:
-                birdAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, 0.1f, false);
+                currentAnimation = shootAnimation;
                 break;
             case DAMAGED:
-                birdAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 8, .45f, false);
+                currentAnimation = damageAnimation;
                 break;
             case DEAD:
-                birdAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 1, 7, .50f, false);
+                currentAnimation = deadAnimation;
                 break;
+        }
+    }
+
+    // debugs the hitboxes of anything related to the bird
+    public void debugHitbox(){
+        //--DEBUG--// Note: debugging hitboxes has to occur after it has rendered
+        this.hitbox.debugHitbox();
+        for(BirdSpit spit:activeSpits){
+            spit.getHitbox().debugHitbox();
+        }
+    }
+
+    // manages all hit detection related to the bird character (Nikko: Change Bird -> List<Enemy> once it starts working)
+    public void hitDetection(Bird enemy, HUD hud){
+        if(this.hitbox.isHit(enemy.hitbox)){
+//            Gdx.app.log("PLAYER->ENEMY", "HIT");
+            this.damageBird(hud);
+        }
+
+        //Nikko: When we have more enemies, I will need to nest another for loop to loop through enemy array
+        for(BirdSpit spit: activeSpits){
+            // check if it hits an enemy
+            if(enemy.hitbox.isHit(spit.getHitbox())){
+//                Gdx.app.log("SPIT->ENEMY", "HIT");
+                enemy.damageBird(hud);
+                spit.setCollision(true);
+            }
         }
     }
 
     public void shoot() {
-        System.out.println("Shooting");
         previousState = currentState;
         currentState = State.SHOOT;
+//        Gdx.app.log("Previous State", previousState.toString());
+        if(previousState != State.SHOOT && previousState == State.IDLE){ // to prevent overlapping of animations
+            // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
+            spitSound.play(volume);
 
-        if(previousState != State.SHOOT){ // to allow the shoot animation to properly display before shooting again
-           // switchAnimations(State.SHOOT);
+            switchAnimations(State.SHOOT);
+
+            // create spit
+            BirdSpit item = spitPool.obtain();
+//            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
+            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
+            activeSpits.add(item);
+//            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
         }
     }
+
 
     public void deadBird(HUD hud){
         previousState = currentState;
@@ -162,18 +250,27 @@ public class Bird implements Disposable {
 
         switchAnimations(State.DEAD);
 
+        deadSoundSad.play(volume);
+
         // set the screen to game over screen
+
     }
 
-    public void damagedBird(HUD hud){
-        previousState = currentState;
-        currentState = State.DAMAGED;
-
+    public void damageBird(HUD hud){
         if(!this.isInvincible){ // bird can only get damaged when it isn't invincible
+            previousState = currentState;
+            currentState = State.DAMAGED;
+
+            if(this.healthCount == 2){
+//                damageSoundLoud.play();
+            }else{
+                damageSoundNormal.play(volume);
+            }
+
             timeVar = System.currentTimeMillis(); // update time var to current time value every time the bird gets damaged
             setInvincible(true);
             switchAnimations(State.DAMAGED);
-            this.healthCount--;
+//            this.healthCount--;
             if(this.healthCount <= 0){
                 this.deadBird(hud);
             }
@@ -182,24 +279,59 @@ public class Bird implements Disposable {
 
     }
 
-
     public void setBirdSize(int width, int height){
-
         //repositions the bird of the new size makes it go out of bounds
-        if((position.x + width) > SuperBirdGame.ANDROID_WIDTH) {
-            position.x = SuperBirdGame.ANDROID_WIDTH - width;
+        if((position.x + width) > SuperBirdGame.GAME_WIDTH) {
+            position.x = SuperBirdGame.GAME_WIDTH - width;
         }
-        if((position.y + height) > SuperBirdGame.ANDROID_HEIGHT) {
-            position.y = SuperBirdGame.ANDROID_HEIGHT - height;
+        if((position.y + height) > SuperBirdGame.GAME_HEIGHT) {
+            position.y = SuperBirdGame.GAME_HEIGHT - height;
         }
-
         BirdWidth = width;
         BirdHeight = height;
     }
 
+    //this method changes the volume from the static integer from SettingsScreen
+    //the changes occur whenever the user clicks the right and left buttons of volume
+    //from the SettingsScreen and later on from MiniSettingScreen on PlayScreen
+    public void setVolume(){
+        //this if statement captures the changes on the volume from the settings
+        if(SettingsScreen.volumeChanges == 1)
+            volume = 0.1f;
+        else if(SettingsScreen.volumeChanges == 2)
+            volume = 0.2f;
+        else if(SettingsScreen.volumeChanges == 3)
+            volume = 0.3f;
+        else if(SettingsScreen.volumeChanges == 4)
+            volume = 0.4f;
+        else if(SettingsScreen.volumeChanges == 5)
+            volume = 0.5f;
+        else if(SettingsScreen.volumeChanges == 6)
+            volume = 0.6f;
+        else if(SettingsScreen.volumeChanges == 7)
+            volume = 0.7f;
+        else if(SettingsScreen.volumeChanges == 8)
+            volume = 0.8f;
+        else if(SettingsScreen.volumeChanges == 9)
+            volume = 0.9f;
+        else if(SettingsScreen.volumeChanges == 10)
+            volume = 1.0f;
+    }
+
+
+
     @Override
     public void dispose() {
-        birdAnimation.dispose();
+        currentAnimation.dispose();
+        deadAnimation.dispose();
+        idleAnimation.dispose();
+        shootAnimation.dispose();
+        damageAnimation.dispose();
+        spitSound.dispose();
+        deadSound.dispose();
+        deadSoundSad.dispose();
+        damageSoundNormal.dispose();
+        damageSoundLoud.dispose();
     }
 
 

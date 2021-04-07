@@ -25,7 +25,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		//sp.ANDROID_HEIGHT = 100;
 		//sp.setHeight(100);
-		//initialize(new SuperBirdGame(width, height), config);
-		initialize(new Test());
+		initialize(new SuperBirdGame(), config);
+		//initialize(new Test());
 	}
 }

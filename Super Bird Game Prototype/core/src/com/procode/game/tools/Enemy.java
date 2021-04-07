@@ -21,10 +21,11 @@ public class Enemy implements Disposable {
     protected int enemyHeight;
 
     protected State currentState; // the current state of the enemy
-    protected int currAttackState = 0; // what position in the attack list to use
+    protected int currAttackState; // what position in the attack list to use
 
     // how fast the enemy goes across the screen
     protected float enemySpeed;
+    protected float originalSpeed;
 
 
 
@@ -34,7 +35,9 @@ public class Enemy implements Disposable {
         enemyWidth = width;
         enemyHeight = height;
         enemySpeed = speed;
+        originalSpeed = speed;
         numOfAttacks = 0;
+        currAttackState = 0;
 
         //sets a random position off screen for x and random position y
         position = new Vector2();
@@ -58,10 +61,13 @@ public class Enemy implements Disposable {
         switch(currentState){
             case IDLE:
                 idleEnemy.updateFrame(deltaTime);
+                break;
             case ATTACK:
                 enemyAttacks.get(currAttackState).updateFrame(deltaTime);
+                break;
             case DEAD:
                 deadEnemy.updateFrame(deltaTime);
+                break;
         }
     }
 
@@ -77,6 +83,8 @@ public class Enemy implements Disposable {
             case DEAD:
                 return deadEnemy.getCurrImg();
         }
+
+        System.out.println("was not supposed to end up here");
         return null;
     }
 
@@ -85,9 +93,9 @@ public class Enemy implements Disposable {
     // what state to change to (idle, attack, damaged or dead)
     // if there exists an attack, it will also place it, otherwise it should be -1
     public void changeState(State enemyState, int enemyAttack){
-        currentState = enemyState;
-        if (currentState == State.ATTACK){
-            currAttackState = enemyAttack;
+        this.currentState = enemyState;
+        if (enemyState == State.ATTACK){
+            this.currAttackState = enemyAttack;
         }
     }
 
@@ -130,7 +138,7 @@ public class Enemy implements Disposable {
     // and has not passed the bird
     public boolean onScreen(){
         if (((position.x + enemyWidth) > 0) &&
-                ((position.y + enemyHeight) < SuperBirdGame.ANDROID_HEIGHT) &&
+                ((position.y + enemyHeight) < SuperBirdGame.GAME_HEIGHT) &&
                 ((position.y + enemyHeight) > 0)){
             return true;
         }
@@ -141,10 +149,10 @@ public class Enemy implements Disposable {
 
     @Override
     public void dispose() {
-        enemyAttacks = null;
-        idleEnemy = null;
-        damagedEnemy = null;
-        deadEnemy = null;
+        enemyAttacks.clear();
+        idleEnemy.dispose();
+        damagedEnemy.dispose();
+        deadEnemy.dispose();
         position = null;
         enemyWidth = 0;
         enemyHeight = 0;
