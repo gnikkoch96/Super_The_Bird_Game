@@ -133,11 +133,6 @@ public class HUD implements Disposable {
     }
 
 
-    public boolean getShootStateBtn(){
-        return gamepad.shoot;
-    }
-
-
 
     //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){

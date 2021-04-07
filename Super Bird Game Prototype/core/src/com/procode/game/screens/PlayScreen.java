@@ -46,6 +46,7 @@ public class PlayScreen implements Screen {
     private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
     //private MechaBird enemyBird;
     private Spawner enemySpawner;
+    public static boolean rapidFireSpit = false;
 
     public Array<BirdSpit> activeSpits;
 
@@ -128,6 +129,9 @@ public class PlayScreen implements Screen {
         state = HUD.state;
         player.update(dt);
         player.updateHitDetection(enemySpawner.activeEnemies, hud);
+        if(rapidFireSpit){
+            player.shoot();
+        }
 
 
         // bird movement

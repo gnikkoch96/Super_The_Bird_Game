@@ -22,7 +22,6 @@ public class Gamepad {
     public ImageButton leftArrow;
     public ImageButton rightArrow;
     public ImageButton shootButton;
-    public boolean shoot = false;
 
 
 
@@ -121,13 +120,13 @@ public class Gamepad {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if(HUD.state == 0)
-                    PlayScreen.player.shoot();
+                    PlayScreen.rapidFireSpit = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                shoot = false;
+                PlayScreen.rapidFireSpit = false;
             }
         });
 
