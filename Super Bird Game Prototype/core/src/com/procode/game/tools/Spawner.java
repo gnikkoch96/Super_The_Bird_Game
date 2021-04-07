@@ -95,10 +95,7 @@ public class Spawner {
             if (activeEnemies.get(i).getState() == Enemy.State.DEAD){
 
                 // mecha bird respawn and make inactive
-                if (activeEnemies.get(i) instanceof MechaBird){
-                    ((MechaBird) activeEnemies.get(i)).reSpawn();
-                    inactiveEnemies.add(activeEnemies.remove(i));
-                }
+                inactiveEnemies.add(activeEnemies.remove(i));
                 // remaining cases for updating for a drone or other enemy type
             }
 
@@ -109,7 +106,10 @@ public class Spawner {
 
             // get a random position in the inactive list and add it to the active
             int randListPos = (int) Math.random() * inactiveEnemies.size();
-            activeEnemies.add(inactiveEnemies.remove(randListPos));
+            if (inactiveEnemies.get(randListPos) instanceof MechaBird) {
+                ((MechaBird) inactiveEnemies.get(randListPos)).reSpawn();
+                activeEnemies.add(inactiveEnemies.remove(randListPos));
+            }
         }
 
         // finally, random chance of spawning a new enemy if the number is less than the max
@@ -122,8 +122,13 @@ public class Spawner {
             if (randomSpawn <  currSpawnPerS){
                 lastEnemySpawnTime = dt;
                 currSpawnPerS = newSpawnPerS;
+
+                // get a random position in the inactive list and add it to the active
                 int randListPos = (int) Math.random() * inactiveEnemies.size();
-                activeEnemies.add(inactiveEnemies.remove(randListPos));
+                if (inactiveEnemies.get(randListPos) instanceof MechaBird) {
+                    ((MechaBird) inactiveEnemies.get(randListPos)).reSpawn();
+                    activeEnemies.add(inactiveEnemies.remove(randListPos));
+                }
             }
         }
     }

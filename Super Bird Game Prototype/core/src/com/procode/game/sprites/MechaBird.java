@@ -149,6 +149,7 @@ public class MechaBird extends Enemy {
 
     // updates the frames, state and position depending on the situation
     public void updateMechaBird(float deltaTime){
+
         super.update(deltaTime); // updates the frames
 
         // now update the position and state depending on current state and other factors
@@ -160,13 +161,13 @@ public class MechaBird extends Enemy {
             } else {
 
                 // pause before changing to a new state
-                if(timeActionPaused == 0) {
+                if (timeActionPaused == 0) {
                     timeActionPaused = deltaTime;
                     pausedDuration = (float) Math.random() + .2f;
                 }
 
                 // stop for next movement for about 1 - 2 seconds
-                if(timeActionPaused + pausedDuration < deltaTime) {
+                if (timeActionPaused + pausedDuration < deltaTime) {
 
                     // sets the next attack to a destination to move to
                     if (attackPattern.get(currAttackInList) == 0) { // dash
@@ -180,11 +181,10 @@ public class MechaBird extends Enemy {
                 }
 
             }
-        }
-        else if (super.currentState == State.ATTACK) {
+        } else if (super.currentState == State.ATTACK) {
 
             // stop for next movement before next attack in list
-            if(timeActionPaused + pausedDuration < deltaTime) {
+            if (timeActionPaused + pausedDuration < deltaTime) {
 
                 // will do attack based on the animation completion and the position it is in
                 if (attackPattern.get(currAttackInList) == 0) {
@@ -216,11 +216,10 @@ public class MechaBird extends Enemy {
 
                 }
             }
-        }
-        else if (super.currentState == State.DEAD){
-                if (super.deadEnemy.isAnimFinished() == true){
-                    attackPattern.clear();
-                }
+        } else if (super.currentState == State.DEAD) {
+            if (super.deadEnemy.isAnimFinished() == true) {
+                attackPattern.clear();
+            }
         }
     }
 
@@ -273,21 +272,23 @@ public class MechaBird extends Enemy {
 
         // make animations be able to play again if they are not looped
         deadEnemy.replayLoop();
-        for (int i = 0; i < super.enemyAttacks.size(); i++){
+        for (int i = 0; i < super.enemyAttacks.size(); i++) {
             enemyAttacks.get(i).replayLoop();
         }
+
     }
 
 
 
     //sets the enemy position
     public void setEnemyInitialPosition(){
-        super.position.x = (int) (SuperBirdGame.GAME_WIDTH + ((Math.random() * 5) * enemyWidth));
+        super.position.x = (int) (SuperBirdGame.GAME_WIDTH + ((Math.random() * 5) * enemyWidth) + enemyWidth * 4);
         super.position.y = (int) ((Math.random()) * (SuperBirdGame.GAME_HEIGHT - enemyHeight));
     }
 
 
 
+    // gets the position
     public Vector2 getMechaPos(){
         return super.position;
     }

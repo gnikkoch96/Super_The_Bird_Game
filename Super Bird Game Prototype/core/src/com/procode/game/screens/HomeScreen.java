@@ -127,7 +127,7 @@ public class HomeScreen implements Screen {
 
         int birdWidth = game.GAME_WIDTH /5;
         int birdHeight = game.GAME_HEIGHT /5;
-        bird = new Bird(50, 100, birdWidth, birdHeight);
+        bird = new Bird(50, 100, birdWidth, birdHeight, null);
 
 
         btnPlay.addListener(new ClickListener() {

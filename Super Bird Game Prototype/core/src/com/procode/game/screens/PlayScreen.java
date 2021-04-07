@@ -72,8 +72,8 @@ public class PlayScreen implements Screen {
         //Creating Sprites
         int birdWidth = SuperBirdGame.GAME_WIDTH /5;
         int birdHeight = SuperBirdGame.GAME_HEIGHT /5;
-        player = new Bird(SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /2, birdWidth, birdHeight);
-        enemy = new Bird(SuperBirdGame.GAME_WIDTH /2, SuperBirdGame.GAME_HEIGHT /2, birdWidth,birdHeight);
+        player = new Bird(SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /2, birdWidth, birdHeight, hud.stage.getCamera());
+        enemy = new Bird(SuperBirdGame.GAME_WIDTH /2, SuperBirdGame.GAME_HEIGHT /2, birdWidth,birdHeight, hud.stage.getCamera());
 
 
         //Setting Properties
@@ -89,11 +89,11 @@ public class PlayScreen implements Screen {
 //        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
 
         int minEnemies = 2; // easy = 2 hard = 5
-        int maxEnemies = 5; // easy = 5 hard = 15
-        float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40
-        float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80
-        float spawnPerSec = .01f; // easy = .01f hard = 1f
-        float spawnFrequency = 2.5f; // easy = 2.5f hard = 0
+        int maxEnemies = 10; // easy = 5 hard = 15
+        float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40, hard = /10
+        float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80, hard = /40
+        float spawnPerSec = 1f; // easy = .01f hard = 1f
+        float spawnFrequency = 0f; // easy = 2.5f hard = 0
         enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency);
     }
 
@@ -217,8 +217,8 @@ public class PlayScreen implements Screen {
         }
 
         //--DEBUGGING--//
-        enemy.hitbox.debugHitbox(hud);
-        player.debugHitbox(hud);
+        enemy.hitbox.debugHitbox();
+        player.debugHitbox();
     }
 
 

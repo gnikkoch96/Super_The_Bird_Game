@@ -1,6 +1,7 @@
 package com.procode.game.tools;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -17,11 +18,15 @@ public class Hitbox implements Disposable {
 
     //--DEBUG PURPOSES--//
     private ShapeRenderer shapeRenderer;
+    private boolean displayHitbox;
+    private Camera cam;
 
-    public Hitbox(Vector2 currentPos, int w, int h) {
+    public Hitbox(Vector2 currentPos, int w, int h, Camera gameCam) {
         position = currentPos;
         width = w;
         height = h;
+        this.cam = gameCam;
+
 
         // y-value is reversed
         topleft = new Vector2(this.position.x, this.position.y + height);
@@ -78,15 +83,23 @@ public class Hitbox implements Disposable {
     }
 
     //--DEBUG--//
-    public void debugHitbox(HUD hud){
-        shapeRenderer.setProjectionMatrix(hud.stage.getCamera().combined);
-        this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        this.shapeRenderer.setColor(Color.BLACK);
-        this.shapeRenderer.line(this.botleft, this.topleft);
-        this.shapeRenderer.line(this.botleft, this.botright);
-        this.shapeRenderer.line(this.topleft, this.topright);
-        this.shapeRenderer.line(this.botright, this.topright);
-        this.shapeRenderer.end();
+    public void debugHitbox(){
+        if(cam != null) {
+            shapeRenderer.setProjectionMatrix(cam.combined); // sets it to the orthographic camera
+            displayHitbox = true;
+        }
+        else{
+            displayHitbox = false;
+        }
+        if(displayHitbox) {
+            this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            this.shapeRenderer.setColor(Color.BLACK);
+            this.shapeRenderer.line(this.botleft, this.topleft);
+            this.shapeRenderer.line(this.botleft, this.botright);
+            this.shapeRenderer.line(this.topleft, this.topright);
+            this.shapeRenderer.line(this.botright, this.topright);
+            this.shapeRenderer.end();
+        }
     }
 
     public String toString() {

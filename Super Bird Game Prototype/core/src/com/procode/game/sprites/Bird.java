@@ -2,6 +2,7 @@ package com.procode.game.sprites;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -49,14 +50,9 @@ public class Bird implements Disposable {
 
     // projectiles (w/ memory management)
     private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
-    private final Pool<BirdSpit> spitPool = new Pool<BirdSpit>(){ // spit pool (16 by default)
-        @Override
-        protected BirdSpit newObject() {
-            return new BirdSpit();
-        }
-    };
+    private final Pool<BirdSpit> spitPool;
 
-    public Bird(int x, int y, int birdWidth, int birdHeight) {
+    public Bird(int x, int y, int birdWidth, int birdHeight, final Camera gameCamera) {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
         position = new Vector2(x,y);
@@ -67,7 +63,13 @@ public class Bird implements Disposable {
         healthCount = 6;
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
-        hitbox = new Hitbox(this.position, BirdWidth, BirdHeight);
+        spitPool = new Pool<BirdSpit>(){ // spit pool (16 by default)
+            @Override
+            protected BirdSpit newObject() {
+                return new BirdSpit(gameCamera);
+            }
+        };
+        hitbox = new Hitbox(this.position, BirdWidth, BirdHeight, gameCamera);
         currentState = State.IDLE;
         previousState = currentState;
 
@@ -196,11 +198,11 @@ public class Bird implements Disposable {
     }
 
     // debugs the hitboxes of anything related to the bird
-    public void debugHitbox(HUD hud){
+    public void debugHitbox(){
         //--DEBUG--// Note: debugging hitboxes has to occur after it has rendered
-        this.hitbox.debugHitbox(hud);
+        this.hitbox.debugHitbox();
         for(BirdSpit spit:activeSpits){
-            spit.getHitbox().debugHitbox(hud);
+            spit.getHitbox().debugHitbox();
         }
     }
 

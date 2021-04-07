@@ -1,5 +1,6 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
@@ -30,7 +31,7 @@ public class EnemyDummy implements Disposable {
     private boolean isDead;
     private boolean isInvincible;
 
-    public EnemyDummy(int x, int y, int birdWidth, int birdHeight) {
+    public EnemyDummy(int x, int y, int birdWidth, int birdHeight, Camera gameCamera) {
         birdAnimation = new Animation();
         shootAnimation = new Animation();
         spinAnimation = new Animation();
@@ -43,7 +44,7 @@ public class EnemyDummy implements Disposable {
         healthCount = 6;
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
-        hitbox = new Hitbox(this.position, BirdWidth, BirdHeight);
+        hitbox = new Hitbox(this.position, BirdWidth, BirdHeight, gameCamera);
         currentState = State.SPIN;
 
 
