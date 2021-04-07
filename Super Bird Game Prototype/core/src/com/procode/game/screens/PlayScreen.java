@@ -36,7 +36,7 @@ public class PlayScreen implements Screen {
     private Vector2 birdMovement;
     private Gamepad gamepad;
 
-    private final int GAME_PLAY =0; // play the game
+    private final int GAME_PLAY = 0; // play the game
     private final int GAME_PAUSE = 1; // pause the game
     private final int GAME_QUIT = 4; // quit the game
 
@@ -157,8 +157,6 @@ public class PlayScreen implements Screen {
         enemySpawner.updateSpawner(dt);
     }
 
-
-
     public void setBackgroundMovement(){
         if(moveHills_x > -(game.GAME_WIDTH /4))
             moveHills_x -= 3;
@@ -215,10 +213,6 @@ public class PlayScreen implements Screen {
 
             game.batch.draw(currEnemyImg,enemyPos.x, enemyPos.y);
         }
-
-        //--DEBUGGING--//
-        enemy.hitbox.debugHitbox();
-        player.debugHitbox();
     }
 
 
@@ -244,16 +238,20 @@ public class PlayScreen implements Screen {
                 break;
         }
 
-        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
+//        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
 
         // render projectiles
         for(BirdSpit spits: activeSpits){
             spits.render(game.batch);
+            BirdSpit.collisionParticle.draw(game.batch, delta);
         }
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
-        //player.renderBullets(game.batch);
         game.batch.end();
+
+        //--DEBUGGING--//
+        enemy.hitbox.debugHitbox();
+        player.debugHitbox();
 
         //add buttons to screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

@@ -28,16 +28,10 @@ public class Hitbox implements Disposable {
         this.cam = gameCam;
 
 
-        // y-value is reversed
         topleft = new Vector2(this.position.x, this.position.y + height);
         topright = new Vector2(this.position.x+width, this.position.y + height);
         botleft = new Vector2(this.position.x, this.position.y);
         botright = new Vector2(this.position.x+width, this.position.y);
-
-//        topleft = new Vector2(this.position.x, this.position.y-height);
-//        topright = new Vector2(this.position.x+width, this.position.y-height);
-//        botleft = new Vector2(this.position.x, this.position.y);
-//        botright = new Vector2(this.position.x+width, this.position.y);
 
         //--DEBUG--//
         shapeRenderer = new ShapeRenderer();
@@ -50,14 +44,6 @@ public class Hitbox implements Disposable {
         // Check if the corner of the incoming object is inside of this hitbox
         for(Vector2 o : other_corners) {
             if((o.x >= this.botleft.x && o.x <= this.topright.x) && (o.y >= this.botleft.y && o.y <= this.topright.y)) {
-//                Gdx.app.log("This Hitbox (Enemy)", "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
-//                        + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
-//                        + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
-//                        + "topright: (" + this.topright.x + ", " + this.topright.y + ")\n");
-//                Gdx.app.log("Other Hitbox (Bullet)", "\nbotleft: (" + other.botleft.x + ", " + other.botleft.y + ")\n"
-//                        + "botright: (" + other.botright.x + ", " + other.botright.y + ")\n"
-//                        + "topleft: (" + other.topleft.x + ", " + other.topleft.y + ")\n"
-//                        + "topright: (" + other.topright.x + ", " + other.topright.y + ")\n");
 //                System.out.println("BIRD JUST GOT HIT BY SOMETHING!");
                 return true;
             }
@@ -75,10 +61,10 @@ public class Hitbox implements Disposable {
         botleft.set(this.position.x, this.position.y);
         botright.set(update_x, this.position.y);
 
-//        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
-//                + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
-//                + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
-//                + "topright: (" + this.topright.x + ", " + this.topright.y + ")\n");
+        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
+                + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
+                + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
+                + "topright: (" + this.topright.x + ", " + this.topright.y + ")\n");
 
     }
 
