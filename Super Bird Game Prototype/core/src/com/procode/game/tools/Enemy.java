@@ -27,6 +27,10 @@ public class Enemy implements Disposable {
     protected float enemySpeed;
     protected float originalSpeed;
 
+    // hitbox stuff
+    public Hitbox hitbox;
+    protected Vector2 hitboxPosOffset;
+    protected Vector2 hitboxBoundsOffset;
 
 
     // constructor for the enemy class when want a random position off screen

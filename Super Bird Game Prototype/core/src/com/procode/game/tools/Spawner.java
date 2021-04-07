@@ -1,6 +1,10 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.utils.Array;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.sprites.Bird;
+import com.procode.game.sprites.BirdSpit;
 import com.procode.game.sprites.MechaBird;
 
 import java.util.ArrayList;
@@ -25,12 +29,13 @@ public class Spawner {
     private float newSpawnPerS; // the percentage for a new enemy spawning per second (needs to be between 0 and 1)
     private float currSpawnPerS; // the current spawn percentage (increases over time when a new enemy isn't spawned)
     private float spawnFrequency;
+    private Camera gamecam;
 
 
 
     // will initialize variables and also initialize enemies depending on the maxEnemies,
     // will initialize that many enemies per enemy variant
-    public Spawner(int maxEnemies, int minEnemies, float enemyMaxSpeed, float enemyMinSpeed, float newSpawnPerS, float spawnFrequency){
+    public Spawner(int maxEnemies, int minEnemies, float enemyMaxSpeed, float enemyMinSpeed, float newSpawnPerS, float spawnFrequency, Camera gameCam){
         this.maxEnemies = maxEnemies;
         this.minEnemies = minEnemies;
         this.enemyMaxSpeed = enemyMaxSpeed;
@@ -41,6 +46,7 @@ public class Spawner {
         this.spawnFrequency = spawnFrequency;
         activeEnemies = new ArrayList<Enemy>();
         inactiveEnemies = new ArrayList<Enemy>();
+        this.gamecam = gameCam;
 
         // initialize all variants of enemies based off of the max into the inactive enemies
         // initialize mechaBirds
@@ -52,7 +58,7 @@ public class Spawner {
             if(randSpeed < enemyMinSpeed){
                 randSpeed = enemyMinSpeed;
             }
-            MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, (int) randSpeed);
+            MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, (int) randSpeed, gameCam);
 
             inactiveEnemies.add(mecha);
         }
@@ -77,14 +83,14 @@ public class Spawner {
     // updates the enemies on the active list
     // if they die, their state is Dead, then we must remove them to the inactive list
     // also we must control how the enemies are spawned onto the screen by adding to the active list
-    public void updateSpawner(float dt){
+    public void updateSpawner(float dt, Hitbox playerHitbox, Array<BirdSpit> playerSpit){
 
         // first update the enemies in the active list
         for (int i = 0; i < activeEnemies.size(); i++){
 
             // mecha bird update
             if (activeEnemies.get(i) instanceof MechaBird){
-                ((MechaBird) activeEnemies.get(i)).updateMechaBird(dt);
+                ((MechaBird) activeEnemies.get(i)).updateMechaBird(dt, playerHitbox, playerSpit);
             }
             // remaining cases for updating for a drone or other enemy type
         }
@@ -92,14 +98,10 @@ public class Spawner {
         // now delete any enemy that has died by both respawn the enemy and send it to the inactive list
         for (int i = 0; i < activeEnemies.size(); i++){
 
-            if (activeEnemies.get(i).getState() == Enemy.State.DEAD){
+            if (activeEnemies.get(i).getState() == Enemy.State.DEAD && activeEnemies.get(i).deadEnemy.isAnimFinished() == true){
 
-                // mecha bird respawn and make inactive
-                if (activeEnemies.get(i) instanceof MechaBird){
-                    ((MechaBird) activeEnemies.get(i)).reSpawn();
-                    inactiveEnemies.add(activeEnemies.remove(i));
-                }
-                // remaining cases for updating for a drone or other enemy type
+                // make inactive
+                inactiveEnemies.add(activeEnemies.remove(i));
             }
 
         }
@@ -109,7 +111,10 @@ public class Spawner {
 
             // get a random position in the inactive list and add it to the active
             int randListPos = (int) Math.random() * inactiveEnemies.size();
-            activeEnemies.add(inactiveEnemies.remove(randListPos));
+            if (inactiveEnemies.get(randListPos) instanceof MechaBird) {
+                ((MechaBird) inactiveEnemies.get(randListPos)).reSpawn();
+                activeEnemies.add(inactiveEnemies.remove(randListPos));
+            }
         }
 
         // finally, random chance of spawning a new enemy if the number is less than the max
@@ -122,8 +127,15 @@ public class Spawner {
             if (randomSpawn <  currSpawnPerS){
                 lastEnemySpawnTime = dt;
                 currSpawnPerS = newSpawnPerS;
+
+                // get a random position in the inactive list and add it to the active
                 int randListPos = (int) Math.random() * inactiveEnemies.size();
-                activeEnemies.add(inactiveEnemies.remove(randListPos));
+                if (inactiveEnemies.get(randListPos) instanceof MechaBird) {
+                    ((MechaBird) inactiveEnemies.get(randListPos)).reSpawn();
+                    activeEnemies.add(inactiveEnemies.remove(randListPos));
+                }
+
+                // now for drones
             }
         }
     }
@@ -153,7 +165,7 @@ public class Spawner {
                 if(randSpeed < enemyMinSpeed){
                     randSpeed = enemyMinSpeed;
                 }
-                MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, (int) randSpeed);
+                MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, (int) randSpeed, gamecam);
 
                 inactiveEnemies.add(mecha);
             }

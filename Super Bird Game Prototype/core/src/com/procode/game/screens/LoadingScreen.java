@@ -84,6 +84,7 @@ public class LoadingScreen extends Game implements Screen {
         stage.addActor(healthBar);
 
 
+
     }
 
     private float updateBar =0;
@@ -95,7 +96,7 @@ public class LoadingScreen extends Game implements Screen {
         healthBar.setValue(updateBar);
 
         if(updateBar > 5.5f)
-            game.setScreen(new PlayScreen(game));
+           create();
         game.batch.begin();
         //render the stage and draw it
         //game.batch.draw(background, 0, 0);
@@ -107,7 +108,7 @@ public class LoadingScreen extends Game implements Screen {
 
     @Override
     public void create() {
-
+        game.setScreen(new PlayScreen(game));
     }
 
     @Override
@@ -136,6 +137,10 @@ public class LoadingScreen extends Game implements Screen {
     @Override
     public void dispose() {
 
+        pixmap.dispose();
+        stage.dispose();
+        skin.dispose();
+        game.dispose();
     }
 }
 

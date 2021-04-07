@@ -127,7 +127,7 @@ public class HomeScreen implements Screen {
 
         int birdWidth = game.GAME_WIDTH /5;
         int birdHeight = game.GAME_HEIGHT /5;
-        bird = new Bird(50, 100, birdWidth, birdHeight);
+        bird = new Bird(50, 100, birdWidth, birdHeight, null);
 
 
         btnPlay.addListener(new ClickListener() {
@@ -175,7 +175,7 @@ public class HomeScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 1, 1, 0);
+        Gdx.gl.glClearColor(255/255f, 127/255f, 39/255f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         currTime += delta;
         update(currTime);

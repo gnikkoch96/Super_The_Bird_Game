@@ -14,7 +14,7 @@ import com.procode.game.screens.PlayScreen;
 public class Gamepad {
     private float x; //values for position to add to the bird
     private float y;
-    private float touchSensitivity; // the amount the bird moves per second the button is held
+    public float touchSensitivity; // the amount the bird moves per second the button is held
 
     public int buttonSize; // because image is a circle only need the radius so size is a single variable
     public ImageButton upArrow; // need to be images to add on click listeners does not work well with textures
@@ -22,7 +22,6 @@ public class Gamepad {
     public ImageButton leftArrow;
     public ImageButton rightArrow;
     public ImageButton shootButton;
-    public boolean shoot = false;
 
 
 
@@ -51,6 +50,10 @@ public class Gamepad {
         shootButton = ImageFunctions.resizeImageButton("screen icons//shoot button.png", (int)(buttonSize * 1.5), (int)(buttonSize * 1.5));
         Texture shootButtonPressed = ImageFunctions.resize("screen icons//pressed shoot button.png", buttonSize, buttonSize);
         shootButton.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(shootButtonPressed));
+
+
+
+
 
         // add listeners
         upArrow.addListener(new ClickListener() {
@@ -117,13 +120,13 @@ public class Gamepad {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if(HUD.state == 0)
-                    PlayScreen.player.shoot();
+                    PlayScreen.rapidFireSpit = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                shoot = false;
+                PlayScreen.rapidFireSpit = false;
             }
         });
 

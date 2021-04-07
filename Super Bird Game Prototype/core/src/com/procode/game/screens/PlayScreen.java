@@ -38,16 +38,21 @@ public class PlayScreen implements Screen {
 
     private final int GAME_PLAY = 0; // play the game
     private final int GAME_PAUSE = 1; // pause the game
+    private final int GAME_QUIT = 4; // quit the game
 
     // sprites
     public static Bird player;
-    public static Bird enemy;
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x, enemySpeed;
     //private MechaBird enemyBird;
     private Spawner enemySpawner;
+    public static boolean rapidFireSpit = false;
 
     public Array<BirdSpit> activeSpits;
+    public static String changeBackground = "orange";
+
+
+
 
 
     public PlayScreen(SuperBirdGame game){
@@ -60,6 +65,7 @@ public class PlayScreen implements Screen {
         bg = new Background(); //this is the background class that contains all textures of images for the background
 
 
+
         //set the starting point of the background objects
         moveHills_x = game.GAME_WIDTH;
         moveMountain_x = game.GAME_WIDTH;
@@ -69,8 +75,7 @@ public class PlayScreen implements Screen {
         //Creating Sprites
         int birdWidth = SuperBirdGame.GAME_WIDTH /5;
         int birdHeight = SuperBirdGame.GAME_HEIGHT /5;
-        player = new Bird(SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /2, birdWidth, birdHeight);
-        enemy = new Bird(SuperBirdGame.GAME_WIDTH /2, SuperBirdGame.GAME_HEIGHT /2, birdWidth,birdHeight);
+        player = new Bird(SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /2, birdWidth, birdHeight, hud.stage.getCamera());
 
 
         //Setting Properties
@@ -86,12 +91,12 @@ public class PlayScreen implements Screen {
 //        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
 
         int minEnemies = 2; // easy = 2 hard = 5
-        int maxEnemies = 5; // easy = 5 hard = 15
-        float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40
-        float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80
+        int maxEnemies = 10; // easy = 5 hard = 15
+        float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 80; // desired max speed = game height / 40, hard = /10
+        float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 100; // desired min speed = game height / 80, hard = /40
         float spawnPerSec = .01f; // easy = .01f hard = 1f
         float spawnFrequency = 2.5f; // easy = 2.5f hard = 0
-        enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency);
+        enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera());
     }
 
     public void handleInput(float dt){
@@ -99,8 +104,25 @@ public class PlayScreen implements Screen {
             player.damageBird(hud);
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.Z) || Gdx.input.isKeyPressed(Input.Keys.Z) ||
+                Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.E) ||
+                Gdx.input.isKeyJustPressed(Input.Keys.O) || Gdx.input.isKeyPressed(Input.Keys.O)){
             player.shoot();
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.W)){
+            player.movePosition(0,gamepad.touchSensitivity);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.A)){
+            player.movePosition(-gamepad.touchSensitivity,0);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.S)){
+            player.movePosition(0, -gamepad.touchSensitivity);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.D)){
+            player.movePosition(gamepad.touchSensitivity,0);
         }
     }
 
@@ -109,10 +131,10 @@ public class PlayScreen implements Screen {
 
         state = HUD.state;
         player.update(dt);
-        enemy.update(dt);
-
-        player.hitDetection(enemy, hud);
-        player.hitbox.isHit(enemy.hitbox);
+        player.updateHitDetection(enemySpawner.activeEnemies, hud);
+        if(rapidFireSpit){
+            player.shoot();
+        }
 
 
         // bird movement
@@ -134,7 +156,7 @@ public class PlayScreen implements Screen {
 //            enemyBird.reSpawn();
 //        }
 
-        enemySpawner.updateSpawner(dt);
+        enemySpawner.updateSpawner(dt, player.hitbox, player.activeSpits);
     }
 
     public void setBackgroundMovement(){
@@ -156,7 +178,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void show() {
-
+        hud.settingScreen.volumeButtons();
     }
 
     public void play(float delta){
@@ -164,15 +186,23 @@ public class PlayScreen implements Screen {
         update(currTime);
         //game.batch.draw(background, 0, 0);
 
-        HUD.settingScreen.setContainerVisible(false);
+        hud.settingScreen.setContainerVisible(false);
 
-        game.batch.draw(bg.getBackgroundSky(),0,0);
+       // game.batch.draw(bg.getBackgroundSky(),0,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
-        game.batch.draw(enemy.getBirdImage(),enemy.getPosition().x, enemy.getPosition().y);
+
+        hud.gamepad.upArrow.setVisible(true);
+        hud.gamepad.downArrow.setVisible(true);
+        hud.gamepad.leftArrow.setVisible(true);
+        hud.gamepad.rightArrow.setVisible(true);
+        hud.gamepad.shootButton.setVisible(true);
+        hud.pauseBtn.setVisible(true);
+
+        state = HUD.state;
 
         //testing only---------------------------------------
 //        System.out.println("currPos: " + enemyBird.getEnemyPosition() + "   currDestination: " + enemyBird.currDestination + "   currentState: " + enemyBird.getState() + "   currentSpeed: " + enemyBird.getEnemySpeed());
@@ -190,13 +220,20 @@ public class PlayScreen implements Screen {
     @Override
     public void render(float delta) {
         // empties the Screen
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+
+        if(changeBackground.equals("orange"))
+            Gdx.gl.glClearColor(255/255f, 127/255f, 39/255f,1);
+        else if(changeBackground.equals("blue"))
+            Gdx.gl.glClearColor(0/255f, 255/255f, 255/255f,1);
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // main render
         game.batch.setProjectionMatrix(game.camera.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
-        game.batch.draw(background, 0, 0);
+        //game.batch.draw(background, 0, 0);
+
+        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
@@ -221,12 +258,15 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         //--DEBUGGING--//
-//        enemy.hitbox.debugHitbox();
-//        player.debugHitbox();
+        player.debugHitbox();
+        for (int i = 0; i < enemySpawner.activeEnemies.size(); i++){
+            enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
+        }
 
         //add buttons to screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+
     }
 
 
@@ -239,15 +279,37 @@ public class PlayScreen implements Screen {
     @Override
     public void pause() {
         //game.batch.draw(background, 0, 0);
-        game.batch.draw(bg.getBackgroundSky(),0,0);
+      //  game.batch.draw(bg.getBackgroundSky(),0,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
-        HUD.settingScreen.setContainerVisible(true);
+        hud.settingScreen.setContainerVisible(true);
+        //activate the buttons
+        hud.settingScreen.Buttons();
+
+        //this will set the screen into the setting screen
+        //1 is the id number for setting screen view on play screen
+        if(hud.settingScreen.state == 1) {
+            hud.settingScreen.setSettingsContainerVisible(true);
+        }
+        else
+            hud.settingScreen.setSettingsContainerVisible(false);
+
+        hud.gamepad.upArrow.setVisible(false);
+        hud.gamepad.downArrow.setVisible(false);
+        hud.gamepad.leftArrow.setVisible(false);
+        hud.gamepad.rightArrow.setVisible(false);
+        hud.gamepad.shootButton.setVisible(false);
+        hud.pauseBtn.setVisible(false);
 
         state = HUD.state;
+
+        //set the screen into homescreen
+        if(state == GAME_QUIT){
+            game.setScreen(new HomeScreen(game));
+        }
     }
 
     @Override

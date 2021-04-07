@@ -8,6 +8,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.procode.game.screens.LoginScreen;
+import com.procode.game.screens.PlayScreen;
+import com.procode.game.screens.Scoreboard;
+import com.procode.game.screens.SettingsScreen;
 import com.procode.game.screens.PlayScreen;
 import com.procode.game.screens.SplashScreen;
 
@@ -55,8 +59,14 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/spitCollision.mp3", Sound.class);
 		manager.finishLoading();
 
-//		this.setScreen(new SplashScreen(this));
-		this.setScreen(new PlayScreen(this));
+		this.setScreen(new SplashScreen(this));
+//		this.setScreen(new PlayScreen(this));
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		camera.position.set(GAME_WIDTH/2, GAME_HEIGHT/2, 0);
 	}
 
 	@Override

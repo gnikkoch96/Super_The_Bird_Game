@@ -31,7 +31,7 @@ public class HUD implements Disposable {
 
     // what is shown on the HUD
     private Image healthBar;
-    private Image pauseBtn, playBtn;
+    public ImageButton pauseBtn, playBtn;
     private Image scoreBackground;        // visual for when displaying the score
     private Label scoreLabel, scoreTextLabel;
     public Gamepad gamepad;               // displays the gamepad on the screen
@@ -42,7 +42,7 @@ public class HUD implements Disposable {
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     public static int state;
     public int bird_State = 0;
-    private final int GAME_PLAY = 0, GAME_PAUSE = 1;
+    private final int GAME_PLAY = 0, GAME_PAUSE = 1, GAME_QUIT = 4;
     public static MiniSettingScreen settingScreen;
 
     public HUD(SuperBirdGame game){
@@ -77,7 +77,7 @@ public class HUD implements Disposable {
 
         // displays
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /5));
-        pauseBtn = new Image(ImageFunctions.resize("screen icons//pause button.png", SuperBirdGame.GAME_WIDTH /35, SuperBirdGame.GAME_HEIGHT /25));
+        pauseBtn = ImageFunctions.resizeImageButton("screen icons//pause button.png", SuperBirdGame.GAME_WIDTH /35, SuperBirdGame.GAME_HEIGHT /25);
         scoreBackground = new Image(ImageFunctions.resize("screen icons//score-backgroundTwo.png", SuperBirdGame.GAME_WIDTH /4, SuperBirdGame.GAME_HEIGHT /7));
         scoreTextLabel = new Label("SCORE: ", style);
         scoreLabel = new Label(score + " ", style);
@@ -95,6 +95,7 @@ public class HUD implements Disposable {
 
         // gamepad
         gamepad = new Gamepad(game);
+
         stage.addActor(gamepad.upArrow);
         stage.addActor(gamepad.downArrow);
         stage.addActor(gamepad.leftArrow);
@@ -108,9 +109,13 @@ public class HUD implements Disposable {
         //set up the mini settings for the PlayScreen
         settingScreen = new MiniSettingScreen(stage);
         settingScreen.setContainerVisible(false);
+        settingScreen.setSettingsContainerVisible(false);
+
+        //Display table to screen
         stage.addActor(settingScreen.getActor());
-
-
+        stage.addActor(settingScreen.getSettingsActor());
+        stage.addActor(scoreTable);
+        stage.addActor(leftTable);
     }
     public void setPauseBtn(){
         pauseBtn.addListener(new ClickListener(){
@@ -125,12 +130,6 @@ public class HUD implements Disposable {
             }
         });
     }
-
-    public boolean getShootStateBtn(){
-        return gamepad.shoot;
-    }
-
-
 
     //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){

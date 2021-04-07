@@ -1,24 +1,27 @@
 package com.procode.game.sprites;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 import com.procode.game.tools.ImageFunctions;
+import com.procode.game.tools.Projectile;
 
 public class BirdSpit extends Projectile implements Disposable {
     // animations
     private static Texture projectileImage; // this will be the image that floats until a contact has been made
 
 
-    public BirdSpit(){
+    public BirdSpit(Camera gameCamera){
         //--Nikko: The width and height can be changed
-        this.projectileWidth = 100;
-        this.projectileHeight = 30;
+        this.projectileWidth = SuperBirdGame.GAME_WIDTH / 15;
+        this.projectileHeight = SuperBirdGame.GAME_HEIGHT / 35;
 
         this.position = new Vector2(); // x and y are initialized in the init()
         this.velocity = 20; //--Nikko: try changing speed
@@ -33,8 +36,9 @@ public class BirdSpit extends Projectile implements Disposable {
         collisionParticle.load(Gdx.files.internal("effects/liquid2.p"), Gdx.files.internal("bird animations"));
 
 
-
-        this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight);
+        this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight, gameCamera);
+        collisionAnimation = new Animation();
+        collisionAnimation.setAnimation("bird animations//spit projectile ", 100, 100, 1, 3, 1f, false);
 
     }
 
