@@ -7,10 +7,11 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import com.procode.game.scenes.HUD;
+import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Hitbox;
 import com.procode.game.tools.ImageFunctions;
+import com.procode.game.tools.Projectile;
 
 public class BirdSpit extends Projectile implements Disposable {
     // animations
@@ -20,8 +21,8 @@ public class BirdSpit extends Projectile implements Disposable {
 
     public BirdSpit(Camera gameCamera){
         //--Nikko: The width and height can be changed
-        this.projectileWidth = 100;
-        this.projectileHeight = 30;
+        this.projectileWidth = SuperBirdGame.GAME_WIDTH / 15;
+        this.projectileHeight = SuperBirdGame.GAME_HEIGHT / 35;
 
         this.position = new Vector2(); // x and y are initialized in the init()
         this.velocity = 20; //--Nikko: try changing speed
