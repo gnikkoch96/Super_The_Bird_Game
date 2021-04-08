@@ -355,15 +355,17 @@ public class Bird implements Disposable {
 
     // manages all hit detection related to the bird character (Nikko: Change Bird -> List<Enemy> once it starts working)
     public void hitDetection(Enemy enemy, HUD hud){
-        if(this.hitbox.isHit(enemy.hitbox)){
+        if(enemy.hitbox != null) {
+            if (this.hitbox.isHit(enemy.hitbox) || enemy.hitbox.isHit(this.hitbox)) {
 //            Gdx.app.log("PLAYER->ENEMY", "HIT");
-            this.damageBird(hud);
-        }
+                this.damageBird(hud);
+            }
 
-        for (int i = 0; i < activeSpits.size; i++){
-            if(activeSpits.get(i).hitbox.isHit(enemy.hitbox) ||
-                    enemy.hitbox.isHit(activeSpits.get(i).hitbox)){
-                activeSpits.get(i).setCollision(true);
+            for (int i = 0; i < activeSpits.size; i++) {
+                if (activeSpits.get(i).hitbox.isHit(enemy.hitbox) ||
+                        enemy.hitbox.isHit(activeSpits.get(i).hitbox)) {
+                    activeSpits.get(i).setCollision(true);
+                }
             }
         }
     }

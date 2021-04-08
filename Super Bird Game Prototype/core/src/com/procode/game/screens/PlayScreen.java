@@ -89,12 +89,12 @@ public class PlayScreen implements Screen {
 //        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 70;
 //        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
 
-        int minEnemies = 2; // easy = 2 hard = 5
-        int maxEnemies = 10; // easy = 5 hard = 15
-        float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 80; // desired max speed = game height / 40, hard = /10
-        float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 100; // desired min speed = game height / 80, hard = /40
-        float spawnPerSec = .01f; // easy = .01f hard = 1f
-        float spawnFrequency = 2.5f; // easy = 2.5f hard = 0
+        int minEnemies = 7; // easy = 2 hard = 5
+        int maxEnemies = 15; // easy = 5 hard = 15
+        float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40, hard = /10
+        float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80, hard = /40
+        float spawnPerSec = .15f; // easy = .01f hard = 1f
+        float spawnFrequency = 1f; // easy = 2.5f hard = 0
         enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera());
     }
 
@@ -257,7 +257,9 @@ public class PlayScreen implements Screen {
         //--DEBUGGING--//
         player.debugHitbox();
         for (int i = 0; i < enemySpawner.activeEnemies.size(); i++){
-            enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
+            if(enemySpawner.activeEnemies.get(i).hitbox != null) { // this is because hitboxes are deleted and replaced with new ones
+                enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
+            }
         }
 
         //add buttons to screen
