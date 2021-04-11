@@ -9,12 +9,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.screens.PlayScreen;
-import com.procode.game.screens.SplashScreen;
 
 public class SuperBirdGame extends Game {
 	public static final String DESKTOP_TITLE = "Super Bird Game";
-	public static int DESKTOP_WIDTH = 1920;
-	public static int DESKTOP_HEIGHT = 1080;
+	public static int DESKTOP_WIDTH = 1280;
+	public static int DESKTOP_HEIGHT = 720;
 
 	public static int GAME_WIDTH = 1920;
 	public static int GAME_HEIGHT = 1080;
