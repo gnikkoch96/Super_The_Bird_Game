@@ -53,6 +53,7 @@ public class Scoreboard implements Screen {
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
         scoreboard_bg = ImageFunctions.resize("background stuff/scoreboard.png", SuperBirdGame.GAME_WIDTH,SuperBirdGame.GAME_HEIGHT);
         Skin skin = new Skin(Gdx.files.internal("comic-ui.json"));
+
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
         font = new BitmapFont();

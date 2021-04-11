@@ -59,14 +59,8 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/spitCollision.mp3", Sound.class);
 		manager.finishLoading();
 
-		this.setScreen(new SplashScreen(this));
-//		this.setScreen(new PlayScreen(this));
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		viewport.update(width, height);
-		camera.position.set(GAME_WIDTH/2, GAME_HEIGHT/2, 0);
+//		this.setScreen(new SplashScreen(this));
+		this.setScreen(new PlayScreen(this));
 	}
 
 	@Override

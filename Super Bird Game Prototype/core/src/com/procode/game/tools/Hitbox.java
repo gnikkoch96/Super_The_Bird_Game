@@ -61,10 +61,10 @@ public class Hitbox implements Disposable {
         botleft.set(this.position.x, this.position.y);
         botright.set(update_x, this.position.y);
 
-        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
-                + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
-                + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
-                + "topright: (" + this.topright.x + ", " + this.topright.y + ")\n");
+//        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.botleft.x + ", " + this.botleft.y + ")\n"
+//                + "botright: (" + this.botright.x + ", " + this.botright.y + ")\n"
+//                + "topleft: (" + this.topleft.x + ", " + this.topleft.y + ")\n"
+//                + "topright: (" + this.topright.x + ", " + this.topright.y + ")\n");
 
     }
 

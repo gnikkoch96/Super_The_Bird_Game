@@ -373,21 +373,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         tableContainer1.setActor(passwordTable);
     }
 
-    //this method will change the state of the screen.
-    public void btnNextClicked(String state){
-
-        if(state.equals("Username")){
-            tableContainer0.setVisible(false);
-            tableContainer1.setVisible(true);
-        }else if(state.equals("Password")){
-            tableContainer1.setVisible(false);
-            tableContainer2.setVisible(true);
-        }else if(state.equals("FullName")){
-            tableContainer2.setVisible(false);
-            tableContainer3.setVisible(true);
-        }else if(state.equals("Email")){
-            game.setScreen(new ConfirmationScreen(game, new HashMap<String, String>()));
-        }
 
     //this method will return it back from previous state
     public void btnBackClicked(String state){
@@ -439,6 +424,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         if(validateAccount() == true && tableContainer1.isVisible() == false) {
             tableContainer0.setVisible(false);
             tableContainer1.setVisible(true);
+
 
         }else if(validateAccount() == true && passwordTable.isVisible() == true) {
             passwordTable.setVisible(false);

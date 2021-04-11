@@ -1,6 +1,5 @@
 package com.procode.game.tools;
 
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.procode.game.SuperBirdGame;
@@ -18,7 +17,6 @@ public class Projectile implements Pool.Poolable {
     protected Vector2 position;
     protected boolean alive;  // checks to see if the bullet is still on screen or hasn't hit an object
     protected boolean collided; // used to play the finishing animation of the spit (Nikko: Might remove this as we can just use the isHit() from Hitbox.class)
-    protected ParticleEffect collisionParticle;
 
     public void setCollision(boolean val){
         this.collided = val;
@@ -50,7 +48,6 @@ public class Projectile implements Pool.Poolable {
     public void reset() {
         this.alive = false;
         this.collided = false;
-//        this.collisionParticle.reset();
     }
 
 }
