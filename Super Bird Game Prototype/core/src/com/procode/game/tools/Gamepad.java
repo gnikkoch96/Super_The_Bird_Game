@@ -29,7 +29,7 @@ public class Gamepad {
         x = 0;
         y = 0;
         touchSensitivity = game.GAME_HEIGHT / 60;
-        buttonSize = game.GAME_HEIGHT / 10;
+        buttonSize = game.GAME_HEIGHT / 8;
 
         upArrow = ImageFunctions.resizeImageButton("screen icons//up button.png", buttonSize, buttonSize);
         downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", buttonSize, buttonSize);
@@ -103,7 +103,7 @@ public class Gamepad {
             private void logic(float x, float y) {
                 // 1
                 if( (x > upArrow.getX() && x < upArrow.getX() + buttonSize) && (y > upArrow.getY() && y < upArrow.getY() + buttonSize) ) {
-                    System.out.println("Up");
+                    //System.out.println("Up");
                     if (previous != 1) {
                         buttonReleased();
                         previous = 1;
@@ -114,7 +114,7 @@ public class Gamepad {
 
                 // 2
                 if( (x > downArrow.getX() && x < downArrow.getX() + buttonSize) && (y > downArrow.getY() && y < downArrow.getY() + buttonSize) ) {
-                    System.out.println("Down");
+                    //System.out.println("Down");
                     if(previous != 2) {
                         buttonReleased();
                         previous = 2;
@@ -125,7 +125,7 @@ public class Gamepad {
 
                 // 3
                 if( (x > leftArrow.getX() && x < leftArrow.getX() + buttonSize) && (y > leftArrow.getY() && y < leftArrow.getY() + buttonSize) ) {
-                    System.out.println("Left");
+                    //System.out.println("Left");
                     if (previous != 3) {
                         buttonReleased();
                         previous = 3;
@@ -136,7 +136,7 @@ public class Gamepad {
 
                 // 4
                 if( (x > rightArrow.getX() && x < rightArrow.getX() + buttonSize) && (y > rightArrow.getY() && y < rightArrow.getY() + buttonSize) ) {
-                    System.out.println("Right");
+                    //System.out.println("Right");
                     if (previous != 4) {
                         buttonReleased();
                         previous = 4;
@@ -147,7 +147,7 @@ public class Gamepad {
 
                 // 5
                 if( (x > upLeft.getX() && x < upLeft.getX() + buttonSize) && (y > upLeft.getY() && y < upLeft.getY() + buttonSize) ) {
-                    System.out.println("UP LEFT");
+                    //System.out.println("UP LEFT");
                     if (previous != 5) {
                         buttonReleased();
                         previous = 5;
@@ -159,7 +159,7 @@ public class Gamepad {
 
                 // 6
                 if( (x > upRight.getX() && x < upRight.getX() + buttonSize) && (y > upRight.getY() && y < upRight.getY() + buttonSize) ) {
-                    System.out.println("UP RIGHT");
+                    //System.out.println("UP RIGHT");
                     if (previous != 6) {
                         buttonReleased();
                         previous = 6;
@@ -171,7 +171,7 @@ public class Gamepad {
 
                 // 7
                 if( (x > downLeft.getX() && x < downLeft.getX() + buttonSize) && (y > downLeft.getY() && y < downLeft.getY() + buttonSize) ) {
-                    System.out.println("DOWN LEFT");
+                    //System.out.println("DOWN LEFT");
                     if (previous != 7) {
                         buttonReleased();
                         previous = 7;
@@ -183,7 +183,7 @@ public class Gamepad {
 
                 // 8
                 if( (x > downRight.getX() && x < downRight.getX() + buttonSize) && (y > downRight.getY() && y < downRight.getY() + buttonSize) ) {
-                    System.out.println("DOWN RIGHT");
+                    //System.out.println("DOWN RIGHT");
                     if (previous != 8) {
                         buttonReleased();
                         previous = 8;

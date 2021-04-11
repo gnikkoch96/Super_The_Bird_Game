@@ -183,7 +183,7 @@ public class Bird implements Disposable {
 //            }
         }
 
-        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitbox_offset.x + " , " + this.hitbox_offset.y);
+        //Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitbox_offset.x + " , " + this.hitbox_offset.y);
     }
 
     // can only set invincible after a certain period of time has passed
