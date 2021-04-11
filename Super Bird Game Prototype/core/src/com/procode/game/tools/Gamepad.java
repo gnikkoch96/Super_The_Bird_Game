@@ -1,5 +1,6 @@
 package com.procode.game.tools;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -17,14 +18,12 @@ public class Gamepad {
     private float touchSensitivity; // the amount the bird moves per second the button is held
 
     public int buttonSize; // because image is a circle only need the radius so size is a single variable
-    public ImageButton upArrow; // need to be images to add on click listeners does not work well with textures
-    public ImageButton downArrow;
-    public ImageButton leftArrow;
-    public ImageButton rightArrow;
+    public ImageButton upArrow, downArrow, leftArrow, rightArrow; // need to be images to add on click listeners does not work well with textures
+    public ImageButton upLeft, upRight, downLeft, downRight;
     public ImageButton shootButton;
     public boolean shoot = false;
 
-
+    public ClickListener clickListener;
 
     //initializes
     public Gamepad(SuperBirdGame game) {
@@ -37,6 +36,10 @@ public class Gamepad {
         downArrow = ImageFunctions.resizeImageButton("screen icons//down button.png", buttonSize, buttonSize);
         leftArrow = ImageFunctions.resizeImageButton("screen icons//left button.png", buttonSize, buttonSize);
         rightArrow = ImageFunctions.resizeImageButton("screen icons//right button.png", buttonSize, buttonSize);
+        upLeft = ImageFunctions.resizeImageButton("screen icons//blank png.png", buttonSize, buttonSize);
+        upRight = ImageFunctions.resizeImageButton("screen icons//blank png.png", buttonSize, buttonSize);
+        downLeft = ImageFunctions.resizeImageButton("screen icons//blank png.png", buttonSize, buttonSize);
+        downRight = ImageFunctions.resizeImageButton("screen icons//blank png.png", buttonSize, buttonSize);
 
         // pressed icons
         Texture upButtonPressed = ImageFunctions.resize("screen icons//pressed up button.png", buttonSize, buttonSize);
@@ -51,67 +54,6 @@ public class Gamepad {
         shootButton = ImageFunctions.resizeImageButton("screen icons//shoot button.png", (int)(buttonSize * 1.5), (int)(buttonSize * 1.5));
         Texture shootButtonPressed = ImageFunctions.resize("screen icons//pressed shoot button.png", buttonSize, buttonSize);
         shootButton.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(shootButtonPressed));
-
-        // add listeners
-        upArrow.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                float upMovement = touchSensitivity;
-                buttonPressed(upMovement, true);
-//                System.out.println("UP");
-                return true;
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-               buttonReleased(true);
-            }
-        });
-
-        downArrow.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                float downMovement = touchSensitivity * -1;
-                buttonPressed(downMovement, true);
-//                System.out.println("DOWN");
-                return true;
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonReleased(true);
-            }
-        });
-
-        leftArrow.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                float leftMovement = touchSensitivity * -1;
-                buttonPressed(leftMovement, false);
-//                System.out.println("LEFT");
-                return true;
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonReleased(false);
-            }
-        });
-
-        rightArrow.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                float rightMovement = touchSensitivity;
-                buttonPressed(rightMovement, false);
-//                System.out.println("RIGHT");
-                return true;
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                buttonReleased(false);
-            }
-        });
 
         shootButton.addListener(new ClickListener() {
             @Override
@@ -128,11 +70,131 @@ public class Gamepad {
         });
 
         //set where the buttons will be placed on screen
+        upArrow.setPosition(buttonSize, buttonSize * 2);
         downArrow.setPosition(buttonSize,0);
         leftArrow.setPosition(0,buttonSize);
         rightArrow.setPosition(buttonSize * 2, buttonSize);
-        upArrow.setPosition(buttonSize, buttonSize * 2);
+
+        upLeft.setPosition(0, buttonSize * 2);
+        upRight.setPosition(buttonSize * 2, buttonSize * 2);
+        downLeft.setPosition(0, 0);
+        downRight.setPosition(buttonSize * 2, 0);
+
         shootButton.setPosition(SuperBirdGame.GAME_WIDTH - buttonSize * 3, (int)(buttonSize/1.5));
+
+        clickListener = new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                logic(x, y);
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                buttonReleased();
+            }
+
+            @Override
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                logic(x, y);
+            }
+
+            int previous = 0;
+
+            private void logic(float x, float y) {
+                // 1
+                if( (x > upArrow.getX() && x < upArrow.getX() + buttonSize) && (y > upArrow.getY() && y < upArrow.getY() + buttonSize) ) {
+                    System.out.println("Up");
+                    if (previous != 1) {
+                        buttonReleased();
+                        previous = 1;
+                    }
+                    float upMovement = touchSensitivity;
+                    buttonPressed(upMovement, true);
+                }
+
+                // 2
+                if( (x > downArrow.getX() && x < downArrow.getX() + buttonSize) && (y > downArrow.getY() && y < downArrow.getY() + buttonSize) ) {
+                    System.out.println("Down");
+                    if(previous != 2) {
+                        buttonReleased();
+                        previous = 2;
+                    }
+                    float downMovement = touchSensitivity * -1;
+                    buttonPressed(downMovement, true);
+                }
+
+                // 3
+                if( (x > leftArrow.getX() && x < leftArrow.getX() + buttonSize) && (y > leftArrow.getY() && y < leftArrow.getY() + buttonSize) ) {
+                    System.out.println("Left");
+                    if (previous != 3) {
+                        buttonReleased();
+                        previous = 3;
+                    }
+                    float leftMovement = touchSensitivity * -1;
+                    buttonPressed(leftMovement, false);
+                }
+
+                // 4
+                if( (x > rightArrow.getX() && x < rightArrow.getX() + buttonSize) && (y > rightArrow.getY() && y < rightArrow.getY() + buttonSize) ) {
+                    System.out.println("Right");
+                    if (previous != 4) {
+                        buttonReleased();
+                        previous = 4;
+                    }
+                    float rightMovement = touchSensitivity;
+                    buttonPressed(rightMovement, false);
+                }
+
+                // 5
+                if( (x > upLeft.getX() && x < upLeft.getX() + buttonSize) && (y > upLeft.getY() && y < upLeft.getY() + buttonSize) ) {
+                    System.out.println("UP LEFT");
+                    if (previous != 5) {
+                        buttonReleased();
+                        previous = 5;
+                    }
+                    float upMovement = touchSensitivity;
+                    float leftMovement = touchSensitivity * -1;
+                    buttonPressed(upMovement, leftMovement);
+                }
+
+                // 6
+                if( (x > upRight.getX() && x < upRight.getX() + buttonSize) && (y > upRight.getY() && y < upRight.getY() + buttonSize) ) {
+                    System.out.println("UP RIGHT");
+                    if (previous != 6) {
+                        buttonReleased();
+                        previous = 6;
+                    }
+                    float upMovement = touchSensitivity;
+                    float rightMovement = touchSensitivity;
+                    buttonPressed(upMovement, rightMovement);
+                }
+
+                // 7
+                if( (x > downLeft.getX() && x < downLeft.getX() + buttonSize) && (y > downLeft.getY() && y < downLeft.getY() + buttonSize) ) {
+                    System.out.println("DOWN LEFT");
+                    if (previous != 7) {
+                        buttonReleased();
+                        previous = 7;
+                    }
+                    float downMovement = touchSensitivity * -1;
+                    float leftMovement = touchSensitivity * -1;
+                    buttonPressed(downMovement, leftMovement);
+                }
+
+                // 8
+                if( (x > downRight.getX() && x < downRight.getX() + buttonSize) && (y > downRight.getY() && y < downRight.getY() + buttonSize) ) {
+                    System.out.println("DOWN RIGHT");
+                    if (previous != 8) {
+                        buttonReleased();
+                        previous = 8;
+                    }
+                    float downMovement = touchSensitivity * -1;
+                    float rightMovement = touchSensitivity;
+                    buttonPressed(downMovement, rightMovement);
+                }
+            }
+        }; // ClickListener end
     }
 
     // adds or subtracts the amount depending on the axis
@@ -143,18 +205,17 @@ public class Gamepad {
         else{
             x = movement;
         }
-
-        System.out.println("button pressed");
     }
 
-    // called when button is released
-    public void buttonReleased(boolean isYAxis){
-        if (isYAxis){
-            y = 0;
-        }
-        else{
-            x = 0;
-        }
+    private void buttonPressed(float movey, float movex) {
+        y = movey;
+        x = movex;
+    }
+
+    // called when button is buttonReleasedd
+    public void buttonReleased(){
+        x = 0;
+        y = 0;
     }
 
     public Vector2 getButtonInputs() {
