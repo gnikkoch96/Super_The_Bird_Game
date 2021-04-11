@@ -89,12 +89,12 @@ public class PlayScreen implements Screen {
 //        float mechaBirdSpeed = SuperBirdGame.ANDROID_HEIGHT / 70;
 //        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
 
-        int minEnemies = 7; // easy = 2 hard = 5
-        int maxEnemies = 15; // easy = 5 hard = 15
+        int minEnemies = 2; // easy = 2 hard = 5
+        int maxEnemies = 5; // easy = 5 hard = 15
         float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40, hard = /10
         float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80, hard = /40
-        float spawnPerSec = .15f; // easy = .01f hard = 1f
-        float spawnFrequency = 1f; // easy = 2.5f hard = 0
+        float spawnPerSec = .01f; // easy = .01f hard = 1f
+        float spawnFrequency = 2.5f; // easy = 2.5f hard = 0
         enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera());
     }
 

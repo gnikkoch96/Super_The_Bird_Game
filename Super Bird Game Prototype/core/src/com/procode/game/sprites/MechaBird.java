@@ -18,7 +18,7 @@ public class MechaBird extends Enemy {
     private List<Integer> attackPattern; // list of what attacks to use
     private int currAttackInList;
     public Vector2 currDestination; // if the mecha bird needs to reach a destination, this is
-    private Vector2 finalDestination; // used for cases where the mecha bird has a current destination to reach and another one after that
+
 
     // we want to pause an action before doing the next one
     public float timeActionPaused;
@@ -29,6 +29,12 @@ public class MechaBird extends Enemy {
 
     // keep track of spits that have already hit
     List<BirdSpit> playerSpitsAlreadyHit;
+
+    // when doing spinning attack, we want to keep track of the angle
+    private int angle;
+    private int radius;
+    private boolean spinFinished;
+    private Vector2 originalPos;
 
 
 
@@ -44,6 +50,12 @@ public class MechaBird extends Enemy {
         this.gameCamera = gameCamera;
         playerSpitsAlreadyHit = new ArrayList<BirdSpit>();
 
+        // stuff for attacks
+        angle = 0;
+        spinFinished = false;
+        radius = 0;
+        originalPos = new Vector2();
+
         // create all the animations
         // note we do not need super for variables because they are protected, just thought
         // itd be easier to read if we did so
@@ -57,7 +69,6 @@ public class MechaBird extends Enemy {
         super.deadEnemy.setAnimation( "mecha bird animations//mecha bird dead ", (int) (super.enemyWidth * 1.5), (int) (super.enemyHeight * 1.5), 2, 4, .4f, false);
 
         currDestination = new Vector2();
-        finalDestination = new Vector2();
 
         // add the attacking animations to the mecha bird
         // dashing attack animation
@@ -68,11 +79,11 @@ public class MechaBird extends Enemy {
 
         //spinning attack animation
         Animation mechaBirdSpinCharge = new Animation();
-        mechaBirdSpinCharge.setAnimation("mecha bird animations//mecha bird spin ", super.enemyWidth, super.enemyHeight, 1, 3, .15f, false);
+        mechaBirdSpinCharge.setAnimation("mecha bird animations//mecha bird spin ", super.enemyWidth, super.enemyHeight, 1, 6, .65f, false);
         Animation mechaBirdSpinning = new Animation();
-        mechaBirdSpinning.setAnimation("mecha bird animations//mecha bird spin ", super.enemyWidth, super.enemyHeight, 4, 6, .1f, true);
+        mechaBirdSpinning.setAnimation("mecha bird animations//mecha bird spin ", super.enemyWidth, super.enemyHeight, 4, 6, .15f, true);
         Animation mechaBirdSpinStop = new Animation();
-        mechaBirdSpinStop.setAnimation("mecha bird animations//mecha bird spin ", super.enemyWidth, super.enemyHeight, 4, 8, .15f, false);
+        mechaBirdSpinStop.setAnimation("mecha bird animations//mecha bird spin ", super.enemyWidth, super.enemyHeight, 4, 8, .40f, false);
 
         // shooting animations
         Animation mechaBirdShoot = new Animation();
@@ -110,20 +121,18 @@ public class MechaBird extends Enemy {
     // will pick out random attacks until a point where the mecha bird does a dash
     public void setAttackPattern(){
         // to test only, the only attack is the dash
-        attackPattern.add(0);
 
-//      -----------------------make attack path logic--------------------
-//        boolean endingAttack = false;
-//
-//        while (!endingAttack){
-//            int randomAttack = (int) (Math.random() * (super.numOfAttacks)); // a random attack that will be selected
-//
-//            // 0 = dash, 1 = spin 2 = shoot (based on animations listed)
-//            if (randomAttack == 0){
-//                endingAttack = true;
-//            }
-//            attackPattern.add(randomAttack);
-//        }
+        boolean endingAttack = false;
+
+        while (!endingAttack){
+            int randomAttack = (int) (Math.random() * (2)); // a random attack that will be selected
+
+            // 0 = dash, 1 = spin 2 = shoot (based on animations listed)
+            if (randomAttack == 0){
+                endingAttack = true;
+            }
+            attackPattern.add(randomAttack);
+        }
 
         currAttackInList = 0;
     }
@@ -138,7 +147,7 @@ public class MechaBird extends Enemy {
             // if the current state is idle, we simply need the destination to be on screen,
             // so the destination is the same y axis and a position in the screen
             // (will be randomized somewhat to allow for diversity)
-            currDestination.y = super.position.y;
+            currDestination.y = (int) super.position.y;
             currDestination.x = (int) (SuperBirdGame.GAME_WIDTH - ((Math.random() * super.enemyWidth * 1.5) + super.enemyWidth));
         }
         else if (super.currentState == State.ATTACK){
@@ -146,13 +155,31 @@ public class MechaBird extends Enemy {
                 // if spin, we use a function that will determine the next destination
                 // if shoot, then move up and down for a set period of time
                 if (attackPattern.get(currAttackInList) == 0){ // dash
-                    currDestination.y = super.position.y;
-                    currDestination.x = - (super.enemyWidth * 3);
+                    currDestination.y = (int) super.position.y;
+                    currDestination.x = (int) - (super.enemyWidth * 3);
                 }
 
                 else if (attackPattern.get(currAttackInList) == 1){ // spin
-                    // spin
 
+                    if(angle == 0){
+                        originalPos.x = super.position.x;
+                        originalPos.y = super.position.y;
+                    }
+
+                    float radOffsetX = (float) (radius *  Math.cos(angle * Math.PI / 12));
+                    float radOffsetY = (float) (radius * Math.sin(angle * Math.PI / 12));
+                    currDestination.x = (int) ((originalPos.x - radius) + (radOffsetX));
+                    currDestination.y = (int) ((originalPos.y) + (radOffsetY));
+
+                    // angle needs to increment by 1 at a time and once reaches 360 as its new destination,
+                    // reset to 0
+                    if (angle < 25){
+                        angle += 1;
+                    }
+                    else{
+                        angle = 0;
+                        spinFinished = true;
+                    }
                 }
 
                 else if (attackPattern.get(currAttackInList) == 2){ // shoot
@@ -172,10 +199,10 @@ public class MechaBird extends Enemy {
         super.update(deltaTime); // updates the frames
 
         // now update the position and state depending on current state and other factors
-        if (super.currentState == State.IDLE) {
+        if (super.currentState == State.IDLE && currAttackInList == 0) {
 
             // checks to see if the position of the mecha bird has reached the destination
-            if (super.position.x > currDestination.x) {
+            if (Math.abs(super.position.x - currDestination.x) > super.enemySpeed / 2) {
                 updatePos();
             } else {
 
@@ -201,7 +228,7 @@ public class MechaBird extends Enemy {
 
             }
         }
-        else if (super.currentState == State.ATTACK) {
+        else if (super.currentState == State.ATTACK || currAttackInList > 0) {
 
             // stop for next movement before next attack in list
             if (timeActionPaused + pausedDuration < deltaTime) {
@@ -209,12 +236,18 @@ public class MechaBird extends Enemy {
                 // will do attack based on the animation completion and the position it is in
                 if (attackPattern.get(currAttackInList) == 0) {
 
+                    // make sure its already set
+                    if ((super.currAttackState != 0 && super.currAttackState != 1)){
+                        super.changeState(State.ATTACK, 0);
+                        setDestination();
+                    }
+
                     // resize hitbox to fit the attack
                     super.hitbox.resize((int) hitboxBoundsOffset.x, (int) (hitboxBoundsOffset.y / 2));
 
                     // need to first charge up until the animation is complete
                     // if the animation is complete then dash, also increase speed
-                    if (super.currAttackState == 0 && super.enemyAttacks.get(currAttackState).isAnimFinished() == true) {
+                    if (super.currAttackState == 0 && super.enemyAttacks.get(super.currAttackState).isAnimFinished() == true) {
                         super.changeState(State.ATTACK, 1);
                         super.setEnemySpeed(super.enemySpeed * 5);
                     }
@@ -234,9 +267,10 @@ public class MechaBird extends Enemy {
                             }
                         }
 
-                        if (super.position.x <= currDestination.x || super.hitbox.isHit(playerHitbox) ||
+                        if (Math.abs(super.position.x - currDestination.x) < super.enemySpeed / 2 || super.hitbox.isHit(playerHitbox) ||
                                 playerHitbox.isHit(super.hitbox) || spitHits <= 0) {
                             super.changeState(State.DEAD, -1);
+                            currAttackInList = 0;
                         }
                         else {
                             updatePos();
@@ -247,7 +281,54 @@ public class MechaBird extends Enemy {
                 // for these cases, the mecha bird will follow a directed path
                 // and move onto the next attack in the list
                 else if (attackPattern.get(currAttackInList) == 1) {
-                    //      -----------------------make attack path logic--------------------
+
+                    // randomly set a radius every time
+                    if(radius == 0){
+                        radius = (int) (SuperBirdGame.GAME_WIDTH / 3 + (Math.random() * .5));
+                    }
+
+                    // make sure the attack state is set at least once
+                    if ((super.currAttackState != 2 && super.currAttackState != 4 && super.currAttackState != 3)){
+                        super.changeState(State.ATTACK, 2);
+                        setDestination();
+                    }
+
+                    // then charge up until the animation is complete
+                    if (super.currAttackState == 2 && super.enemyAttacks.get(currAttackState).isAnimFinished() == true) {
+                        super.changeState(State.ATTACK, 3);
+                        super.setEnemySpeed((float) (super.enemySpeed * 1.5)); // needs to spin fast
+                    }
+
+                    // will spin until it reaches its destination and when it does,
+                    // change to the stopping animation until it is done
+                    else if (super.currAttackState == 3){
+                        if (!spinFinished){
+                            if(Math.abs(super.position.x - currDestination.x) > super.enemySpeed / 2 && Math.abs(super.position.y - currDestination.y) > super.enemySpeed / 2) {
+                                updatePos();
+                            }
+                            else{
+                                setDestination();
+                            }
+                        }
+                        else{
+                            spinFinished = false;
+                            angle = 0;
+                            super.changeState(State.ATTACK, 4);
+                            super.setEnemySpeed((float) (super.enemySpeed / 1.5)); // needs to spin fast
+                        }
+                    }
+
+                    // once the spinning stopped, wait for the next action in the list
+                    else if (super.currAttackState == 4){
+                        if(super.enemyAttacks.get(currAttackState).isAnimFinished() == true){
+                            timeActionPaused = deltaTime;
+                            pausedDuration = (float) Math.random() + .5f;
+                            currAttackInList += 1;
+                            radius = 0;
+                            super.changeState(State.IDLE, -1);
+                        }
+                    }
+
                 }
                 else {
                     //      -----------------------make attack path logic--------------------
@@ -274,20 +355,20 @@ public class MechaBird extends Enemy {
     public void updatePos(){
 
         // checks if the position is close enough to the destination to stop moving
-        if (Math.abs(currDestination.x - super.position.x ) > .5){
+        if (Math.abs(currDestination.x - super.position.x ) > super.enemySpeed / 2){
             if (currDestination.x > super.position.x){
-                position.x += super.enemySpeed;
+                position.x += (int) super.enemySpeed;
             }
             else{
-                position.x -= super.enemySpeed;
+                position.x -= (int) super.enemySpeed;
             }
         }
-        if (Math.abs(currDestination.y - super.position.y ) > .5){
+        if (Math.abs(currDestination.y - super.position.y ) > super.enemySpeed / 2){
             if (currDestination.y > super.position.y){
-                position.y += super.enemySpeed;
+                position.y += (int) super.enemySpeed;
             }
             else{
-                position.y -= super.enemySpeed;
+                position.y -= (int) super.enemySpeed;
             }
         }
         updateHitboxPos();
@@ -335,6 +416,8 @@ public class MechaBird extends Enemy {
         // update the hitbox pos by replacing it
         super.hitbox = new Hitbox(new Vector2((int)(super.position.x + super.hitboxPosOffset.x), (int)(super.position.y + super.hitboxPosOffset.y)), (int) super.hitboxBoundsOffset.x, (int) super.hitboxBoundsOffset.y, gameCamera);
         spitHits = maxSpitHits;
+        currAttackInList = 0;
+        spinFinished = false;
     }
 
 
@@ -359,6 +442,5 @@ public class MechaBird extends Enemy {
         super.dispose();
         attackPattern.clear();
         currDestination = null;
-        finalDestination = null;
     }
 }
