@@ -38,7 +38,7 @@ public class Bird implements Disposable {
     private State previousState;
 
     // boolean vars for bird (used in the damagedBird())
-    private boolean isDead;
+    private boolean dead;
     public boolean isInvincible;
 
     // bird properties
@@ -64,7 +64,7 @@ public class Bird implements Disposable {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
         position = new Vector2(x,y);
-        isDead = false;
+        dead = false;
         isInvincible = false;
 
         healthCount = 6;
@@ -117,14 +117,13 @@ public class Bird implements Disposable {
     // gets the current image of the bird
     public Texture getBirdImage(){return currentAnimation.getCurrImg();}
 
+    // determines if the bird is dead or not
+    public boolean isDead(){return dead;}
+
     // gets the position of the bird
     public Vector2 getPosition(){
         return this.position;
     }
-
-
-    public static int getBirdWidth(){return BirdWidth;}
-    public static int getBirdHeight(){return BirdHeight;}
 
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
@@ -181,7 +180,8 @@ public class Bird implements Disposable {
                         switchAnimations(State.IDLE);
                     }
                 }
-            //stops the dead animation from updating after reaching the final frame
+
+                //stops the dead animation from updating after reaching the final frame
            if(currentState != State.DEAD)
             currentAnimation.updateFrame(deltaTime);
            else
@@ -192,9 +192,6 @@ public class Bird implements Disposable {
         // updates bird hitbox
         this.hitboxPosOffset.set((float) (position.x + (int)(BirdWidth/8)), (float) (position.y +  (this.BirdHeight / 10)));
         this.hitbox.update(this.hitboxPosOffset);
-
-//        // particles
-//        spitParticles.update(deltaTime);
 
         // updates projectiles
         for(BirdSpit spit : activeSpits){
@@ -208,10 +205,6 @@ public class Bird implements Disposable {
                 activeSpits.removeValue(spit, true);
             }
         }
-
-
-
-//        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitboxBoundsOffset.x + " , " + this.hitboxBoundsOffset.y);
     }
 
 
@@ -259,7 +252,7 @@ public class Bird implements Disposable {
         previousState = currentState;
         currentState = State.SHOOT;
         if(previousState != State.SHOOT && previousState == State.IDLE){ // to prevent overlapping of animations
-            // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
+            // plays sound
             spitSound.play(volume);
 
             switchAnimations(State.SHOOT);
@@ -268,7 +261,7 @@ public class Bird implements Disposable {
             BirdSpit item = spitPool.obtain();
             item.init(this.position.x + (int)(BirdWidth/1.5), this.position.y + (int)(BirdWidth/3.8)); //Nikko: change to this when the image has been adjusted
             activeSpits.add(item);
-            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+//            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
         }
     }
 
@@ -282,6 +275,8 @@ public class Bird implements Disposable {
         deadSoundSad.play(volume);
 
         // set the screen to game over screen
+        dead = true;
+
 
     }
 

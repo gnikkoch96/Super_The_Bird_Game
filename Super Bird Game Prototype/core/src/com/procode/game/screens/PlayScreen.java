@@ -55,9 +55,6 @@ public class PlayScreen implements Screen {
 
     public static String changeBackground = "orange";
 
-
-
-
     public PlayScreen(SuperBirdGame game){
         //Initializing Properties
         this.game = game;
@@ -133,18 +130,27 @@ public class PlayScreen implements Screen {
         handleInput(dt);
 
         state = HUD.state;
-        player.update(dt);
-        player.updateHitDetection(enemySpawner.activeEnemies, hud);
-        if(rapidFireSpit){
-            player.shoot();
+
+        if(!player.isDead()){
+            player.update(dt);
+            player.updateHitDetection(enemySpawner.activeEnemies, hud);
+            if(rapidFireSpit) {
+                player.shoot();
+            }
+
+            // bird movement
+            birdMovement = hud.gamepad.getButtonInputs();
+            //Gdx.app.log("Bird Movement", "(" + String.valueOf(birdMovement.x) + " , " + String.valueOf(birdMovement.y) + ")");
+            player.movePosition(birdMovement.x, birdMovement.y);
+            setBackgroundMovement();
+
+        }else{
+            //--TEST--//
+            game.setScreen(new GameOverScreen());
         }
 
 
-        // bird movement
-        birdMovement = hud.gamepad.getButtonInputs();
-        //Gdx.app.log("Bird Movement", "(" + String.valueOf(birdMovement.x) + " , " + String.valueOf(birdMovement.y) + ")");
-        player.movePosition(birdMovement.x, birdMovement.y);
-        setBackgroundMovement();
+
         //gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
 
         /*if(hud.getShootStateBtn() == true) {
