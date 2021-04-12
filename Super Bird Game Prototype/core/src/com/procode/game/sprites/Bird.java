@@ -176,6 +176,7 @@ public class Bird implements Disposable {
                     switchAnimations(State.IDLE);
                 }
             }
+
             currentAnimation.updateFrame(deltaTime);
         }
 
@@ -289,7 +290,13 @@ public class Bird implements Disposable {
             timeVar = System.currentTimeMillis(); // update time var to current time value every time the bird gets damaged
             setInvincible(true);
             switchAnimations(State.DAMAGED);
+
+            //need to validate so that when updateHealthbar is updated
+            //it doesnt look for a negative image since images goes from
+            //0 to n numbers from the assests folder
+            if(this.healthCount != 0)
             this.healthCount--; //Nikko--turn this on when you are not debugging
+
             if(this.healthCount <= 0){
                 this.deadBird(hud);
             }
