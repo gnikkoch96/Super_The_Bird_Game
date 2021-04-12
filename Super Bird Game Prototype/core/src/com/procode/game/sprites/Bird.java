@@ -358,8 +358,7 @@ public class Bird implements Disposable {
                 BirdSpit spit = activeSpits.get(i);
                 if(spit.hitbox.isHit(enemy.hitbox) || enemy.hitbox.isHit(spit.hitbox)){
                     spit.setCollision(true);
-                    spitParticles.createParticle(spit.getPosition().x, spit.getPosition().y);
-    //                spitParticles.createParticle(enemy.getEnemyPosition().x + enemy.getEnemyPosition().x/2, enemy.getEnemyPosition().y + enemy.getEnemyPosition().y/2);
+                    spitParticles.createParticle(spit.getPosition().x + spit.getProjectileWidth(),spit.getPosition().y + spit.getProjectileHeight()/2);
                 }
             }
         }
