@@ -1,6 +1,7 @@
 package com.procode.game.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,8 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.screens.MiniSettingScreen;
+import com.procode.game.screens.PlayScreen;
+import com.procode.game.sprites.Bird;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
 
@@ -44,7 +49,6 @@ public class HUD implements Disposable {
     public HUD(SuperBirdGame game){
         score = 0;
         stage = new Stage(game.viewport, game.batch);
-
         Gdx.input.setInputProcessor(stage);
 
         // table is used for organizing the displays
@@ -97,13 +101,7 @@ public class HUD implements Disposable {
         stage.addActor(gamepad.downArrow);
         stage.addActor(gamepad.leftArrow);
         stage.addActor(gamepad.rightArrow);
-        stage.addActor(gamepad.upLeft);
-        stage.addActor(gamepad.upRight);
-        stage.addActor(gamepad.downLeft);
-        stage.addActor(gamepad.downRight);
         stage.addActor(gamepad.shootButton);
-
-        stage.addListener(gamepad.clickListener);
 
         //Display table to screen
         stage.addActor(scoreTable);
