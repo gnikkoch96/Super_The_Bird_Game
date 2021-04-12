@@ -36,8 +36,8 @@ public class Enemy implements Disposable {
         enemyAnimation = new Animation();
 
         //sets a random position off screen for x and random position y
-        position.y = (int) (Math.random() * SuperBirdGame.ANDROID_HEIGHT);
-        position.x = (int) (SuperBirdGame.ANDROID_WIDTH + ((Math.random() * 5) * enemyWidth));
+        position.y = (int) (Math.random() * SuperBirdGame.GAME_HEIGHT);
+        position.x = (int) (SuperBirdGame.GAME_WIDTH + ((Math.random() * 5) * enemyWidth));
     }
 
     // updates the enemy animation and position every frame
@@ -80,9 +80,9 @@ public class Enemy implements Disposable {
 
     // returns true when an enemy is on screen
     public boolean isOnScreen(){
-        if (((position.x + enemyWidth) < SuperBirdGame.ANDROID_WIDTH) &&
+        if (((position.x + enemyWidth) < SuperBirdGame.GAME_WIDTH) &&
                 ((position.x + enemyWidth) > 0) &&
-                ((position.y + enemyHeight) < SuperBirdGame.ANDROID_HEIGHT) &&
+                ((position.y + enemyHeight) < SuperBirdGame.GAME_HEIGHT) &&
                 ((position.y + enemyHeight) > 0)){
             return true;
         }

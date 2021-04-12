@@ -33,7 +33,7 @@ public class Projectile implements Pool.Poolable {
     }
 
     public boolean isOutOfScreen(){
-        if(this.position.x >= SuperBirdGame.ANDROID_WIDTH)
+        if(this.position.x >= SuperBirdGame.GAME_WIDTH)
             return true;
         else
             return false;

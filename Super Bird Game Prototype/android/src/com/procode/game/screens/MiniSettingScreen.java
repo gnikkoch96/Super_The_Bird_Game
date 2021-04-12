@@ -22,7 +22,6 @@ import com.procode.game.scenes.HUD;
 import com.procode.game.tools.ImageFunctions;
 import com.procode.game.tools.Volume;
 
-import javax.swing.plaf.nimbus.State;
 
 public class MiniSettingScreen{
 
