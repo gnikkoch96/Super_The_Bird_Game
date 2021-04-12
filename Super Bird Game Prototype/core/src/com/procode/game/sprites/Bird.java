@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -14,6 +15,7 @@ import com.procode.game.screens.SettingsScreen;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Enemy;
 import com.procode.game.tools.Hitbox;
+import com.procode.game.tools.ParticleEffectComponent;
 
 import java.lang.Math;
 import java.util.List;
@@ -44,7 +46,6 @@ public class Bird implements Disposable {
     private Vector2 hitboxBoundsOffset;
     private Vector2 hitboxPosOffset;
     private int healthCount;
-    private Vector2 velocity;
     public Hitbox hitbox;
 
     // audio related
@@ -53,14 +54,16 @@ public class Bird implements Disposable {
     private Sound deadSound, deadSoundSad;
 
     // projectiles (w/ memory management)
-    public final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
+    private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
     private final Pool<BirdSpit> spitPool;
+
+    // particles
+    private ParticleEffectComponent spitParticles;
 
     public Bird(int x, int y, int birdWidth, int birdHeight, final Camera gameCamera) {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
         position = new Vector2(x,y);
-
         isDead = false;
         isInvincible = false;
 
@@ -73,6 +76,8 @@ public class Bird implements Disposable {
                 return new BirdSpit(gameCamera);
             }
         };
+//        spitParticles = new ParticleEffectComponent("effects/liquid.p", "bird animations");
+        spitParticles = new ParticleEffectComponent("effects/spitimpact3.p", "bird animations");
         this.hitboxPosOffset = new Vector2((float) (x + (int)(BirdWidth/8)), (float) (y +  (this.BirdHeight/10)));
         this.hitboxBoundsOffset = new Vector2((int) (BirdWidth/3), ((int)(this.BirdHeight) - (this.BirdHeight/4)));
         hitbox = new Hitbox(this.hitboxPosOffset, (int) this.hitboxBoundsOffset.x, (int) this.hitboxBoundsOffset.y, gameCamera);
@@ -106,6 +111,9 @@ public class Bird implements Disposable {
     // gets each of the activeSpits
     public Array<BirdSpit> getActiveSpits(){ return this.activeSpits;}
 
+    // gets each of the activeParticles
+    public ParticleEffectComponent getSpitParticles(){return this.spitParticles;}
+
     // gets the current image of the bird
     public Texture getBirdImage(){return currentAnimation.getCurrImg();}
 
@@ -114,13 +122,12 @@ public class Bird implements Disposable {
         return this.position;
     }
 
-    //--Nikko: I used this to locate where the spits should be rendering from
+
     public static int getBirdWidth(){return BirdWidth;}
     public static int getBirdHeight(){return BirdHeight;}
 
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
-
         if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.GAME_WIDTH) {
             position.x += (newX);
         }
@@ -143,13 +150,10 @@ public class Bird implements Disposable {
 
     // updates the bird every frame
     public void update(float deltaTime){
-
         //this method captures the changes on the volume from the settings
         setVolume();
 
-
         if(currentAnimation.animationEnded == true){ // transitions from non-idle animation back to idle
-//            Gdx.app.log("Current Animation Status isEnded: ", String.valueOf(currentAnimation.animationEnded));
             currentAnimation.setAnimFinished();
             previousState = currentState;
 
@@ -162,9 +166,7 @@ public class Bird implements Disposable {
                     currentAnimation = invincibleIdleAnimation;
                 }
             }
-
             currentState = State.IDLE;
-
         }else{ // updates the idle animation
             setInvincible(false);
             if(!this.isInvincible){ // switch to non-invincible animations
@@ -177,28 +179,29 @@ public class Bird implements Disposable {
             currentAnimation.updateFrame(deltaTime);
         }
 
+        // updates bird hitbox
+        this.hitboxPosOffset.set((float) (position.x + (int)(BirdWidth/8)), (float) (position.y +  (this.BirdHeight / 10)));
+        this.hitbox.update(this.hitboxPosOffset);
+
+//        // particles
+//        spitParticles.update(deltaTime);
+
         // updates projectiles
         for(BirdSpit spit : activeSpits){
             spit.update(deltaTime);
         }
 
-        // updates bird hitbox
-        this.hitboxPosOffset.set((float) (position.x + (int)(BirdWidth/8)), (float) (position.y +  (this.BirdHeight / 10)));
-        this.hitbox.update(this.hitboxPosOffset);
         // manage spits that exit the screen
         for(BirdSpit spit: activeSpits){
             if(spit.isOutOfScreen() || spit.isCollided()){
                 spitPool.free(spit);
                 activeSpits.removeValue(spit, true);
             }
-
-//            if(spit.isOutOfScreen() || spit.getCollisionAnimation().animationEnded){
-//                spitPool.free(spit);
-//                activeSpits.removeValue(spit, true);
-//            }
         }
 
-        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitboxBoundsOffset.x + " , " + this.hitboxBoundsOffset.y);
+
+
+//        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitboxBoundsOffset.x + " , " + this.hitboxBoundsOffset.y);
     }
 
 
@@ -222,8 +225,6 @@ public class Bird implements Disposable {
             }
         }
     }
-
-
 
     public void switchAnimations(State playerState){
         switch(playerState){
@@ -255,18 +256,9 @@ public class Bird implements Disposable {
 
             // create spit
             BirdSpit item = spitPool.obtain();
-//            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
-//            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
             item.init(this.position.x + (int)(BirdWidth/1.5), this.position.y + (int)(BirdWidth/3.8)); //Nikko: change to this when the image has been adjusted
             activeSpits.add(item);
             Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
-
-//            BirdSpit item = new BirdSpit();
-////            item.init(this.position.x + item.projectileWidth, this.position.y + item.projectileHeight);
-//            item.init(this.position.x + BirdWidth, this.position.y + (BirdHeight/2)); //Nikko: change to this when the image has been adjusted
-//            activeSpits.add(item);
-//            Gdx.app.log("Spits Left:", String.valueOf(activeSpits.size));
-
         }
     }
 
@@ -297,7 +289,7 @@ public class Bird implements Disposable {
             timeVar = System.currentTimeMillis(); // update time var to current time value every time the bird gets damaged
             setInvincible(true);
             switchAnimations(State.DAMAGED);
-//            this.healthCount--; //Nikko--turn this on when you are not debugging
+            this.healthCount--; //Nikko--turn this on when you are not debugging
             if(this.healthCount <= 0){
                 this.deadBird(hud);
             }
@@ -361,10 +353,13 @@ public class Bird implements Disposable {
                 this.damageBird(hud);
             }
 
-            for (int i = 0; i < activeSpits.size; i++) {
-                if (activeSpits.get(i).hitbox.isHit(enemy.hitbox) ||
-                        enemy.hitbox.isHit(activeSpits.get(i).hitbox)) {
-                    activeSpits.get(i).setCollision(true);
+            // bird projectile and enemy collision
+            for (int i = 0; i < activeSpits.size; i++){
+                BirdSpit spit = activeSpits.get(i);
+                if(spit.hitbox.isHit(enemy.hitbox) || enemy.hitbox.isHit(spit.hitbox)){
+                    spit.setCollision(true);
+                    spitParticles.createParticle(spit.getPosition().x, spit.getPosition().y);
+    //                spitParticles.createParticle(enemy.getEnemyPosition().x + enemy.getEnemyPosition().x/2, enemy.getEnemyPosition().y + enemy.getEnemyPosition().y/2);
                 }
             }
         }

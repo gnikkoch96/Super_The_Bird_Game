@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -21,6 +22,7 @@ import com.procode.game.tools.Enemy;
 import com.procode.game.sprites.BirdSpit;
 import com.procode.game.tools.Gamepad;
 import com.procode.game.tools.ImageFunctions;
+import com.procode.game.tools.ParticleEffectComponent;
 import com.procode.game.tools.Spawner;
 
 
@@ -49,6 +51,8 @@ public class PlayScreen implements Screen {
     public static boolean rapidFireSpit = false;
 
     public Array<BirdSpit> activeSpits;
+    public Array<ParticleEffectComponent> activeParticles;
+
     public static String changeBackground = "orange";
 
 
@@ -155,7 +159,7 @@ public class PlayScreen implements Screen {
 //            enemyBird.reSpawn();
 //        }
 
-        enemySpawner.updateSpawner(dt, player.hitbox, player.activeSpits);
+        enemySpawner.updateSpawner(dt, player.hitbox, player.getActiveSpits());
     }
 
     public void setBackgroundMovement(){
@@ -183,6 +187,7 @@ public class PlayScreen implements Screen {
     public void play(float delta){
         currTime += delta;
         update(currTime);
+
         //game.batch.draw(background, 0, 0);
 
         hud.settingScreen.setContainerVisible(false);
@@ -213,6 +218,12 @@ public class PlayScreen implements Screen {
 
             game.batch.draw(currEnemyImg,enemyPos.x, enemyPos.y);
         }
+
+        // render particles if any
+        player.getSpitParticles().update(delta); // has to be placed in render for it to work (Nikko: Not sure why)
+        player.getSpitParticles().renderParticles(game.batch);
+        game.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); // related to particles
+
     }
 
 
@@ -230,9 +241,6 @@ public class PlayScreen implements Screen {
         // main render
         game.batch.setProjectionMatrix(game.camera.combined);      //--Mess with this by comparing with and without this line of code--//
         game.batch.begin();
-        //game.batch.draw(background, 0, 0);
-
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         switch(state){ // pauses or resumes the game
             case GAME_PLAY:
@@ -243,15 +251,16 @@ public class PlayScreen implements Screen {
                 break;
         }
 
-//        game.batch.draw(enemy.getBirdImage(), enemy.getPosition().x, enemy.getPosition().y);
-
         // render projectiles
         for(BirdSpit spits: activeSpits){
             spits.render(game.batch);
-            BirdSpit.collisionParticle.draw(game.batch, delta);
         }
 
+        // render player
         game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+
+
+
         game.batch.end();
 
         //--DEBUGGING--//
