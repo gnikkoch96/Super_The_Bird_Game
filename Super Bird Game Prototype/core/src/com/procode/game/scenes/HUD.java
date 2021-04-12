@@ -49,6 +49,7 @@ public class HUD implements Disposable {
     public HUD(SuperBirdGame game){
         score = 0;
         stage = new Stage(game.viewport, game.batch);
+
         Gdx.input.setInputProcessor(stage);
 
         // table is used for organizing the displays
@@ -101,7 +102,13 @@ public class HUD implements Disposable {
         stage.addActor(gamepad.downArrow);
         stage.addActor(gamepad.leftArrow);
         stage.addActor(gamepad.rightArrow);
+        stage.addActor(gamepad.upLeft);
+        stage.addActor(gamepad.upRight);
+        stage.addActor(gamepad.downLeft);
+        stage.addActor(gamepad.downRight);
         stage.addActor(gamepad.shootButton);
+
+        stage.addListener(gamepad.clickListener);
 
         //Display table to screen
         stage.addActor(scoreTable);
