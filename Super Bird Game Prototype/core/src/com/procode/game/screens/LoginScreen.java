@@ -2,9 +2,6 @@ package com.procode.game.screens;
 
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,8 +30,6 @@ import com.procode.game.SuperBirdGame;
 import com.procode.game.sprites.Background;
 import com.procode.game.tools.ImageFunctions;
 
-import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
-
 
 public class LoginScreen extends ApplicationAdapter implements Screen {
 
@@ -48,8 +43,6 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private Label txtUserName, txtPassword;
-    private SpriteBatch batch;
-    private Viewport viewport;
     private Texture background;
     private TextField.TextFieldStyle txtFieldStyle;
     private Label.LabelStyle labelStyle;
@@ -62,13 +55,12 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     public LoginScreen(SuperBirdGame g){
         game = g;
 
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
+        stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         //atlas = new TextureAtlas("font-export.fnt");
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
 
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -93,13 +85,13 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         //=======Background stuff ===================
         bg = new Background();
 
-        moveHills_x = game.ANDROID_WIDTH;
-        moveMountain_x = game.ANDROID_WIDTH - 50;
-        moveClouds_x = game.ANDROID_WIDTH;
+        moveHills_x = game.GAME_WIDTH;
+        moveMountain_x = game.GAME_WIDTH - 50;
+        moveClouds_x = game.GAME_WIDTH;
 
         //========Setting the sizes of the containers ===================
-        float sw = SuperBirdGame.ANDROID_WIDTH;
-        float sh = SuperBirdGame.ANDROID_HEIGHT;
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
 
         float cw = sw * 0.7f;
         float ch = sh * 0.6f;
@@ -121,26 +113,17 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         //=========This is the label for user name============
         txtUserName = new Label("Enter Username",labelStyle);
         txtUserName.setAlignment(Align.center);
-        //txtUserName.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) + 150 );
-        txtUserName.setSize(300,300);
 
         //=========Text field for the user name================
         userName = new TextField("", txtFieldStyle);
-        //userName.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
-        //userName.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2));
-
-
-       // stage.addActor(txtUserName);
-        //set the actor UserName
-        //.addActor(userName);
 
         //Adding the label and the text field in the table
         table.row().colspan(3).expandX().fillX();
         table.row().colspan(3).expandX().fillX();
         table.row().colspan(3).expandX().fillX();
-        table.add(txtUserName).fillX().width((float)game.ANDROID_WIDTH/2);
+        table.add(txtUserName).fillX().width((float)game.GAME_WIDTH/2);
         table.row().colspan(3).expandX().fillX();
-        table.add(userName).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+        table.add(userName).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
         //adding the table into the container
         tableContainer.setActor(table);
@@ -151,25 +134,17 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     public void userPassword(){
         txtPassword = new Label("Enter Password",labelStyle);
         txtPassword.setAlignment(Align.center);
-       // txtPassword.setPosition(game.ANDROID_WIDTH/2 - 500,(game.ANDROID_HEIGHT/2) - 200 );
-     //   txtPassword.setSize(300,300);
+
 
         //=========Text field for the user password =============
         password = new TextField("", txtFieldStyle);
         password.setPasswordCharacter('*');
-     //   password.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 350);
         password.setPasswordMode(true);
-    //    password.setSize(game.ANDROID_HEIGHT,game.ANDROID_HEIGHT/6);
-
-        //then send the password into the stage
-       // stage.addActor(txtPassword);
-       // stage.addActor(password);
-
         //Adding the label and the text field in the table
         table.row().colspan(3).expandX().fillX();
-        table.add(txtPassword).fillX().width((float)game.ANDROID_WIDTH/2);
+        table.add(txtPassword).fillX().width((float)game.GAME_WIDTH/2);
         table.row().colspan(3).expandX().fillX();
-        table.add(password).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+        table.add(password).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
         //adding the table into the container
         tableContainer.setActor(table);
@@ -187,9 +162,6 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         btnLogin = new TextButton("Log In", style_button);
         skin.add("fonts", font);
         //set the position and size of the button
-       // btnLogin.setPosition(game.ANDROID_WIDTH/2 - (game.ANDROID_HEIGHT/2),(game.ANDROID_HEIGHT/2) - 550);
-       // btnLogin.setSize(400,200);
-
         //set the listener for log in button
         btnLogin.addListener(new ClickListener(){
             @Override
@@ -202,7 +174,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         btnSignUp = new TextButton("Sign Up", style_button);;
 
         //set the position and size of the button
-        //btnSignUp.setPosition((game.ANDROID_WIDTH/2) + 300,(game.ANDROID_HEIGHT/2) - 550);
+        //btnSignUp.setPosition((game.GAME_WIDTH/2) + 300,GAME/2) - 550);
         //btnSignUp.setSize(400,200);
 
         //set the listener for SignUp button
@@ -219,8 +191,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         table.add(buttonTable);
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnLogin).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
-        buttonTable.add(btnSignUp).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnLogin).width(((float)game.GAME_WIDTH)/5.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnSignUp).width(((float)game.GAME_WIDTH)/5.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
         //stage.addActor(btnLogin);
         //stage.addActor(btnSignUp);
     }
@@ -247,26 +219,26 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     }
 
     public void upDate(){
-        if(moveHills_x > -(game.ANDROID_WIDTH/4))
+        if(moveHills_x > -(game.GAME_WIDTH /4))
             moveHills_x -= 5;
         else
-            moveHills_x = game.ANDROID_WIDTH;
+            moveHills_x = game.GAME_WIDTH;
 
-        if(moveClouds_x > -(game.ANDROID_WIDTH/2))
+        if(moveClouds_x > -(game.GAME_WIDTH /2))
             moveClouds_x -= 5;
         else
-            moveClouds_x = game.ANDROID_WIDTH;
+            moveClouds_x = game.GAME_WIDTH;
 
-        if(moveMountain_x > -(game.ANDROID_WIDTH))
+        if(moveMountain_x > -(game.GAME_WIDTH))
             moveMountain_x -= 5;
         else
-            moveMountain_x = game.ANDROID_WIDTH;
+            moveMountain_x = game.GAME_WIDTH;
 
     }
 
     @Override
     public void render(float delta){
-        Gdx.gl.glClearColor(0,1,1,0);
+        Gdx.gl.glClearColor(255/255f, 127/255f, 39/255f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         upDate();
@@ -284,7 +256,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     }
 
     public void resize(int width, int height){
-
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
     }
 
     public void pause(){
@@ -308,7 +281,6 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         stage.dispose();
         atlas.dispose();
         font.dispose();
-        batch.dispose();
         skin.dispose();
     }
 

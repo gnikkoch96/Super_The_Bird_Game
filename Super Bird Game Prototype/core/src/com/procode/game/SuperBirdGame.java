@@ -1,27 +1,34 @@
 package com.procode.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.procode.game.screens.LoadingScreen;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.procode.game.screens.LoginScreen;
+import com.procode.game.screens.PlayScreen;
+import com.procode.game.screens.Scoreboard;
+import com.procode.game.screens.SettingsScreen;
 import com.procode.game.screens.PlayScreen;
 import com.procode.game.screens.SplashScreen;
 
 public class SuperBirdGame extends Game {
-	public static final int DESKTOP_WIDTH = 2712;
-	public static final int DESKTOP_HEIGHT = 1440;
 	public static final String DESKTOP_TITLE = "Super Bird Game";
+	public static int DESKTOP_WIDTH = 1920;
+	public static int DESKTOP_HEIGHT = 1080;
+
+	public static int GAME_WIDTH = 1920;
+	public static int GAME_HEIGHT = 1080;
+
+	public static OrthographicCamera camera;
+	public static Viewport viewport;
+	public static float aspectRatio;
+
 	public SpriteBatch batch;
 
-	// android configurations
-	public static int ANDROID_WIDTH, ANDROID_HEIGHT;
-	public static int num;															// nikko: what does this do?
-
-	// collision bits (used to manage the collision detections)
-	public static final short BIRD_BIT = 2;
-	public static final short ENEMY_BIT = 4;
-	public static final short BIRDSPIT_BIT = 8;
 
 	/* WARNING Using AssetManager in a static way can cause issues, especially on Android.
 	Instead you may want to pass around Assetmanager to those the classes that need it.
@@ -29,16 +36,18 @@ public class SuperBirdGame extends Game {
 	public static AssetManager manager;
 
 	public SuperBirdGame(){}
-	public SuperBirdGame(int width, int height){
-		this.ANDROID_WIDTH = width;
-		this.ANDROID_HEIGHT = height;
-		System.out.println("width: " + width);
-		System.out.println("height: " + height);
-	}
 
 	@Override
 	public void create () {
+		camera = new OrthographicCamera();
+		camera.position.set(GAME_WIDTH/2, GAME_HEIGHT/2, 0);
+
+		aspectRatio = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
+		viewport = new FillViewport(GAME_WIDTH * aspectRatio, GAME_HEIGHT, camera);
+		viewport.apply();
+
 		batch = new SpriteBatch();
+		batch.setProjectionMatrix(camera.combined);
 
 		// asset manager stuff
 		manager = new AssetManager();
@@ -47,10 +56,17 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/bird_dead_sad.wav", Sound.class);
 		manager.load("audio/sound/bird_scream_loud.wav", Sound.class);
 		manager.load("audio/sound/bird_scream_normal.wav", Sound.class);
+		manager.load("audio/sound/spitCollision.mp3", Sound.class);
 		manager.finishLoading();
 
-		this.setScreen(new SplashScreen(this));
+//		this.setScreen(new SplashScreen(this));
+		this.setScreen(new PlayScreen(this));
+	}
 
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		camera.position.set(GAME_WIDTH/2, GAME_HEIGHT/2, 0);
 	}
 
 	@Override

@@ -29,20 +29,13 @@ public class SplashScreen implements Screen {
 
     @Override
     public void show() {
-
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-
         splashtexture = new Texture(Gdx.files.internal("screen icons/procode.png"));
         splashtexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         splashimage = new Image(splashtexture);
-        splashimage.setSize(game.ANDROID_WIDTH,game.ANDROID_HEIGHT);
+        splashimage.setSize(game.GAME_WIDTH,game.GAME_HEIGHT);
 
-        OrthographicCamera camera = new OrthographicCamera(game.ANDROID_WIDTH, game.ANDROID_HEIGHT);
-        camera.position.x = (float) game.ANDROID_WIDTH/2;
-        camera.position.y = (float) game.ANDROID_HEIGHT/2;
-
-        splashstage = new Stage(viewport,game.batch);
+        splashstage = new Stage(game.viewport,game.batch);
         splashstage.addActor(splashimage);
 
         splashimage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.fadeIn(0.25F),Actions.delay(0.25F), Actions.fadeOut(1F)));
@@ -71,7 +64,8 @@ public class SplashScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        splashstage.getViewport().update(width,height,true);
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
     }
 
     @Override

@@ -29,7 +29,6 @@ import java.util.HashMap;
 public class ConfirmationScreen implements Screen {
     private SuperBirdGame game;
     private Stage stage;
-    private Viewport viewport;
     private Skin skin;
     private Texture background;
     private BitmapFont font;
@@ -39,16 +38,15 @@ public class ConfirmationScreen implements Screen {
 
     public ConfirmationScreen(SuperBirdGame g, HashMap<String,String> map){
         game = g;
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
+        stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         //atlas = new TextureAtlas("font-export.fnt");
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
 
         Container<Table> tableContainer = new Container<Table>();
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
@@ -58,8 +56,8 @@ public class ConfirmationScreen implements Screen {
         font = fontGenerator.generateFont(fontParameter);
 
 
-        float sw = SuperBirdGame.ANDROID_WIDTH;
-        float sh = SuperBirdGame.ANDROID_HEIGHT;
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
 
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
@@ -73,7 +71,7 @@ public class ConfirmationScreen implements Screen {
         labelStyle = skin.get(Label.LabelStyle.class);
         labelStyle.font = font;
 
-        Label topLabel = new Label("Congratulations your account has been verified", labelStyle);
+        Label topLabel = new Label("Congratulations account has been verified", labelStyle);
 
         topLabel.setAlignment(Align.center);
         Label name = new Label("Name: " + map.remove("name"),labelStyle);
@@ -132,7 +130,7 @@ public class ConfirmationScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,1,1,0);
+        Gdx.gl.glClearColor(255/255f, 127/255f, 39/255f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.batch.begin();
@@ -147,7 +145,8 @@ public class ConfirmationScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
     }
 
     @Override

@@ -140,6 +140,9 @@ public class Database {
                 });
     }
 
+    public void upDateScore(int score){
+        
+    }
     /*public void upDateScore(int score){
         rootRef.child("Users").child(this.username).child(this.score).setValue(score)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

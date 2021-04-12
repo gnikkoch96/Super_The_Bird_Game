@@ -46,8 +46,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private Label txtUserName, txtPassword, message, txtFullName, txtEmail;
-    private SpriteBatch batch;
-    private Viewport viewport;
     private Texture background;
     private TextField.TextFieldStyle txtFieldStyle;
     private Label.LabelStyle labelStyle;
@@ -61,13 +59,12 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     public RegisterScreen(SuperBirdGame g){
         game = g;
 
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
+        stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         //atlas = new TextureAtlas("font-export.fnt");
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
 
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -94,8 +91,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         style_button.font = font;
 
         //========Setting the sizes of the containers ===================
-        float sw = SuperBirdGame.ANDROID_WIDTH;
-        float sh = SuperBirdGame.ANDROID_HEIGHT;
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
 
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
@@ -171,9 +168,9 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
 
         Table buttonTable = new Table(skin);
-        fullNameTable.add(txtFullName).fillX().width((float)game.ANDROID_WIDTH/2);
+        fullNameTable.add(txtFullName).fillX().width((float)game.GAME_WIDTH/2);
         fullNameTable.row().colspan(3).expandX().fillX();
-        fullNameTable.add(fullName).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+        fullNameTable.add(fullName).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
 
         fullNameTable.row().colspan(3).expandX().fillX();
@@ -181,8 +178,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
         //adding the table into the container
      //   tableContainer.setActor(table);
@@ -221,17 +218,17 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         //Adding the label and the text field in the table
         emailTable.row().colspan(3).expandX().fillX();
-        emailTable.add(txtEmail).fillX().width((float)game.ANDROID_WIDTH/2);
+        emailTable.add(txtEmail).fillX().width((float)game.GAME_WIDTH/2);
         emailTable.row().colspan(3).expandX().fillX();
-        emailTable.add(email).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+        emailTable.add(email).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
         emailTable.row().colspan(3).expandX().fillX();
         emailTable.add(buttonTable);
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
         //adding the table into the container
         tableContainer3.setActor(emailTable);
@@ -250,9 +247,9 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         System.out.println(username_input);
 
         userNameTable.row().colspan(3).expandX().fillX();
-        userNameTable.add(txtUserName).fillX().width((float)game.ANDROID_WIDTH/2);
+        userNameTable.add(txtUserName).fillX().width((float)game.GAME_WIDTH/2);
         userNameTable.row().colspan(3).expandX().fillX();
-        userNameTable.add(userName).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+        userNameTable.add(userName).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
 
         TextButton btnNext = new TextButton("Next", style_button);
@@ -284,8 +281,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
 
 
@@ -304,7 +301,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         if(username_input.length() >= 0 && username_input.length() < 6){
             if(message == null) {
                 message = new Label("Username should be atleast 6 characters", ls);
-                message.setPosition(game.ANDROID_WIDTH / 2 - (game.ANDROID_HEIGHT / 2), (game.ANDROID_HEIGHT / 2) - 400);
+                message.setPosition(game.GAME_WIDTH / 2 - (game.GAME_HEIGHT / 2), (game.GAME_HEIGHT / 2) - 400);
                 message.setSize(300, 300);
                 message.setVisible(true);
                 stage.addActor(message);
@@ -336,9 +333,9 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         //Adding the label and the text field in the table
         passwordTable.row().colspan(3).expandX().fillX();
-        passwordTable.add(txtPassword).fillX().width((float)game.ANDROID_WIDTH/2);
+        passwordTable.add(txtPassword).fillX().width((float)game.GAME_WIDTH/2);
         passwordTable.row().colspan(3).expandX().fillX();
-        passwordTable.add(password).fillX().width((float)game.ANDROID_WIDTH/2).height((float)game.ANDROID_HEIGHT/6);
+        passwordTable.add(password).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
         //=================Next button =====================
 
@@ -369,8 +366,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).spaceRight((float)game.ANDROID_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.ANDROID_WIDTH)/6.0f).height(((float)game.ANDROID_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
         tableContainer1.setVisible(false);
         tableContainer1.setActor(passwordTable);
@@ -428,18 +425,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             tableContainer0.setVisible(false);
             tableContainer1.setVisible(true);
 
-         //   userNameTable.setVisible(false);
-         //   txtUserName.setVisible(false);
-           // userName.setVisible(false);
-          //  passwordTable.setVisible(true);
-           // txtPassword.setVisible(true);
-          //  password.setVisible(true);
-          //  btnBack.setVisible(true);
-           // if (message != null)
-          //      message.setVisible(false);
-            //game.setScreen(new PlayScreen(game));
 
-            //}else if(validateAccount() == true && password.isVisible() == true){
         }else if(validateAccount() == true && passwordTable.isVisible() == true) {
             passwordTable.setVisible(false);
             txtPassword.setVisible(false);
@@ -449,8 +435,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             txtFullName.setVisible(true);
             btnBack.setVisible(true);
 
-
-            //}else if(validateAccount() == true && fullName.isVisible() == true){
         }else if(validateAccount() == true && fullNameTable.isVisible() == true){
             fullNameTable.setVisible(false);
             txtFullName.setVisible(false);
@@ -528,7 +512,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
     @Override
     public void render(float delta){
-        Gdx.gl.glClearColor(0,1,1,0);
+        Gdx.gl.glClearColor(255/255f, 127/255f, 39/255f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //buttons();
@@ -549,7 +533,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     }
 
     public void resize(int width, int height){
-
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
     }
 
     public void pause(){
@@ -573,7 +558,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         stage.dispose();
         atlas.dispose();
         font.dispose();
-        batch.dispose();
         skin.dispose();
     }
 

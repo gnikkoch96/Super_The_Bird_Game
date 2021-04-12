@@ -1,6 +1,5 @@
 package com.procode.game.tools;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
@@ -85,13 +84,15 @@ public class Animation {
     public void setAnimationEnded(boolean var){this.animationEnded = var;} // used to fix the transition issue
     public Texture getCurrImg(){return anim.get(currFrame);} // returns the current frame for the image
     public boolean isAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
-    public boolean getIsLoop(){return this.isLoop;} // used to differentiate between looped animation and non-loop
-    public void setIsLoop(boolean loop){this.isLoop = false;}; // set the loop
     public void setAnimFinished(){this.animationEnded = false; this.timeFrameUpdated = 0; currFrame = 0;};
     public void dispose(){
         for(Texture texture : anim){
             texture.dispose();
         }
     }
+    public void replayLoop(){
+            currFrame = 0;
+            animationEnded = false;
+    } // if you want to play an animation again, it will reset the animation
 }
 

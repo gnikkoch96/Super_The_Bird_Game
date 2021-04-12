@@ -27,7 +27,6 @@ import com.procode.game.tools.ImageFunctions;
 public class HomeScreen implements Screen {
     private SuperBirdGame game;
     private Stage stage;
-    private Viewport viewport;
     private Skin skin;
     private Texture background;
     private BitmapFont font;
@@ -44,17 +43,16 @@ public class HomeScreen implements Screen {
 
     public HomeScreen(SuperBirdGame g) {
         game = g;
-        viewport = new FitViewport(SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, game.batch);
+        stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
         Skin skin = new Skin(Gdx.files.internal("comic-ui.json"));
         Container<Table> tableContainer = new Container<Table>();
-        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.ANDROID_WIDTH, SuperBirdGame.ANDROID_HEIGHT);
+        background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
 
-        buttonSize = game.ANDROID_HEIGHT / 5;
+        buttonSize = game.GAME_HEIGHT / 5;
 
 
         font = new BitmapFont();
@@ -68,8 +66,8 @@ public class HomeScreen implements Screen {
         fly =0;
         moveUp = true;
 
-        float sw = SuperBirdGame.ANDROID_WIDTH;
-        float sh = SuperBirdGame.ANDROID_HEIGHT;
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
 
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
@@ -127,9 +125,9 @@ public class HomeScreen implements Screen {
         tableContainer.setActor(table);
         stage.addActor(tableContainer);
 
-        int birdWidth = game.ANDROID_WIDTH/5;
-        int birdHeight = game.ANDROID_HEIGHT/5;
-        bird = new Bird(50, 100, birdWidth, birdHeight);
+        int birdWidth = game.GAME_WIDTH /5;
+        int birdHeight = game.GAME_HEIGHT /5;
+        bird = new Bird(50, 100, birdWidth, birdHeight, null);
 
 
         btnPlay.addListener(new ClickListener() {
@@ -146,6 +144,13 @@ public class HomeScreen implements Screen {
                 game.setScreen(new Scoreboard(game));
             }
         });
+
+        btnOption.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(new SettingsScreen(game));
+            }
+        });
     }
 
     @Override
@@ -157,9 +162,9 @@ public class HomeScreen implements Screen {
         // bird movement
         bird.update(dt);   //Updates the Animation Frame
 
-        if(fly != game.ANDROID_HEIGHT && moveUp == true){
+        if(fly != game.GAME_HEIGHT && moveUp == true){
             fly += 5;
-            if(fly == game.ANDROID_HEIGHT)
+            if(fly == game.GAME_HEIGHT)
             moveUp =false;
         }else{
             fly -= 5;
@@ -170,7 +175,7 @@ public class HomeScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 1, 1, 0);
+        Gdx.gl.glClearColor(255/255f, 127/255f, 39/255f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         currTime += delta;
         update(currTime);
@@ -188,7 +193,8 @@ public class HomeScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        game.viewport.update(width, height);
+        game.camera.position.set(game.GAME_WIDTH/2, game.GAME_HEIGHT/2, 0);
     }
 
     @Override
