@@ -111,7 +111,7 @@ public class HUD implements Disposable {
         stage.addListener(gamepad.clickListener);
 
         //Display table to screen
-        stage.addActor(scoreTable);
+//        stage.addActor(scoreTable);
         stage.addActor(leftTable);
 
         //set up the mini settings for the PlayScreen
@@ -122,8 +122,7 @@ public class HUD implements Disposable {
         //Display table to screen
         stage.addActor(settingScreen.getActor());
         stage.addActor(settingScreen.getSettingsActor());
-        stage.addActor(scoreTable);
-        stage.addActor(leftTable);
+
     }
     public void setPauseBtn(){
         pauseBtn.addListener(new ClickListener(){

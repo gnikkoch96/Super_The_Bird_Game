@@ -24,6 +24,8 @@ public class Projectile implements Pool.Poolable {
     public boolean isCollided(){return this.collided;}
 
     // getters and setters
+    public int getProjectileWidth(){return this.projectileWidth;}
+    public int getProjectileHeight(){return this.projectileHeight;}
     public Vector2 getPosition() {
         return this.position;
     }
