@@ -156,28 +156,37 @@ public class Bird implements Disposable {
         if(currentAnimation.animationEnded == true){ // transitions from non-idle animation back to idle
             currentAnimation.setAnimFinished();
             previousState = currentState;
+            //keep running if state is not dead
+            if(currentState != State.DEAD) {
 
-            if(!this.isInvincible){
-                switchAnimations(State.IDLE);
-            }else{ // is currently invincible
-                if(previousState == State.SHOOT){
-                    currentAnimation = invincibleShootAnimation;
-                }else{
-                    currentAnimation = invincibleIdleAnimation;
-                }
-            }
-            currentState = State.IDLE;
-        }else{ // updates the idle animation
-            setInvincible(false);
-            if(!this.isInvincible){ // switch to non-invincible animations
-                if(currentState == State.SHOOT){
-                    switchAnimations(State.SHOOT);
-                }else if(currentState == State.IDLE){
+                if (!this.isInvincible) {
                     switchAnimations(State.IDLE);
+                } else { // is currently invincible
+                    if (previousState == State.SHOOT) {
+                        currentAnimation = invincibleShootAnimation;
+                    } else {
+                        currentAnimation = invincibleIdleAnimation;
+                    }
                 }
-            }
 
+                currentState = State.IDLE;
+            }
+        }else{ // updates the idle animation
+
+                setInvincible(false);
+                if (!this.isInvincible) { // switch to non-invincible animations
+                    if (currentState == State.SHOOT) {
+                        switchAnimations(State.SHOOT);
+                    } else if (currentState == State.IDLE) {
+                        switchAnimations(State.IDLE);
+                    }
+                }
+            //stops the dead animation from updating after reaching the final frame
+           if(currentState != State.DEAD)
             currentAnimation.updateFrame(deltaTime);
+           else
+               if(currentAnimation.getCurrFrameIndex() != 6)
+                   currentAnimation.updateFrame(deltaTime);
         }
 
         // updates bird hitbox
@@ -277,7 +286,7 @@ public class Bird implements Disposable {
     }
 
     public void damageBird(HUD hud){
-        if(!this.isInvincible){ // bird can only get damaged when it isn't invincible
+        if(!this.isInvincible && currentState != State.DEAD){ // bird can only get damaged when it isn't invincible
             previousState = currentState;
             currentState = State.DAMAGED;
 
@@ -297,8 +306,9 @@ public class Bird implements Disposable {
             if(this.healthCount != 0)
             this.healthCount--; //Nikko--turn this on when you are not debugging
 
-            if(this.healthCount <= 0){
+            if(this.healthCount == 0){
                 this.deadBird(hud);
+                currentState = State.DEAD;
             }
             hud.updateHealthBar(this.healthCount);
         }
