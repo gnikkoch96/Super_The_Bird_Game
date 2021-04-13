@@ -370,6 +370,16 @@ public class Bird implements Disposable {
                 this.damageBird(hud);
             }
 
+            if(enemy instanceof MechaBird){
+                Array<MechaLaser> activeShots = ((MechaBird)(enemy)).activeShots;
+                for (MechaLaser laser : activeShots) {
+                    if (this.hitbox.isHit(laser.hitbox) || laser.hitbox.isHit(this.hitbox)) {
+//                          Gdx.app.log("PLAYER->ENEMY", "HIT");
+                        this.damageBird(hud);
+                    }
+                }
+            }
+
             // bird projectile and enemy collision
             for (int i = 0; i < activeSpits.size; i++){
                 BirdSpit spit = activeSpits.get(i);
