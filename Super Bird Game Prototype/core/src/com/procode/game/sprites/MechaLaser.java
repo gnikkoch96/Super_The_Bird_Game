@@ -18,7 +18,7 @@ public class MechaLaser extends Projectile implements Disposable {
     public MechaLaser(Camera gameCamera){
         //--Nikko: The width and height can be changed
         this.projectileWidth = SuperBirdGame.GAME_WIDTH / 10;
-        this.projectileHeight = SuperBirdGame.GAME_HEIGHT / 25;
+        this.projectileHeight = SuperBirdGame.GAME_HEIGHT / 15;
         this.position = new Vector2(); // x and y are initialized in the init()
         this.velocity = -20; //--Nikko: try changing speed (to fix the bird catching up to spit, make this equation include the speed of the bird)
         this.collided = false;
