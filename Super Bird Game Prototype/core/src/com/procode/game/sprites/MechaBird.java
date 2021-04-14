@@ -1,5 +1,6 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -36,6 +37,9 @@ public class MechaBird extends Enemy {
     private boolean spinFinished;
     private Vector2 originalPos;
 
+    // sounds
+    private float volume;
+    private Sound deadSound;
 
 
     public MechaBird(int mechaBWidth, int mechaBHeight, float speed, Camera gameCamera){
@@ -109,6 +113,9 @@ public class MechaBird extends Enemy {
         super.hitboxPosOffset = new Vector2(super.enemyWidth / 6, super.enemyHeight / 8 );
         super.hitboxBoundsOffset = new Vector2((int) (super.enemyWidth/ 1.5), ((int)(super.enemyHeight) - (super.enemyHeight/3)));
         super.hitbox = new Hitbox(new Vector2((int)(super.position.x + super.hitboxPosOffset.x), (int)(super.position.y + super.hitboxPosOffset.y)), (int) super.hitboxBoundsOffset.x, (int) super.hitboxBoundsOffset.y, gameCamera);
+
+        // sounds
+        deadSound = SuperBirdGame.manager.get("audio/sound/mecha_dead.wav", Sound.class);
 
         // now do the following: move the mecha bird until it reaches the screen visually, (is on the screen)
         // idle animation will play until this position is reached.
@@ -336,7 +343,8 @@ public class MechaBird extends Enemy {
                 }
             }
         }
-        else if (super.currentState == State.DEAD) {
+        else if (super.currentState == State.DEAD) { // mecha bird dies
+            deadSound.play();
 
             // resize hitbox to fit the attack
             super.hitbox.resize((int) (hitboxBoundsOffset.x * 1.5), (int) (hitboxBoundsOffset.y * 1.5));

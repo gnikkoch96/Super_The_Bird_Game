@@ -56,7 +56,8 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/bird_dead_sad.wav", Sound.class);
 		manager.load("audio/sound/bird_scream_loud.wav", Sound.class);
 		manager.load("audio/sound/bird_scream_normal.wav", Sound.class);
-		manager.load("audio/sound/spitCollision.mp3", Sound.class);
+//		manager.load("audio/sound/spitCollision.mp3", Sound.class);
+		manager.load("audio/sound/mecha_dead.wav", Sound.class);
 		manager.finishLoading();
 
 //		this.setScreen(new SplashScreen(this));

@@ -157,7 +157,6 @@ public class Bird implements Disposable {
             previousState = currentState;
             //keep running if state is not dead
             if(currentState != State.DEAD) {
-
                 if (!this.isInvincible) {
                     switchAnimations(State.IDLE);
                 } else { // is currently invincible
