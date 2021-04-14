@@ -26,7 +26,7 @@ public class User {
 
     public void InsertDataToDatabase(){
         //create new object of database
-        Database data = new Database(username, password, email, birthday, fullName);
+        Database data = new Database(username, password, email, fullName);
         //insert data to the database
         data.insertData();
     }
@@ -35,7 +35,6 @@ public class User {
         return "UserName: " + username + "\n" +
                 "Password: " + password + "\n" +
                 "FullName: " + fullName + "\n" +
-                "Email: " + email + "\n" +
-                "Birthday: " + birthday + "\n";
+                "Email: " + email + "\n";
     }
 }

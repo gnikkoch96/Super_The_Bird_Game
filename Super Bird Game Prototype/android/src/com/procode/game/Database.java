@@ -18,24 +18,24 @@ public class Database {
     private final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private final HashMap<String,Object> userdataMap = new HashMap<>();
 
-    private String username, password, email, birthday, fullName;
+    private String username, password, email, fullName;
 
-    public Database(String username, String password, String email, String birthday, String fullname){
+    public Database(String username, String password, String email, String fullname){
         this.username = username;
         this.password = password;
         this.email = email;
         this.fullName = fullname;
-        this.birthday = birthday;
     }
 
     //this class will insert the data to the database including the username, password,
     //email, birthday and fullName
+    //only use this one for New Users registering a new account
     public void insertData(){
         userdataMap.put("username", this.username);
         userdataMap.put("password", this.password);
         userdataMap.put("email", this.email);
         userdataMap.put("name", this.fullName);
-        userdataMap.put("birthday", this.birthday);
+        userdataMap.put("scoreboard", 0);
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -114,18 +114,7 @@ public class Database {
                 });
     }
 
-    //update the birthday from the database
-    public void upDateBirthday(String birthday){
-        rootRef.child("Users").child(this.username).child(this.birthday).setValue(birthday)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
 
-                        }
-                    }
-                });
-    }
 
     //update the fullname from the database
     public void upDateFullName(String fullname){

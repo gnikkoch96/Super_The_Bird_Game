@@ -404,7 +404,12 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             tableContainer2.setVisible(false);
             tableContainer3.setVisible(true);
         }else if(state.equals("Email")){
-            game.setScreen(new ConfirmationScreen(game, new HashMap<String, String>()));
+            HashMap<String,String> map = new HashMap<String,String>();
+            map.put("name", fullName.getText());
+            map.put("username", userName.getText());
+            map.put("password", password.getText());
+            map.put("email", email.getText());
+            game.setScreen(new ConfirmationScreen(game, map));
         }
 
     }
@@ -450,6 +455,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             map.put("username", userName.getText());
             map.put("password", password.getText());
             map.put("email", email.getText());
+            System.out.println("olla" + email.getText());
             game.setScreen(new ConfirmationScreen(game, map));
         }
         //game.setScreen(new PlayScreen(game));
