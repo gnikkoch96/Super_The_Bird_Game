@@ -191,7 +191,7 @@ public class SettingsScreen implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 // btnSignUpClicked();
-
+                game.setScreen(new ChangePasswordScreen(game));
             }
         });
 
@@ -201,6 +201,7 @@ public class SettingsScreen implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //btnLoginClicked();
+                game.setScreen(new EditAccountScreen(game));
             }
         });
 

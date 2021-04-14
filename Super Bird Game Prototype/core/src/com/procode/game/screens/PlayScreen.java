@@ -18,6 +18,7 @@ import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Background;
 import com.procode.game.sprites.Bird;
 import com.procode.game.sprites.MechaBird;
+import com.procode.game.sprites.MechaLaser;
 import com.procode.game.tools.Enemy;
 import com.procode.game.sprites.BirdSpit;
 import com.procode.game.tools.Gamepad;
@@ -91,11 +92,11 @@ public class PlayScreen implements Screen {
 //        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
 
         int minEnemies = 2; // easy = 2 hard = 5
-        int maxEnemies = 5; // easy = 5 hard = 15
+        int maxEnemies = 3; // easy = 3 hard = 15
         float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40, hard = /10
         float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80, hard = /40
-        float spawnPerSec = .01f; // easy = .01f hard = 1f
-        float spawnFrequency = 2.5f; // easy = 2.5f hard = 0
+        float spawnPerSec = .001f; // easy = .0001f hard = 1f
+        float spawnFrequency = 3.5f; // easy = 3.5f hard = 0
         enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera());
     }
 
@@ -219,10 +220,20 @@ public class PlayScreen implements Screen {
 //        game.batch.draw(enemyBird.getMechaBirdImage(), enemyBird.getEnemyPosition().x, enemyBird.getEnemyPosition().y);
 
         for (int i = 0; i < enemySpawner.activeEnemies.size(); i++){
+            Enemy currEnemy = enemySpawner.activeEnemies.get(i);
+
             Texture currEnemyImg = enemySpawner.activeEnemies.get(i).getEnemyImage();
             Vector2 enemyPos = enemySpawner.activeEnemies.get(i).getEnemyPosition();
 
             game.batch.draw(currEnemyImg,enemyPos.x, enemyPos.y);
+
+            if (currEnemy instanceof MechaBird) {
+
+                Array<MechaLaser> activeShots = ((MechaBird)(currEnemy)).activeShots;
+                for (MechaLaser laser : activeShots) {
+                    laser.render(game.batch);
+                }
+            }
         }
 
         // render particles if any

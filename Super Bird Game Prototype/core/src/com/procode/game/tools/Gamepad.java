@@ -72,13 +72,15 @@ public class Gamepad {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if(HUD.state == 0)
-                    PlayScreen.player.shoot();
+                    if(PlayScreen.rapidFireSpit == false)
+                        PlayScreen.rapidFireSpit = true;
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 shoot = false;
+                PlayScreen.rapidFireSpit = false;
             }
         });
 
