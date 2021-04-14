@@ -160,7 +160,6 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
         //==================Button Log In =====================
         btnLogin = new TextButton("Log In", style_button);
-        skin.add("fonts", font);
         //set the position and size of the button
         //set the listener for log in button
         btnLogin.addListener(new ClickListener(){
