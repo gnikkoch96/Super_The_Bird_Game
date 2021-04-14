@@ -396,7 +396,7 @@ public class MechaBird extends Enemy {
                         if(super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() == 3 && shootPerframe == false) {
                             shootPerframe = true;
                             MechaLaser item = shootPool.obtain();
-                            item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.5)); //Nikko: change to this when the image has been adjusted
+                            item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.9)); //Nikko: change to this when the image has been adjusted
                             activeShots.add(item);
                         }
                         else if (super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() != 3){
