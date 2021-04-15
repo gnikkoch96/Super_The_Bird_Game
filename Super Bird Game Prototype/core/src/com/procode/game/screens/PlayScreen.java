@@ -281,12 +281,18 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         //--DEBUGGING--//
-//        player.debugHitbox();
-//        for (int i = 0; i < enemySpawner.activeEnemies.size(); i++){
-//            if(enemySpawner.activeEnemies.get(i).hitbox != null) { // this is because hitboxes are deleted and replaced with new ones
-//                enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
-//            }
-//        }
+        player.debugHitbox();
+        for (int i = 0; i < enemySpawner.activeEnemies.size(); i++){
+            if(enemySpawner.activeEnemies.get(i).hitbox != null) { // this is because hitboxes are deleted and replaced with new ones
+                enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
+
+                if(enemySpawner.activeEnemies.get(i) instanceof MechaBird){ // debugs laser hitboxes
+                    for(MechaLaser laser: ((MechaBird) enemySpawner.activeEnemies.get(i)).activeShots){
+                        laser.hitbox.debugHitbox();
+                    }
+                }
+            }
+        }
 
         //add buttons to screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

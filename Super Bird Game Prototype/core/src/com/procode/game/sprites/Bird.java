@@ -76,7 +76,6 @@ public class Bird implements Disposable {
                 return new BirdSpit(gameCamera);
             }
         };
-//        spitParticles = new ParticleEffectComponent("effects/liquid.p", "bird animations");
         spitParticles = new ParticleEffectComponent("effects/spitimpact3.p", "bird animations");
         this.hitboxPosOffset = new Vector2((float) (x + (int)(BirdWidth/8)), (float) (y +  (this.BirdHeight/10)));
         this.hitboxBoundsOffset = new Vector2((int) (BirdWidth/3), ((int)(this.BirdHeight) - (this.BirdHeight/4)));
@@ -197,13 +196,15 @@ public class Bird implements Disposable {
             spit.update(deltaTime);
         }
 
-        // manage spits that exit the screen
+        // manage spits that exit the screen (could have been put into the playscreen)
         for(BirdSpit spit: activeSpits){
             if(spit.isOutOfScreen() || spit.isCollided()){
                 spitPool.free(spit);
                 activeSpits.removeValue(spit, true);
             }
         }
+
+
     }
 
 
@@ -369,7 +370,9 @@ public class Bird implements Disposable {
                 for (MechaLaser laser : activeShots) {
                     if (this.hitbox.isHit(laser.hitbox) || laser.hitbox.isHit(this.hitbox)) {
 //                          Gdx.app.log("PLAYER->ENEMY", "HIT");
+                        laser.setCollision(true);
                         this.damageBird(hud);
+
                     }
                 }
             }

@@ -14,12 +14,14 @@ public class MechaLaser extends Projectile implements Disposable {
 
     // animations
     private static Texture projectileImage; // this will be the image that floats until a contact has been made
+    private Vector2 hitboxOffset;
 
     public MechaLaser(Camera gameCamera){
         //--Nikko: The width and height can be changed
         this.projectileWidth = SuperBirdGame.GAME_WIDTH / 10;
         this.projectileHeight = SuperBirdGame.GAME_HEIGHT / 15;
         this.position = new Vector2(); // x and y are initialized in the init()
+        this.hitboxOffset = new Vector2();
         this.velocity = -20; //--Nikko: try changing speed (to fix the bird catching up to spit, make this equation include the speed of the bird)
         this.collided = false;
         this.alive = false;
@@ -27,12 +29,13 @@ public class MechaLaser extends Projectile implements Disposable {
         //--Nikko: To save memory from creating a new texture and animation for each new spit
         if(MechaLaser.projectileImage == null) MechaLaser.projectileImage = ImageFunctions.resize("mecha bird animations//mecha bird projectile 1.png", this.projectileWidth, this.projectileHeight);
 
-        this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight, gameCamera);
+        this.hitbox = new Hitbox(this.position, this.projectileWidth, this.projectileHeight/3, gameCamera);
     }
 
     // sets the spit initial values
     public void init(float x, float y){
         this.position.set(x, y);
+        this.hitboxOffset.set(x, y + this.projectileHeight/2);
         this.alive = true;
     }
 
@@ -45,7 +48,8 @@ public class MechaLaser extends Projectile implements Disposable {
                 this.position.x += this.velocity;
 
                 // update hitbox location
-                hitbox.update(this.position);
+                this.hitboxOffset.set(this.position.x, this.position.y + ((float)(this.projectileHeight/2.5)));
+                hitbox.update(this.hitboxOffset);
             }
         }
     }
