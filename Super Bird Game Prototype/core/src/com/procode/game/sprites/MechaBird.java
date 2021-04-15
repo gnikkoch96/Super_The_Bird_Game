@@ -30,7 +30,7 @@ public class MechaBird extends Enemy {
     private int maxSpitHits = 4;
 
     // keep track of spits that have already hit
-    List<BirdSpit> playerSpitsAlreadyHit;
+    private List<BirdSpit> playerSpitsAlreadyHit;
 
     // when doing spinning attack, we want to keep track of the angle
     private int angle;
@@ -46,6 +46,10 @@ public class MechaBird extends Enemy {
     public final Array<MechaLaser> activeShots = new Array<MechaLaser>(); // active spits is defined as in the screen and hasn't made contact with anything yet
     public final Pool<MechaLaser> shootPool;
 
+    // amount of hits before destruction
+    private int originalHits;
+    private int totalCurrHits;
+    private List<BirdSpit> ignoredSpits;
 
 
     public MechaBird(int mechaBWidth, int mechaBHeight, float speed, final Camera gameCamera){
@@ -56,6 +60,10 @@ public class MechaBird extends Enemy {
         timeActionPaused = 0;
         spitHits = maxSpitHits;
         maxAttacksPerEnemy = 4;
+        ignoredSpits =  new ArrayList<BirdSpit>();
+
+        originalHits = 45;
+        totalCurrHits = originalHits;
 
         // stuff for hitbox
         this.gameCamera = gameCamera;
@@ -430,6 +438,19 @@ public class MechaBird extends Enemy {
             }
         }
 
+        // takes into account the current hits taken so far
+        for (BirdSpit spits: playerSpits ){
+            Hitbox currSpitHitbox = spits.getHitbox();
+            if (currSpitHitbox.isHit(super.hitbox) || super.hitbox.isHit(currSpitHitbox)){
+                totalCurrHits -= 1;
+            }
+        }
+
+        // if taken more than the limit, destroy the enemy
+        if (totalCurrHits < 1 && super.currentState != State.DEAD){
+            super.changeState(State.DEAD, -1);
+        }
+
 
         // updates projectiles
         for(MechaLaser laser : activeShots){
@@ -438,7 +459,7 @@ public class MechaBird extends Enemy {
 
         // manage spits that exit the screen
         for(MechaLaser laser: activeShots){
-            if(laser.isOutOfScreen() || laser.isCollided()){
+            if(laser.isOutOfScreen()){
                 shootPool.free(laser);
                 activeShots.removeValue(laser, true);
             }
@@ -483,13 +504,6 @@ public class MechaBird extends Enemy {
 
 
 
-    // get the current image of the MechaBird
-    public Texture getMechaBirdImage(){
-        return super.getEnemyImage();
-    }
-
-
-
     // spawns the enemy at the start
     // if the enemy has been disposed, aka: the enemy has dies, it will be placed offScreen again
     // needs to be in an update method to allow for time reset
@@ -514,7 +528,12 @@ public class MechaBird extends Enemy {
         super.hitbox = new Hitbox(new Vector2((int)(super.position.x + super.hitboxPosOffset.x), (int)(super.position.y + super.hitboxPosOffset.y)), (int) super.hitboxBoundsOffset.x, (int) super.hitboxBoundsOffset.y, gameCamera);
         spitHits = maxSpitHits;
         currAttackInList = 0;
+        totalCurrHits = originalHits;
+        radius = 0;
+        angle = 0;
         spinFinished = false;
+        shootPerframe = false;
+        currTimeEnteredShoot = 0;
     }
 
 
