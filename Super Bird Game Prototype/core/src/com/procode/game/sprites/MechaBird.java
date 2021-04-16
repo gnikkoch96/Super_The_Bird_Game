@@ -66,7 +66,7 @@ public class MechaBird extends Enemy {
         spitHits = maxSpitHits;
         maxAttacksPerEnemy = 4;
         ignoredSpits =  new ArrayList<BirdSpit>();
-
+        isDead = false;
         originalHits = 45;
         totalCurrHits = originalHits;
 
@@ -468,7 +468,7 @@ public class MechaBird extends Enemy {
 
         // manage spits that exit the screen
         for(MechaLaser laser: activeShots){
-            if(laser.isOutOfScreen()){
+            if(laser.isOutOfScreen() || laser.isCollided()){
                 shootPool.free(laser);
                 activeShots.removeValue(laser, true);
             }

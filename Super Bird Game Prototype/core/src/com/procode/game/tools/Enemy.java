@@ -19,6 +19,7 @@ public class Enemy implements Disposable {
     protected Vector2 position;
     protected int enemyWidth;
     protected int enemyHeight;
+    protected boolean isDead;
 
     protected State currentState; // the current state of the enemy
     protected int currAttackState; // what position in the attack list to use

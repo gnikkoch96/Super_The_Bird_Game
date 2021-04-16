@@ -3,6 +3,7 @@ package com.procode.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -54,6 +55,9 @@ public class PlayScreen implements Screen {
     public Array<BirdSpit> activeSpits;
     public Array<ParticleEffectComponent> activeParticles;
 
+    // music
+    private Music backgroundMusic;
+
     public static String changeBackground = "orange";
 
     public PlayScreen(SuperBirdGame game){
@@ -98,6 +102,11 @@ public class PlayScreen implements Screen {
         float spawnPerSec = .001f; // easy = .0001f hard = 1f
         float spawnFrequency = 3.5f; // easy = 3.5f hard = 0
         enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera());
+
+        backgroundMusic = SuperBirdGame.manager.get("audio/music/music.mp3", Music.class);
+        backgroundMusic.setVolume(0.3f);
+        backgroundMusic.setLooping(true); // loops music
+        backgroundMusic.play();
     }
 
     public void handleInput(float dt){
@@ -311,12 +320,13 @@ public class PlayScreen implements Screen {
     public void pause() {
         //game.batch.draw(background, 0, 0);
       //  game.batch.draw(bg.getBackgroundSky(),0,0);
-        game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
-        game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
-        game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+//        game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
+//        game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
+//        game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
+//        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         hud.settingScreen.setContainerVisible(true);
+
         //activate the buttons
         hud.settingScreen.Buttons();
 
