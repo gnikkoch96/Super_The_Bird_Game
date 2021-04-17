@@ -1,5 +1,6 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
@@ -46,7 +47,7 @@ public class MechaBird extends Enemy {
     // sounds
     private float volume;
     private Sound deadSound;
-    
+
     // stuff for the shoot
     private Vector2 playerPos; // needs the players position so the enemy can follow the player
     private float currTimeEnteredShoot; // current time the bird shot
@@ -58,6 +59,7 @@ public class MechaBird extends Enemy {
     // amount of total hits before destruction
     private int originalHits; // original amount of hits
     private int totalCurrHits; // current hits before destruction
+    public boolean isHit;
 
     // initializing the mecha bird
     public MechaBird(int mechaBWidth, int mechaBHeight, float speed, final Camera gameCamera){
@@ -71,6 +73,7 @@ public class MechaBird extends Enemy {
 
         originalHits = 20; // 45 total hits before destroying the enemy
         totalCurrHits = originalHits;
+        this.isHit = false;
 
         // stuff for hitbox
         this.gameCamera = gameCamera;
@@ -102,6 +105,8 @@ public class MechaBird extends Enemy {
 
         // the mecha bird will not be able to be damaged but will die upon collision with the bird
         super.damagedEnemy = null;
+//        super.damagedEnemy = new Animation();
+//        super.damagedEnemy.setAnimation("mecha bird animations//damaged//mecha bird damaged ", super.enemyWidth, super.enemyHeight, 1, 5, .50f, false);
 
         super.deadEnemy = new Animation();
         super.deadEnemy.setAnimation( "mecha bird animations//mecha bird dead ", (int) (super.enemyWidth * 1.5), (int) (super.enemyHeight * 1.5), 2, 4, .4f, false);
@@ -126,6 +131,10 @@ public class MechaBird extends Enemy {
         // shooting animations
         Animation mechaBirdShoot = new Animation();
         mechaBirdShoot.setAnimation("mecha bird animations//mecha bird shoot ", super.enemyWidth, super.enemyHeight, 1, 5, .75f, true);
+
+        // damaged animations
+        Animation mechaBirdDamaged = new Animation();
+        mechaBirdDamaged.setAnimation("mecha bird animations//damaged//mecha bird damaged ", super.enemyWidth, super.enemyHeight, 1, 8, .50f, false);
 
         // add all of the animations to the arraylist from the super class
         super.setAttackAnimation(mechaBirdDashCharge);
@@ -157,6 +166,7 @@ public class MechaBird extends Enemy {
     }
 
 
+    public State getCurrentState(){return super.currentState;}
 
     // randomly chooses the attacks to do
     // will pick out random attacks until a point where the mecha bird does a dash
@@ -495,9 +505,18 @@ public class MechaBird extends Enemy {
             if (currSpitHitbox.isHit(super.hitbox) || super.hitbox.isHit(currSpitHitbox)) {
                 //--TEST--//
                 if(this.attackPattern.get(currAttackInList) != 1){ // doesn't take damage when it is spinning
-                    totalCurrHits -= 1;
+                    switch(this.attackPattern.get(currAttackInList)){
+                        case 0: // gets damaged in dash
+                            totalCurrHits -= 4;
+                            break;
+                        case 2: // gets damaged in shoot
+                            totalCurrHits -= 2;
+                            break;
+                    }
+
                 }
-//                totalCurrHits -= 1;
+                this.isHit = true;
+                totalCurrHits -= 1;
             }
         }
 

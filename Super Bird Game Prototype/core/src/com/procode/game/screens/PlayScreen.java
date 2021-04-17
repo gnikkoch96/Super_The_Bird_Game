@@ -4,10 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -103,10 +105,11 @@ public class PlayScreen implements Screen {
         float spawnFrequency = 3.5f; // easy = 3.5f hard = 0
         enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera());
 
+        // background music stuff
         backgroundMusic = SuperBirdGame.manager.get("audio/music/music.mp3", Music.class);
         backgroundMusic.setVolume(0.3f);
         backgroundMusic.setLooping(true); // loops music
-        backgroundMusic.play();
+//        backgroundMusic.play();
     }
 
     public void handleInput(float dt){
@@ -150,6 +153,7 @@ public class PlayScreen implements Screen {
 
             // bird movement
             birdMovement = hud.gamepad.getButtonInputs();
+
             //Gdx.app.log("Bird Movement", "(" + String.valueOf(birdMovement.x) + " , " + String.valueOf(birdMovement.y) + ")");
             player.movePosition(birdMovement.x, birdMovement.y);
             setBackgroundMovement();
@@ -158,22 +162,6 @@ public class PlayScreen implements Screen {
             //--TEST--//
             game.setScreen(new GameOverScreen());
         }
-
-
-
-        //gameCam.position.x = player.getPosition().x + OFFSET;           //Update Camera Position in relative to bird
-
-        /*if(hud.getShootStateBtn() == true) {
-           // System.out.println("Player Shoot");
-            player.shoot();
-        }*/
-
-        //testing only-----------------------------------------------
-//        enemyBird.updateMechaBird(dt);
-//
-//        if(enemyBird.getState() == Enemy.State.DEAD){
-//            enemyBird.reSpawn();
-//        }
 
         enemySpawner.updateSpawner(dt, player.hitbox, player.getActiveSpits());
     }
@@ -213,7 +201,7 @@ public class PlayScreen implements Screen {
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
 
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+//        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         hud.gamepad.upArrow.setVisible(true);
         hud.gamepad.downArrow.setVisible(true);
@@ -234,15 +222,33 @@ public class PlayScreen implements Screen {
             Texture currEnemyImg = enemySpawner.activeEnemies.get(i).getEnemyImage();
             Vector2 enemyPos = enemySpawner.activeEnemies.get(i).getEnemyPosition();
 
-            game.batch.draw(currEnemyImg,enemyPos.x, enemyPos.y);
 
-            if (currEnemy instanceof MechaBird) {
-
+            if (currEnemy instanceof MechaBird) { // render the lasers
                 Array<MechaLaser> activeShots = ((MechaBird)(currEnemy)).activeShots;
                 for (MechaLaser laser : activeShots) {
                     laser.render(game.batch);
                 }
             }
+
+            if(((MechaBird) currEnemy).isHit){ // blinking effect when the mecha bird takes damage
+                //make the sprite transparent by using a for loop
+                Sprite sprite = new Sprite(currEnemyImg);
+                sprite.setPosition(enemyPos.x, enemyPos.y);
+                for(int j = 0; j < 100; j++){ // probably a better way
+                    if(j % 2 == 0){
+                        sprite.setColor(Color.BLUE);
+                        sprite.draw(game.batch);
+                    }else{
+                        sprite.draw(game.batch);
+                    }
+                }
+                ((MechaBird)currEnemy).isHit = false;
+            }else{
+                game.batch.draw(currEnemyImg,enemyPos.x, enemyPos.y);
+            }
+
+
+
         }
 
         // render particles if any
@@ -283,7 +289,13 @@ public class PlayScreen implements Screen {
         }
 
         // render player
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+        if(player.isInvincible){
+            Sprite sprite = new Sprite(player.getBirdImage());
+            sprite.setPosition(player.getPosition().x, player.getPosition().y);
+            sprite.draw(game.batch, (+5f * (float)Math.sin(0) + .5f));
+        }else{
+            game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+        }
 
 
 

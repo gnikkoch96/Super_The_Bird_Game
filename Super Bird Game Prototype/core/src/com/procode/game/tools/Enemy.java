@@ -74,6 +74,9 @@ public class Enemy implements Disposable {
             case ATTACK:
                 enemyAttacks.get(currAttackState).updateFrame(deltaTime);
                 break;
+            case DAMAGE:
+
+                break;
             case DEAD:
                 deadEnemy.updateFrame(deltaTime);
                 break;
@@ -91,6 +94,8 @@ public class Enemy implements Disposable {
                 return idleEnemy.getCurrImg();
             case ATTACK:
                 return enemyAttacks.get(currAttackState).getCurrImg();
+            case DAMAGE:
+                return damagedEnemy.getCurrImg();
             case DEAD:
                 return deadEnemy.getCurrImg();
         }
@@ -100,7 +105,7 @@ public class Enemy implements Disposable {
 
 
     // what state to change to (idle, attack, damaged or dead)
-    // if there exists an attack, place the index of the attack in the enemyAttacks list
+    // if there exists an attack, place the index of the attack in the enemyAttacks list else place a -1
     public void changeState(State enemyState, int enemyAttackIndex){
         this.currentState = enemyState;
         if (enemyState == State.ATTACK){
