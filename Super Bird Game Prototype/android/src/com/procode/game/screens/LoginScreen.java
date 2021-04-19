@@ -26,7 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.procode.game.Database;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.User;
 import com.procode.game.sprites.Background;
 import com.procode.game.tools.ImageFunctions;
 
@@ -51,8 +53,11 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     private Background bg;
     private int moveHills_x, moveMountain_x, moveClouds_x, getMoveClouds_y;
     private Container<Table> tableContainer;
+    public static User currentUser;
+    public static boolean userStatus = false;
 
     public LoginScreen(SuperBirdGame g){
+        currentUser = new User();
         game = g;
 
         stage = new Stage(game.viewport, game.batch);
@@ -166,7 +171,13 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         btnLogin.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 btnLoginClicked();
+                return true;
             }
         });
         //=================Button Sign Up =====================
@@ -199,8 +210,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
     public void btnLoginClicked(){
         //just to see the user name in the console
-        System.out.println(password.getText());
-        game.setScreen(new HomeScreen(game));
+        currentUser.userExist(userName.getText(), password.getText());
+
     }
 
     public void btnSignUpClicked(){
@@ -216,6 +227,13 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         buttons();
         //set the table container with all the labels, textfields and buttons
         stage.addActor(tableContainer);
+    }
+
+    public void setHomeScreen(){
+
+        if(Database.userStatus)
+            game.setScreen(new HomeScreen(game));
+
     }
 
     public void upDate(){
@@ -242,6 +260,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         upDate();
+        setHomeScreen();
         game.batch.begin();
         //render the stage and draw it
         //game.batch.draw(background, 0, 0);

@@ -1,8 +1,18 @@
 package com.procode.game;
 
+import com.procode.game.screens.LoginScreen;
+
 public class User {
 
-    private String username, password, email, birthday, fullName;
+    private String username, password, email, birthday, fullName, scoreboard;
+
+    public User(String username, String password, String email, String birthday, String scoreboard){
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.birthday = birthday;
+        this.scoreboard = scoreboard;
+    }
 
     public User(){
         username = "";
@@ -29,6 +39,15 @@ public class User {
         Database data = new Database(username, password, email, fullName);
         //insert data to the database
         data.insertData();
+    }
+
+
+    public void userExist(String username, String password){
+
+        Database data = new Database(username, password);
+        data.checkDatabase(username, password);
+        //check if user exist
+
     }
 
     public String toString(){

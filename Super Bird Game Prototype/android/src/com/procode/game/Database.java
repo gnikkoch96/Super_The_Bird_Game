@@ -1,5 +1,6 @@
 package com.procode.game;
 
+import android.content.Intent;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -9,6 +10,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.procode.game.User;
+import com.procode.game.screens.LoginScreen;
 
 import java.util.HashMap;
 
@@ -17,14 +20,25 @@ public class Database {
 
     private final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private final HashMap<String,Object> userdataMap = new HashMap<>();
+    private String parentDbName; // this is the parent node from the database
 
     private String username, password, email, fullName;
+    public static boolean userStatus;
+
+    public Database(String username, String password){
+        this.username = username;
+        this.password = password;
+        this.parentDbName = "Users";
+        this.userStatus = false;
+    }
 
     public Database(String username, String password, String email, String fullname){
         this.username = username;
         this.password = password;
         this.email = email;
         this.fullName = fullname;
+        this.parentDbName = "Users";
+        this.userStatus = false;
     }
 
     //this class will insert the data to the database including the username, password,
@@ -46,6 +60,7 @@ public class Database {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
                                    // Toast
+                                    userStatus = true;
                                }else{
                                }
                             }
@@ -145,4 +160,45 @@ public class Database {
 
     }*/
     //===================================End of Updates ============================================
+
+    //=============================Start of User Validation ========================================
+
+    public void checkDatabase(final String userName, final String userPassword){
+
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(parentDbName).child(userName).exists()){
+                    //here I use the constructor that have 5 arguments from User class and populate it from database
+                    User userData = dataSnapshot.child(parentDbName).child(userName).getValue(User.class);
+
+                    if(userData.getUserName().equals(userName)){
+                        if(userData.getPassword().equals(userPassword)){
+
+                            Database.userStatus = true;
+                            LoginScreen.currentUser = userData;
+                            System.out.println("it exist : " + LoginScreen.userStatus);
+                        }
+                    }else{
+                        System.out.println("it does not exist");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+
+        });
+
+
+       // System.out.println("i am here " + LoginScreen.userStatus);
+    }
+
+    public boolean userExist(){
+        return userStatus;
+    }
 }
