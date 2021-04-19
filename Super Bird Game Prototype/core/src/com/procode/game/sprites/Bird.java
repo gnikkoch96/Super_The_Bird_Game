@@ -299,7 +299,7 @@ public class Bird implements Disposable {
             //it doesnt look for a negative image since images goes from
             //0 to n numbers from the assests folder
             if(this.healthCount != 0)
-            this.healthCount--; //Nikko--turn this on when you are not debugging
+                this.healthCount--;  //Nikko--turn this on when you are not debugging
 
             if(this.healthCount == 0){
                 this.deadBird(hud);

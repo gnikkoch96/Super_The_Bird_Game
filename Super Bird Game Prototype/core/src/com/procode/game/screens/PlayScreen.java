@@ -103,7 +103,7 @@ public class PlayScreen implements Screen {
         float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80, hard = /40
         float spawnPerSec = .001f; // easy = .0001f hard = 1f
         float spawnFrequency = 3.5f; // easy = 3.5f hard = 0
-        enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera());
+        enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera(), hud);
 
         // background music stuff
         backgroundMusic = SuperBirdGame.manager.get("audio/music/music.mp3", Music.class);
@@ -234,14 +234,8 @@ public class PlayScreen implements Screen {
                 //make the sprite transparent by using a for loop
                 Sprite sprite = new Sprite(currEnemyImg);
                 sprite.setPosition(enemyPos.x, enemyPos.y);
-                for(int j = 0; j < 100; j++){ // probably a better way
-                    if(j % 2 == 0){
-                        sprite.setColor(Color.BLUE);
-                        sprite.draw(game.batch);
-                    }else{
-                        sprite.draw(game.batch);
-                    }
-                }
+                sprite.setColor(Color.BLUE);
+                sprite.draw(game.batch);
                 ((MechaBird)currEnemy).isHit = false;
             }else{
                 game.batch.draw(currEnemyImg,enemyPos.x, enemyPos.y);

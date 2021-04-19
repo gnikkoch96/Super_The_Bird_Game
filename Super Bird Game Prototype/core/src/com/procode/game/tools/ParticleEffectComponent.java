@@ -31,7 +31,6 @@ public class ParticleEffectComponent{
         ParticleEffectPool.PooledEffect effect = particleEffectPool.obtain();
         effect.setPosition(x, y);
         this.effects.add(effect);
-//        Gdx.app.log("(Create Particle) Effect Size: ", String.valueOf(effects.size));
     }
 
     public void update(float delta){
@@ -48,7 +47,6 @@ public class ParticleEffectComponent{
     public void renderParticles(SpriteBatch sb){ // renders particles that are created
         for(ParticleEffectPool.PooledEffect effect : this.effects){
             effect.draw(sb);
-//            Gdx.app.log("Effect Complete:", String.valueOf(effect.isComplete()));
         }
     }
 

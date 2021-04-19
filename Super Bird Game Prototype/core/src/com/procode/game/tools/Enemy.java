@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.scenes.HUD;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,10 @@ public class Enemy implements Disposable {
     protected int enemyWidth;
     protected int enemyHeight;
     protected boolean isDead;
+
+    // point related
+    protected int pointValue; // represents the points when the enemy is killed
+    protected HUD hud; // used to update the score value
 
     protected State currentState; // the current state of the enemy
     protected int currAttackState; // what position in the enemyAttacks to use
