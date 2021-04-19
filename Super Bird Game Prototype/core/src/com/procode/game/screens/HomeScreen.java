@@ -151,6 +151,13 @@ public class HomeScreen implements Screen {
                 game.setScreen(new SettingsScreen(game));
             }
         });
+
+        btnExit.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+               Gdx.app.exit();
+            }
+        });
     }
 
     @Override
