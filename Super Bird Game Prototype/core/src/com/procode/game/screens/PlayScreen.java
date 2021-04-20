@@ -114,6 +114,15 @@ public class PlayScreen implements Screen {
             player.shoot();
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
+            if(player.isShrunk){
+                player.growBird();
+            }
+            else{
+                player.shrinkBird();
+            }
+        }
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.W)){
             player.movePosition(0,gamepad.touchSensitivity);
         }

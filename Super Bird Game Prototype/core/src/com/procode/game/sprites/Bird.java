@@ -436,7 +436,7 @@ public class Bird implements Disposable {
         if(shrinking == false && BirdWidth != ShrunkBirdWidth) {
             shrinking = true;
             growing = false;
-            speedOffset = 1.3f;
+            speedOffset = 1.15f;
         }
     }
 

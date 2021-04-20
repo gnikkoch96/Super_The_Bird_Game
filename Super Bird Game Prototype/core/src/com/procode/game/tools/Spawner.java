@@ -172,6 +172,9 @@ public class Spawner {
 
             // now for the drone
         }
+        else {
+            this.maxEnemies = maxEnemies;
+        }
     }
 
 
