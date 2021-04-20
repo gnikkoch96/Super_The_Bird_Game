@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Animation {
     private List<Texture> anim; // the list holding the animations
+    private List<String> paths; // list of all of the image paths in the animation
     private int currFrame; // the current frame the animation is playing
     private float timeFrameUpdated; // the time in which the last frame was updated
     private float timePlayedPerFrame; // the amount of time each frame plays for
@@ -18,6 +19,7 @@ public class Animation {
     // also sets animationEnded boolean to false
     public Animation(){
         anim = new ArrayList<Texture>();
+        paths = new ArrayList<String>();
         currFrame = 0;
         animationEnded = false;
         timeFrameUpdated = 0;
@@ -45,6 +47,7 @@ public class Animation {
             String path = animationDir;
             path = path.concat(Integer.toString(i));
             path = path.concat(".png");
+            paths.add(path);
             Texture tempImage = ImageFunctions.resize(path, imgWidth, imgHeight);
             anim.add(tempImage);
         }
@@ -83,6 +86,10 @@ public class Animation {
     public int getCurrFrameIndex(){return this.currFrame;}
     public void setAnimationEnded(boolean var){this.animationEnded = var;} // used to fix the transition issue
     public Texture getCurrImg(){return anim.get(currFrame);} // returns the current frame for the image
+    public Texture getResizedImg(int imgWidth, int imgHeight){ // returns current image based off of set size
+        String currPath = paths.get(currFrame);
+        return ImageFunctions.resize(currPath, imgWidth, imgHeight);
+    }
     public boolean isAnimFinished(){return animationEnded;} // checks if the current animation cycle is finished
     public void setAnimFinished(){this.animationEnded = false; this.timeFrameUpdated = 0; currFrame = 0;};
     public void dispose(){
@@ -94,5 +101,15 @@ public class Animation {
             currFrame = 0;
             animationEnded = false;
     } // if you want to play an animation again, it will reset the animation
+
+
+    // resizes all of the textures for the animation
+    public void resizeAnim(int imgWidth, int imgHeight){
+        for (int i = 0; i < anim.size(); i++){
+            String currPath = paths.get(i);
+            Texture tempImage = ImageFunctions.resize(currPath, imgWidth, imgHeight);
+            anim.set(i, tempImage);
+        }
+    }
 }
 

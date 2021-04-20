@@ -95,10 +95,10 @@ public class PlayScreen implements Screen {
 //        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
 
         int minEnemies = 2; // easy = 2 hard = 5
-        int maxEnemies = 3; // easy = 3 hard = 15
+        int maxEnemies = 15; // easy = 3 hard = 15
         float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40, hard = /10
         float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80, hard = /40
-        float spawnPerSec = .001f; // easy = .0001f hard = 1f
+        float spawnPerSec = .0001f; // easy = .0001f hard = 1f
         float spawnFrequency = 3.5f; // easy = 3.5f hard = 0
         enemySpawner = new Spawner(maxEnemies, minEnemies, enemyMaxSpeed, enemyMinSpeed, spawnPerSec, spawnFrequency, hud.stage.getCamera());
     }
@@ -205,6 +205,7 @@ public class PlayScreen implements Screen {
         hud.gamepad.leftArrow.setVisible(true);
         hud.gamepad.rightArrow.setVisible(true);
         hud.gamepad.shootButton.setVisible(true);
+        hud.gamepad.resizeButton.setVisible(true);
         hud.pauseBtn.setVisible(true);
 
         state = HUD.state;
@@ -327,6 +328,7 @@ public class PlayScreen implements Screen {
         hud.gamepad.leftArrow.setVisible(false);
         hud.gamepad.rightArrow.setVisible(false);
         hud.gamepad.shootButton.setVisible(false);
+        hud.gamepad.resizeButton.setVisible(true);
         hud.pauseBtn.setVisible(false);
 
         state = HUD.state;

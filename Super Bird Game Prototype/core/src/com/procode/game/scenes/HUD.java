@@ -107,6 +107,7 @@ public class HUD implements Disposable {
         stage.addActor(gamepad.downLeft);
         stage.addActor(gamepad.downRight);
         stage.addActor(gamepad.shootButton);
+        stage.addActor(gamepad.resizeButton);
 
         stage.addListener(gamepad.clickListener);
 
