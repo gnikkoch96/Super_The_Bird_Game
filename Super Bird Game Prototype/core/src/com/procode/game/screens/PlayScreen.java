@@ -315,10 +315,10 @@ public class PlayScreen implements Screen {
     public void pause() {
         //game.batch.draw(background, 0, 0);
       //  game.batch.draw(bg.getBackgroundSky(),0,0);
-        game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
-        game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
-        game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
-        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
+//        game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
+//        game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
+//        game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
+//        game.batch.draw(player.getBirdImage(), player.getPosition().x, player.getPosition().y);
 
         hud.settingScreen.setContainerVisible(true);
         //activate the buttons
