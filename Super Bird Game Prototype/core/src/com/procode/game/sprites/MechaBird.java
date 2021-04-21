@@ -237,7 +237,7 @@ public class MechaBird extends Enemy {
 
                     // current position is just the player's y position, while staying in the same x coordinate
                     currDestination.x = super.position.x;
-                    currDestination.y = playerPos.y - (int) (super.enemyHeight / 2);
+                    currDestination.y = playerPos.y - (int) (super.enemyHeight / 2.3);
                 }
         }
     }
