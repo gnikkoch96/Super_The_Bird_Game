@@ -65,6 +65,11 @@ public class Bird implements Disposable {
     private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
     private final Pool<BirdSpit> spitPool;
 
+    // shrunk effects for projectiles
+    private float currentTime; // keeps track of current delta time so bird can only shoot every .2 seconds
+    private float rateOfFireTime;
+    private float lastTimeShot;
+
     // particles
     private ParticleEffectComponent spitParticles;
 
@@ -85,6 +90,10 @@ public class Bird implements Disposable {
         shrinking = false;
         growing = false;
         speedOffset = 1;
+
+        currentTime = 0;
+        rateOfFireTime = .23f;
+        lastTimeShot = 0;
 
         healthCount = 6;
         BirdWidth = (int) birdWidth;
@@ -188,6 +197,7 @@ public class Bird implements Disposable {
     public void update(float deltaTime){
         //this method captures the changes on the volume from the settings
         setVolume();
+        currentTime = deltaTime;
 
         if(currentAnimation.animationEnded == true){ // transitions from non-idle animation back to idle
 
@@ -337,19 +347,23 @@ public class Bird implements Disposable {
 
 
     public void shoot() {
-        previousState = currentState;
-        currentState = State.SHOOT;
-        if(previousState != State.SHOOT && previousState == State.IDLE){ // to prevent overlapping of animations
-            // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
-            spitSound.play(volume);
+        if(isShrunk == false || (currentTime - lastTimeShot) > rateOfFireTime) {
+            lastTimeShot = currentTime;
+            previousState = currentState;
+            currentState = State.SHOOT;
+            if (previousState != State.SHOOT && previousState == State.IDLE) { // to prevent overlapping of animations
 
-            switchAnimations(State.SHOOT);
+                // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
+                spitSound.play(volume);
 
-            // create spit
-            BirdSpit item = spitPool.obtain();
-            item.init(this.position.x + (int)(BirdWidth/1.5), this.position.y + (int)(BirdWidth/3.8)); //Nikko: change to this when the image has been adjusted
-            activeSpits.add(item);
-            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+                switchAnimations(State.SHOOT);
+
+                // create spit
+                BirdSpit item = spitPool.obtain();
+                item.init(this.position.x + (int) (BirdWidth / 1.5), this.position.y + (int) (BirdWidth / 3.8)); //Nikko: change to this when the image has been adjusted
+                activeSpits.add(item);
+                Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+            }
         }
     }
 
