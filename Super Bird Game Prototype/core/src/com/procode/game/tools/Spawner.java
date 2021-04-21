@@ -33,6 +33,8 @@ public class Spawner {
     private Camera gamecam;
 
     private float lastTimeIncreaseDifficulty;
+    private boolean changeEnemyAttacks;
+    private float addedDifficultyTime = 25;
 
 
 
@@ -51,6 +53,7 @@ public class Spawner {
         inactiveEnemies = new ArrayList<Enemy>();
         this.gamecam = gameCam;
         lastTimeIncreaseDifficulty = 0;
+        changeEnemyAttacks = true;
 
         // initialize all variants of enemies based off of the max into the inactive enemies
         // initialize mechaBirds
@@ -144,15 +147,14 @@ public class Spawner {
         }
 
         // every 15 seconds will either make more enemies or increase # of attacks
-        if(dt - lastTimeIncreaseDifficulty > 15) {
+        if(dt - lastTimeIncreaseDifficulty > addedDifficultyTime) {
             lastTimeIncreaseDifficulty = dt;
 
-            // if time is greater than 10 seconds, will either increase # of enemies or # of attacks per enemy
-            int increaseNumOfEnemies = (int) (Math.random() * 2);
-
+            // if time is greater than 25 seconds, will either increase # of enemies or # of attacks per enemy
             // increase # of attacks for mecha birds
-            if (increaseNumOfEnemies == 1) {
-                System.out.println(dt + ": increased attacks");
+            if (changeEnemyAttacks) {
+                changeEnemyAttacks = false;
+
                 for (int i = 0; i < inactiveEnemies.size(); i++) {
 
                     // only applies to the mecha bird
@@ -173,6 +175,7 @@ public class Spawner {
 
             // increase # of enemies
             else {
+                changeEnemyAttacks = true;
                 System.out.println(dt + ": increased min num of enemies to : " + (minEnemies + 1));
                 setMinEnemies(minEnemies + 1);
             }
