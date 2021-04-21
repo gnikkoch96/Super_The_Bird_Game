@@ -22,7 +22,7 @@ public class MechaBird extends Enemy {
     private List<Integer> attackPattern; // list of what attacks to use. In this list the value compares to which attack to use [0 = dash, 1 = spin, 2 = shoot]
     private int currAttackInList; // which attack to use in the attack pattern
     public Vector2 currDestination; // if the mecha bird needs to reach a destination, this is
-    private int maxAttacksPerEnemy; // the maximum amount of attacks a single enemy can have in their attack pattern
+    public int maxAttacksPerEnemy; // the maximum amount of attacks a single enemy can have in their attack pattern
 
     // we want to pause an action before doing the next one
     public float timeActionPaused; // the current time an action is paused
@@ -62,7 +62,7 @@ public class MechaBird extends Enemy {
         pausedDuration = 1.5f; // will pause actions for about 1.5 seconds after each state/ attack transfer
         timeActionPaused = 0;
         spitHits = maxSpitHits;
-        maxAttacksPerEnemy = 4; // 4 hits to destroy enemy in dashing state
+        maxAttacksPerEnemy = 1; // 4 hits to destroy enemy in dashing state
 
         originalHits = 20; // 45 total hits before destroying the enemy
         totalCurrHits = originalHits;
@@ -588,9 +588,9 @@ public class MechaBird extends Enemy {
 
 
 
-    // gets the position
-    public Vector2 getMechaPos(){
-        return super.position;
+    // reset the maximum amount of attacks for the mecha bird
+    public void resetMaxAttacks(int maxAttack) {
+        this.maxAttacksPerEnemy = maxAttack;
     }
 
 
