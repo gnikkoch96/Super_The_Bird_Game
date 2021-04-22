@@ -114,7 +114,7 @@ public class Spawner {
             }
             // remaining cases for updating for a drone or other enemy type
             else if(activeEnemies.get(i) instanceof Drone){
-                ((Drone) activeEnemies.get(i)).updateDrone(dt, playerSpit);
+                ((Drone) activeEnemies.get(i)).updateDrone(dt, playerSpit, playerHitbox);
             }
         }
 
