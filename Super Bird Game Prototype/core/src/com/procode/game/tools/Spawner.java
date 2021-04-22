@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.sprites.Bird;
 import com.procode.game.sprites.BirdSpit;
+import com.procode.game.sprites.Drone;
 import com.procode.game.sprites.MechaBird;
 
 import java.util.ArrayList;
@@ -71,6 +72,18 @@ public class Spawner {
         }
 
         // now do the same for drones
+        int droneWidth = SuperBirdGame.GAME_WIDTH / 6;
+        int droneHeight = SuperBirdGame.GAME_HEIGHT / 7;
+        for (int i = 0;  i < maxEnemies; i++){
+
+            float randSpeed = (float) (Math.random() * enemyMaxSpeed / 2);
+            if(randSpeed < enemyMinSpeed / 2){
+                randSpeed = (float) (enemyMinSpeed / 2);
+            }
+            Drone drone = new Drone(droneWidth, droneHeight, (int) randSpeed, gameCam);
+
+            inactiveEnemies.add(drone);
+        }
 
 
         // now shuffle the list for randomness and add the min amount of enemies onto the active list
@@ -100,6 +113,9 @@ public class Spawner {
                 ((MechaBird) activeEnemies.get(i)).updateMechaBird(dt, playerHitbox, playerSpit);
             }
             // remaining cases for updating for a drone or other enemy type
+            else if(activeEnemies.get(i) instanceof Drone){
+                ((Drone) activeEnemies.get(i)).updateDrone(dt, playerSpit);
+            }
         }
 
         // now delete any enemy that has died by both respawn the enemy and send it to the inactive list
@@ -120,6 +136,12 @@ public class Spawner {
             int randListPos = (int) Math.random() * inactiveEnemies.size();
             if (inactiveEnemies.get(randListPos) instanceof MechaBird) {
                 ((MechaBird) inactiveEnemies.get(randListPos)).reSpawn();
+                activeEnemies.add(inactiveEnemies.remove(randListPos));
+            }
+
+            // respawn drones
+            else if (inactiveEnemies.get(randListPos) instanceof Drone) {
+                ((Drone) inactiveEnemies.get(randListPos)).respawn();
                 activeEnemies.add(inactiveEnemies.remove(randListPos));
             }
         }
@@ -143,6 +165,11 @@ public class Spawner {
                 }
 
                 // now for drones
+                else if (inactiveEnemies.get(randListPos) instanceof Drone) {
+                    ((Drone) inactiveEnemies.get(randListPos)).respawn();
+                    activeEnemies.add(inactiveEnemies.remove(randListPos));
+                }
+
             }
         }
 
@@ -220,7 +247,19 @@ public class Spawner {
                 inactiveEnemies.add(mecha);
             }
 
-            // now for the drone
+            // now do the same for drones
+            int droneWidth = SuperBirdGame.GAME_WIDTH / 6;
+            int droneHeight = SuperBirdGame.GAME_HEIGHT / 7;
+            for (int i = 0;  i < currMax; i++){
+
+                float randSpeed = (float) (Math.random() * enemyMaxSpeed / 2);
+                if(randSpeed < enemyMinSpeed / 2){
+                    randSpeed = (float) (enemyMinSpeed / 2);
+                }
+                Drone drone = new Drone(droneWidth, droneHeight, (int) randSpeed, gamecam);
+
+                inactiveEnemies.add(drone);
+            }
         }
         else {
             this.maxEnemies = maxEnemies;
