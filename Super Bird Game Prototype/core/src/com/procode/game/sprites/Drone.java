@@ -44,7 +44,7 @@ public class Drone extends Enemy {
         super.idleEnemy = new Animation();
         super.idleEnemy.setAnimation("drone animations//drone dash ", super.enemyWidth, super.enemyHeight, 1, 3, .15f, true);
         super.deadEnemy = new Animation();
-        deadEnemy.setAnimation("drone animations//drone explode ", super.enemyWidth, super.enemyHeight, 1, 4, .16f, false);
+        deadEnemy.setAnimation("drone animations//drone explode ", super.enemyWidth, super.enemyHeight, 1, 4, .25f, false);
 
 
 
