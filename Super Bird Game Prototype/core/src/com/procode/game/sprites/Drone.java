@@ -44,7 +44,7 @@ public class Drone extends Enemy {
         super.idleEnemy = new Animation();
         super.idleEnemy.setAnimation("drone animations//drone dash ", super.enemyWidth, super.enemyHeight, 1, 3, .15f, true);
         super.deadEnemy = new Animation();
-        deadEnemy.setAnimation("drone animations//drone explode ", super.enemyWidth, super.enemyHeight, 1, 3, .09f, false);
+        deadEnemy.setAnimation("drone animations//drone explode ", super.enemyWidth, super.enemyHeight, 1, 4, .16f, false);
 
 
 
@@ -66,7 +66,7 @@ public class Drone extends Enemy {
         // if was hit, will go to do a large explode in a random position on the screen
         if(hasBeenHit){
             currDestination.y = (int) ((Math.random()) * (SuperBirdGame.GAME_HEIGHT - enemyHeight)); // random pos between top and bottom of screen
-            currDestination.x = (int) (Math.random() * (SuperBirdGame.GAME_WIDTH / 3));
+            currDestination.x = (int) (Math.random() * (SuperBirdGame.GAME_WIDTH / 5) + explosionMultiplier * super.enemyWidth);
         }
         else {
 
@@ -121,7 +121,7 @@ public class Drone extends Enemy {
                 // big explosion
                 if (Math.abs(super.position.x - currDestination.x) < super.enemySpeed && Math.abs(super.position.y - currDestination.y) < super.enemySpeed){
                     if(hasBeenHit){
-                        explosionMultiplier = 1.5f;
+                        explosionMultiplier = 2.5f;
                     }
                     super.changeState(State.DEAD, -1);
                 }
