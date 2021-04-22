@@ -65,8 +65,8 @@ public class Drone extends Enemy {
 
         // if was hit, will go to do a large explode in a random position on the screen
         if(hasBeenHit){
-            currDestination.y = (int) ((Math.random()) * (SuperBirdGame.GAME_HEIGHT - enemyHeight)); // random pos between top and bottom of screen
-            currDestination.x = (int) (Math.random() * (SuperBirdGame.GAME_WIDTH / 5) + explosionMultiplier * super.enemyWidth);
+            currDestination.y = super.position.y; // random pos between top and bottom of screen
+            currDestination.x = (int) (Math.random() * (SuperBirdGame.GAME_WIDTH / 4) + super.enemyWidth);
         }
         else {
 
@@ -105,7 +105,7 @@ public class Drone extends Enemy {
                 if(!hasBeenSet) {
                     setDestination();
                     hasBeenSet = true;
-                    super.setEnemySpeed((int) (super.enemySpeed * 1.5));
+                    super.setEnemySpeed((int) (super.enemySpeed * 2.5));
                 }
             }
 
