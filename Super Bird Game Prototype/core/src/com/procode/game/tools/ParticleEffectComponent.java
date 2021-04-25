@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
-public class ParticleEffectComponent{
+public class ParticleEffectComponent implements Disposable {
     private ParticleEffect particleEffect;
     private ParticleEffectPool particleEffectPool; // manages the particles
     private Array<ParticleEffectPool.PooledEffect> effects;
@@ -50,4 +51,10 @@ public class ParticleEffectComponent{
         }
     }
 
+    @Override
+    public void dispose() {
+        particleEffect.dispose();
+        particleEffectPool.clear();
+        effects.clear();
+    }
 }

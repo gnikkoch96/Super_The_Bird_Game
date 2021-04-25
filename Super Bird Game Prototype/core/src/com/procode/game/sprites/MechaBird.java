@@ -463,8 +463,7 @@ public class MechaBird extends Enemy {
                         if(super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() == 3 && shootPerframe == false) {
                             shootPerframe = true;
                             MechaLaser item = shootPool.obtain();
-                            item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.9)); //Nikko: change to this when the image has been adjusted
-                            activeShots.add(item);
+                            item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.9));
                         }
                         else if (super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() != 3){
                             shootPerframe = false;
@@ -493,7 +492,6 @@ public class MechaBird extends Enemy {
             super.hitbox.resize((int) (hitboxBoundsOffset.x * 1.5), (int) (hitboxBoundsOffset.y * 1.5));
 
             // clear the spits that have already hit
-            Gdx.app.log("Dead Anim Finished: ", String.valueOf(super.deadEnemy.isAnimFinished()));
             if (super.deadEnemy.isAnimFinished() == true) {
                 playerSpitsAlreadyHit.clear();
                 attackPattern.clear();
@@ -502,7 +500,7 @@ public class MechaBird extends Enemy {
 
         if(this.isDead){
             // update point value when the mecha bird is dead (Nikko: I place this here because it wasn't working properly when I placed it in the other statement)
-            Gdx.app.log("Point Value vs. Actual: ", String.valueOf(pointValue));
+            deadSound.play();
             hud.updatePoints(pointValue);
             this.isDead = false;
         }

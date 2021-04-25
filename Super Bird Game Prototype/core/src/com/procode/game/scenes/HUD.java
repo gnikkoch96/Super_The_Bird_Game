@@ -43,7 +43,7 @@ public class HUD implements Disposable {
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     public static int state;
     public int bird_State = 0;
-    private final int GAME_PLAY = 0, GAME_PAUSE = 1, GAME_QUIT = 4;
+    public static final int GAME_PLAY = 0, GAME_PAUSE = 1, GAME_QUIT = 4;
     public static MiniSettingScreen settingScreen;
 
     public HUD(SuperBirdGame game){
@@ -139,6 +139,10 @@ public class HUD implements Disposable {
         });
     }
 
+    //GAME_PLAY, GAME_PAUSE, GAME_QUIT
+    public void setState(int gameState){
+        state = gameState;
+    }
 
     public void updateHealthBar(int currentHealth){
         Texture newHealth = ImageFunctions.resize("screen icons//bird health " + String.valueOf(currentHealth) + ".png", SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /5);
