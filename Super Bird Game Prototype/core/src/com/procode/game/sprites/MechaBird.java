@@ -67,6 +67,8 @@ public class MechaBird extends Enemy {
     private Sound mechaBirdSpin;
     private Sound mechaBirdLaser;
 
+    private boolean playerCollided;
+
     // initializing the mecha bird
     public MechaBird(int mechaBWidth, int mechaBHeight, float speed, final Camera gameCamera){
 
@@ -76,6 +78,7 @@ public class MechaBird extends Enemy {
         timeActionPaused = 0;
         spitHits = maxSpitHits;
         maxAttacksPerEnemy = 1; // 4 hits to destroy enemy in dashing state
+        playerCollided = false;
 
         originalHits = 20; // 45 total hits before destroying the enemy
         totalCurrHits = originalHits;
@@ -365,6 +368,12 @@ public class MechaBird extends Enemy {
                         // destroys the enemy when it is hit by 4 spits, is off screen or hit the player
                         if (Math.abs(super.position.x - currDestination.x) < super.enemySpeed || super.hitbox.isHit(playerHitbox) ||
                                 playerHitbox.isHit(super.hitbox) || spitHits <= 0) {
+
+                            // confirms if player collided with the mecha bird, so points do not count
+                            if(super.hitbox.isHit(playerHitbox) ||
+                                    playerHitbox.isHit(super.hitbox)){
+                                playerCollided = true;
+                            }
                             super.changeState(State.DEAD, -1);
                             this.isDead = true;
                             currAttackInList = 0;
@@ -478,6 +487,7 @@ public class MechaBird extends Enemy {
                             shootPerframe = true;
                             MechaLaser item = shootPool.obtain();
                             item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.9));
+                            activeShots.add(item);
                         }
                         else if (super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() != 3){
                             shootPerframe = false;
@@ -512,10 +522,12 @@ public class MechaBird extends Enemy {
             }
         }
 
-        if(this.isDead){
+        if(this.isDead && (totalCurrHits == 0 || spitHits == 0 || playerCollided)){
             // update point value when the mecha bird is dead (Nikko: I place this here because it wasn't working properly when I placed it in the other statement)
             deadSound.play();
-            hud.updatePoints(pointValue);
+            if(!playerCollided) {
+                hud.updatePoints(pointValue);
+            }
             this.isDead = false;
         }
 
@@ -616,6 +628,7 @@ public class MechaBird extends Enemy {
         spinFinished = false;
         shootPerframe = false;
         currTimeEnteredShoot = 0;
+        playerCollided = false;
     }
 
 

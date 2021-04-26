@@ -155,7 +155,7 @@ public class Spawner {
         }
 
         // finally, random chance of spawning a new enemy if the number is less than the max
-        if (dt - lastEnemySpawnTime > spawnFrequency && activeEnemies.size() < maxEnemies && dt > 10){
+        if (dt - lastEnemySpawnTime > spawnFrequency && activeEnemies.size() < maxEnemies * 2 && dt > 10){
 
             int randomSpawn = (int) Math.random();
             currSpawnPerS *= 1.25;

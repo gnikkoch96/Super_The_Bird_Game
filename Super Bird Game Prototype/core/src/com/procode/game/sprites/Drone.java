@@ -123,7 +123,6 @@ public class Drone extends Enemy {
             if (spitHits <= 0){
                 super.changeState(State.DEAD, -1);
 
-
             }
             else{
 
@@ -162,6 +161,7 @@ public class Drone extends Enemy {
                     super.position.x = super.position.x - (super.enemyWidth * explosionMultiplier / 2);
                     super.position.y = super.position.y - (super.enemyHeight * explosionMultiplier / 2);
                     updateHitboxPos();
+                    hud.updatePoints(pointValue); // only points added when player kills the drone
                 }
                 hasExploded = true;
             }
@@ -173,7 +173,6 @@ public class Drone extends Enemy {
         }
 
         if(this.isDead){ //Nikko: for some odd reason it adds way more points if I placed it in the super.currentState == State.DEAD code
-            hud.updatePoints(pointValue);
             this.isDead = false;
         }
     }
