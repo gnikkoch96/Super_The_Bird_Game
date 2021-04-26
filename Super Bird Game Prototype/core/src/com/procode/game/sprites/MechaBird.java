@@ -60,7 +60,6 @@ public class MechaBird extends Enemy {
     // amount of total hits before destruction
     private int originalHits; // original amount of hits
     private int totalCurrHits; // current hits before destruction
-    public boolean isHit;
 
     // initializing the mecha bird
     public MechaBird(int mechaBWidth, int mechaBHeight, float speed, final Camera gameCamera){
@@ -75,7 +74,7 @@ public class MechaBird extends Enemy {
         originalHits = 20; // 45 total hits before destroying the enemy
         totalCurrHits = originalHits;
         this.isHit = false;
-        this.pointValue = 100; // point value is 10 pts (can change)
+        this.pointValue = 100; // point value is 100 pts (can change)
 
         // stuff for hitbox
         this.gameCamera = gameCamera;
@@ -165,6 +164,8 @@ public class MechaBird extends Enemy {
         setDestination();
     }
 
+    public boolean getIsHit(){return this.isHit;}
+    public void setIsHit(boolean var){this.isHit = var;}
 
     public State getCurrentState(){return super.currentState;}
 

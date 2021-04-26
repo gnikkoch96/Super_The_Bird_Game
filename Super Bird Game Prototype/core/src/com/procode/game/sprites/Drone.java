@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Enemy;
 import com.procode.game.tools.Hitbox;
@@ -32,6 +33,9 @@ public class Drone extends Enemy {
         super(mechaBWidth, mechaBHeight, speed);
 
         this.gameCamera = gameCamera;
+        this.isHit = false;
+        this.pointValue = 50; // 50 points
+
         currDestination = new Vector2();
         hasBeenHit = false;
         hasBeenSet = false;
@@ -61,7 +65,7 @@ public class Drone extends Enemy {
         setDestination();
     }
 
-
+    public boolean getIsHit(){return this.hasBeenHit;}
 
     public void setDestination(){
 
@@ -80,7 +84,7 @@ public class Drone extends Enemy {
 
 
     // will update the frames and everything else
-    public void updateDrone(float deltaTime, Array<BirdSpit> playerSpits, Hitbox playerHitbox){
+    public void updateDrone(float deltaTime, Array<BirdSpit> playerSpits, Hitbox playerHitbox, HUD hud){
         super.update(deltaTime); // updates the frames of the current animation
 
         // checks to see if the player was hit at least once
@@ -118,6 +122,8 @@ public class Drone extends Enemy {
             // unless it is hit 3 times before that, which will result in it being destroyed
             if (spitHits <= 0){
                 super.changeState(State.DEAD, -1);
+
+
             }
             else{
 
@@ -131,6 +137,8 @@ public class Drone extends Enemy {
                         explosionMultiplier = 1.5f;
                     }
                     super.changeState(State.DEAD, -1);
+                    this.isDead = true;
+
                 }
                 else{
                     updatePos();
@@ -139,7 +147,6 @@ public class Drone extends Enemy {
         }
 
         else if ( super.currentState == State.DEAD){
-
             if(!hasExploded && hasBeenHit) {
                 // resize hitbox to a larger size for the explosion effect
                 if(spitHits > 0) {
@@ -163,6 +170,11 @@ public class Drone extends Enemy {
             if (super.deadEnemy.isAnimFinished() == true) {
                 playerSpitsAlreadyHit.clear();
             }
+        }
+
+        if(this.isDead){ //Nikko: for some odd reason it adds way more points if I placed it in the super.currentState == State.DEAD code
+            hud.updatePoints(pointValue);
+            this.isDead = false;
         }
     }
 

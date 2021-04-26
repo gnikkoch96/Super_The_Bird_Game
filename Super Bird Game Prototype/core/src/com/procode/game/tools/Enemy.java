@@ -38,6 +38,7 @@ public class Enemy implements Disposable {
     public Hitbox hitbox;
     protected Vector2 hitboxPosOffset; // the position offset
     protected Vector2 hitboxBoundsOffset; // the hitbox bounds (box width/height) offset
+    protected boolean isHit;
 
 
     // constructor for the enemy class
