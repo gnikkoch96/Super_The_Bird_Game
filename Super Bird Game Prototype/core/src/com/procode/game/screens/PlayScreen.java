@@ -309,7 +309,7 @@ public class PlayScreen extends BaseScene implements Screen {
         hud.stage.draw();
 
     }
-    
+
     @Override
     public void resize(int width, int height) {
         game.viewport.update(width, height);
