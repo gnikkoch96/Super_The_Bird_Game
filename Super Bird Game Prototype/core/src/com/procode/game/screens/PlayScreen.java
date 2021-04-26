@@ -163,11 +163,11 @@ public class PlayScreen extends BaseScene implements Screen {
     }
 
     public void update(float dt){
-        handleInput(dt);
 
         state = HUD.state;
 
         if(!player.isDead()){
+            handleInput(dt);
             player.update(dt);
             player.updateHitDetection(enemySpawner.activeEnemies, hud);
             if(rapidFireSpit) {
@@ -270,7 +270,7 @@ public class PlayScreen extends BaseScene implements Screen {
             }
 
             if(currEnemy instanceof Drone){
-                if(((Drone) currEnemy).getIsHit()){
+                if(((Drone) currEnemy).getIsHit() && (currEnemy.getState()) != Enemy.State.DEAD){
                     Sprite sprite = new Sprite(currEnemyImg);
                     sprite.setPosition(enemyPos.x, enemyPos.y);
                     sprite.setColor(Color.RED);

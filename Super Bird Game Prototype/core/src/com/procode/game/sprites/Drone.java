@@ -50,7 +50,7 @@ public class Drone extends Enemy {
         super.idleEnemy = new Animation();
         super.idleEnemy.setAnimation("drone animations//drone dash ", super.enemyWidth, super.enemyHeight, 1, 3, .15f, true);
         super.deadEnemy = new Animation();
-        deadEnemy.setAnimation("drone animations//drone explode ", super.enemyWidth, super.enemyHeight, 1, 4, .25f, false);
+        super.deadEnemy.setAnimation("drone animations//drone explode ", super.enemyWidth, super.enemyHeight, 1, 4, .25f, false);
 
 
 
@@ -171,10 +171,6 @@ public class Drone extends Enemy {
                 playerSpitsAlreadyHit.clear();
             }
         }
-
-        if(this.isDead){ //Nikko: for some odd reason it adds way more points if I placed it in the super.currentState == State.DEAD code
-            this.isDead = false;
-        }
     }
 
 
@@ -228,6 +224,7 @@ public class Drone extends Enemy {
         spitHits = maxSpitHits;
         explosionMultiplier = 1.5f;
         super.deadEnemy.resizeAnim((int) (super.enemyWidth),(int) (super.enemyHeight));
+        super.deadEnemy.replayLoop();
         super.setEnemySpeed(super.originalSpeed);
         super.changeState(State.IDLE, -1);
         setEnemyInitialPosition();

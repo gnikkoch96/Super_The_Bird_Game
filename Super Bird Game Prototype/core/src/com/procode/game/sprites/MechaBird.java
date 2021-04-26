@@ -63,7 +63,6 @@ public class MechaBird extends Enemy {
     private int totalCurrHits; // current hits before destruction
 
     // sounds for mecha bird
-    private float volume;
     private Sound mechaBirdSpin;
     private Sound mechaBirdLaser;
 
