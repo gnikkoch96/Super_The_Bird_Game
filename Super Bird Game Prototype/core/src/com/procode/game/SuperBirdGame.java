@@ -3,11 +3,15 @@ package com.procode.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.procode.game.scenes.BaseScene;
+import com.procode.game.scenes.HUD;
+import com.procode.game.screens.HomeScreen;
 import com.procode.game.screens.LoginScreen;
 import com.procode.game.screens.PlayScreen;
 import com.procode.game.screens.Scoreboard;
@@ -28,7 +32,6 @@ public class SuperBirdGame extends Game {
 	public static float aspectRatio;
 
 	public SpriteBatch batch;
-
 
 	/* WARNING Using AssetManager in a static way can cause issues, especially on Android.
 	Instead you may want to pass around Assetmanager to those the classes that need it.
@@ -59,11 +62,16 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/spitCollision.mp3", Sound.class);
 		manager.load("audio/sound/mechaBirdSpin.mp3", Sound.class);
 		manager.load("audio/sound/mechaBirdLaser.mp3", Sound.class);
+//		manager.load("audio/sound/spitCollision.mp3", Sound.class);
+		manager.load("audio/sound/mecha_dead.wav", Sound.class);
+		manager.load("audio/music/music.mp3", Music.class);
 		manager.finishLoading();
+
 
 //		this.setScreen(new SplashScreen(this));
 		this.setScreen(new PlayScreen(this));
 	}
+
 
 	@Override
 	public void resize(int width, int height) {

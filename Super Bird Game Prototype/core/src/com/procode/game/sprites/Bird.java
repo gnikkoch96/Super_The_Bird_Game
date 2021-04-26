@@ -46,7 +46,7 @@ public class Bird implements Disposable {
     private State previousState;
 
     // boolean vars for bird (used in the damagedBird())
-    private boolean isDead;
+    private boolean dead;
     public boolean isInvincible;
 
     // bird properties
@@ -84,7 +84,7 @@ public class Bird implements Disposable {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
         position = new Vector2(x,y);
-        isDead = false;
+        dead = false;
         isInvincible = false;
         isShrunk = false;
         shrinking = false;
@@ -165,11 +165,13 @@ public class Bird implements Disposable {
     // gets the current image of the bird
     public Texture getBirdImage(){return currentAnimation.getCurrImg();}
 
+    // determines if the bird is dead or not
+    public boolean isDead(){return dead;}
+
     // gets the position of the bird
     public Vector2 getPosition(){
         return this.position;
     }
-
 
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
@@ -210,7 +212,6 @@ public class Bird implements Disposable {
             previousState = currentState;
             //keep running if state is not dead
             if(currentState != State.DEAD) {
-
                 if (!this.isInvincible) {
                     switchAnimations(State.IDLE);
                 } else { // is currently invincible
@@ -243,7 +244,8 @@ public class Bird implements Disposable {
                         switchAnimations(State.IDLE);
                     }
                 }
-            //stops the dead animation from updating after reaching the final frame
+
+                //stops the dead animation from updating after reaching the final frame
            if(currentState != State.DEAD)
             currentAnimation.updateFrame(deltaTime);
            else
@@ -255,15 +257,12 @@ public class Bird implements Disposable {
         this.hitboxPosOffset.set((float) (position.x + (int)(BirdWidth/8)), (float) (position.y +  (this.BirdHeight / 10)));
         this.hitbox.update(this.hitboxPosOffset);
 
-//        // particles
-//        spitParticles.update(deltaTime);
-
         // updates projectiles
         for(BirdSpit spit : activeSpits){
             spit.update(deltaTime);
         }
 
-        // manage spits that exit the screen
+        // manage spits that exit the screen (could have been put into the playscreen)
         for(BirdSpit spit: activeSpits){
             if(spit.isOutOfScreen() || spit.isCollided()){
                 spitPool.free(spit);
@@ -377,6 +376,8 @@ public class Bird implements Disposable {
         deadSoundSad.play(volume);
 
         // set the screen to game over screen
+        dead = true;
+
 
     }
 
@@ -500,10 +501,11 @@ public class Bird implements Disposable {
             if(enemy instanceof MechaBird){
                 Array<MechaLaser> activeShots = ((MechaBird)(enemy)).activeShots;
                 for (MechaLaser laser : activeShots) {
-
                     if (this.hitbox.isHit(laser.hitbox) || laser.hitbox.isHit(this.hitbox)) {
 //                          Gdx.app.log("PLAYER->ENEMY", "HIT");
+                        laser.setCollision(true);
                         this.damageBird(hud);
+
                     }
                 }
             }

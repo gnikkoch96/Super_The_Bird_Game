@@ -3,6 +3,7 @@ package com.procode.game.tools;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.utils.Array;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Bird;
 import com.procode.game.sprites.BirdSpit;
 import com.procode.game.sprites.Drone;
@@ -23,6 +24,7 @@ public class Spawner {
     // variables that control how many enemies on the screen,
     // rate of spawning and enemy speed
     private int maxEnemies;
+    private int orgininalMaxEnemies;
     private int minEnemies;
 
     private float enemyMaxSpeed;
@@ -35,14 +37,18 @@ public class Spawner {
 
     private float lastTimeIncreaseDifficulty;
     private boolean changeEnemyAttacks;
-    private float addedDifficultyTime = 25;
+    public float addedDifficultyTime = 25;
+    // point system related
+    private HUD hud;
 
 
 
     // will initialize variables and also initialize enemies depending on the maxEnemies,
     // will initialize that many enemies per enemy variant
-    public Spawner(int maxEnemies, int minEnemies, float enemyMaxSpeed, float enemyMinSpeed, float newSpawnPerS, float spawnFrequency, Camera gameCam){
+    public Spawner(int maxEnemies, int minEnemies, float enemyMaxSpeed, float enemyMinSpeed,
+                   float newSpawnPerS, float spawnFrequency, Camera gameCam, HUD hud) {
         this.maxEnemies = maxEnemies;
+        this.orgininalMaxEnemies = maxEnemies;
         this.minEnemies = minEnemies;
         this.enemyMaxSpeed = enemyMaxSpeed;
         this.enemyMinSpeed = enemyMinSpeed;
@@ -56,6 +62,7 @@ public class Spawner {
         lastTimeIncreaseDifficulty = 0;
         changeEnemyAttacks = true;
 
+        this.hud = hud;
         // initialize all variants of enemies based off of the max into the inactive enemies
         // initialize mechaBirds
         int mechaBirdWidth = SuperBirdGame.GAME_WIDTH / 5;
@@ -86,7 +93,8 @@ public class Spawner {
         }
 
 
-        // now shuffle the list for randomness and add the min amount of enemies onto the active list
+        // now shuffle the list for randomness and add the min
+        // amount of enemies onto the active list
         Collections.shuffle(inactiveEnemies);
         int iterator = 0;
         while (iterator < minEnemies){
@@ -110,11 +118,11 @@ public class Spawner {
 
             // mecha bird update
             if (activeEnemies.get(i) instanceof MechaBird){
-                ((MechaBird) activeEnemies.get(i)).updateMechaBird(dt, playerHitbox, playerSpit);
+                ((MechaBird) activeEnemies.get(i)).updateMechaBird(dt, playerHitbox, playerSpit, hud);
             }
             // remaining cases for updating for a drone or other enemy type
             else if(activeEnemies.get(i) instanceof Drone){
-                ((Drone) activeEnemies.get(i)).updateDrone(dt, playerSpit, playerHitbox);
+                ((Drone) activeEnemies.get(i)).updateDrone(dt, playerSpit, playerHitbox, hud);
             }
         }
 
@@ -177,9 +185,10 @@ public class Spawner {
         if(dt - lastTimeIncreaseDifficulty > addedDifficultyTime) {
             lastTimeIncreaseDifficulty = dt;
 
-            // if time is greater than 25 seconds, will either increase # of enemies or # of attacks per enemy
+            // if time is greater than 25 seconds, or if the max amount of enemies reached the limit,
+            // will either increase # of enemies or # of attacks per enemy
             // increase # of attacks for mecha birds
-            if (changeEnemyAttacks) {
+            if (changeEnemyAttacks || minEnemies == orgininalMaxEnemies * 2) {
                 changeEnemyAttacks = false;
 
                 for (int i = 0; i < inactiveEnemies.size(); i++) {
@@ -213,56 +222,8 @@ public class Spawner {
 
     // resets the minimum amount of ememies
     public void setMinEnemies(int minEnemies){
-        if(minEnemies > maxEnemies){
-            setMaxEnemies(minEnemies);
+        if(minEnemies < orgininalMaxEnemies * 2) {
             this.minEnemies = minEnemies;
-        }
-        else {
-            this.minEnemies = minEnemies;
-        }
-    }
-
-
-
-    // the new maximum enemies (must be larger than the current one)
-    public void setMaxEnemies(int maxEnemies){
-        if(this.maxEnemies < maxEnemies){
-
-            // now add more enemies of each type to match the current max
-
-            // initialize all variants of enemies based off of the max into the inactive enemies
-            // initialize mechaBirds
-            int currMax = maxEnemies - this.maxEnemies;
-            this.maxEnemies = maxEnemies;
-            int mechaBirdWidth = SuperBirdGame.GAME_WIDTH / 5;
-            int mechaBirdHeight = SuperBirdGame.GAME_HEIGHT / 5;
-            for (int i = 0;  i < currMax; i++){
-
-                float randSpeed = (float) (Math.random() * enemyMaxSpeed);
-                if(randSpeed < enemyMinSpeed){
-                    randSpeed = enemyMinSpeed;
-                }
-                MechaBird mecha = new MechaBird(mechaBirdWidth, mechaBirdHeight, (int) randSpeed, gamecam);
-
-                inactiveEnemies.add(mecha);
-            }
-
-            // now do the same for drones
-            int droneWidth = SuperBirdGame.GAME_WIDTH / 6;
-            int droneHeight = SuperBirdGame.GAME_HEIGHT / 7;
-            for (int i = 0;  i < currMax; i++){
-
-                float randSpeed = (float) (Math.random() * enemyMaxSpeed / 2);
-                if(randSpeed < enemyMinSpeed / 2){
-                    randSpeed = (float) (enemyMinSpeed / 2);
-                }
-                Drone drone = new Drone(droneWidth, droneHeight, (int) randSpeed, gamecam);
-
-                inactiveEnemies.add(drone);
-            }
-        }
-        else {
-            this.maxEnemies = maxEnemies;
         }
     }
 
