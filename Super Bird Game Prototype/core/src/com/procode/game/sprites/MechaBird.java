@@ -1,11 +1,13 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.screens.SettingsScreen;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Enemy;
 import com.procode.game.tools.Hitbox;
@@ -53,6 +55,11 @@ public class MechaBird extends Enemy {
     // amount of total hits before destruction
     private int originalHits; // original amount of hits
     private int totalCurrHits; // current hits before destruction
+
+    // sounds for mecha bird
+    private float volume;
+    private Sound mechaBirdSpin;
+    private Sound mechaBirdLaser;
 
     // initializing the mecha bird
     public MechaBird(int mechaBWidth, int mechaBHeight, float speed, final Camera gameCamera){
@@ -146,6 +153,11 @@ public class MechaBird extends Enemy {
         // now do the following: move the mecha bird until it reaches the screen visually, (is on the screen)
         // idle animation will play until this position is reached.
         setDestination();
+
+        // initialize sounds
+        setVolume();
+        mechaBirdSpin = SuperBirdGame.manager.get("audio/sound/mechaBirdSpin.mp3", Sound.class);
+        mechaBirdLaser = SuperBirdGame.manager.get("audio/sound/mechaBirdLaser.mp3", Sound.class);
     }
 
 
@@ -362,12 +374,14 @@ public class MechaBird extends Enemy {
                     if ((super.currAttackState != 2 && super.currAttackState != 4 && super.currAttackState != 3)){
                         super.changeState(State.ATTACK, 2);
                         setDestination();
+                        mechaBirdSpin.play(volume);
                     }
 
                     // charge up until the animation is complete, then start to spin in a circular motion
                     if (super.currAttackState == 2 && super.enemyAttacks.get(super.currAttackState).isAnimFinished() == true) {
                         super.changeState(State.ATTACK, 3);
                         super.setEnemySpeed((float) (super.enemySpeed * 1.5)); // needs to spin fast
+                        mechaBirdSpin.play();
                     }
 
                     // will spin until it reaches its destination and when it does,
@@ -446,6 +460,7 @@ public class MechaBird extends Enemy {
                             MechaLaser item = shootPool.obtain();
                             item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.9)); //Nikko: change to this when the image has been adjusted
                             activeShots.add(item);
+                            mechaBirdLaser.play(volume);
                         }
                         else if (super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() != 3){
                             shootPerframe = false;
@@ -591,6 +606,34 @@ public class MechaBird extends Enemy {
     // reset the maximum amount of attacks for the mecha bird
     public void resetMaxAttacks(int maxAttack) {
         this.maxAttacksPerEnemy = maxAttack;
+    }
+
+
+    //this method changes the volume from the static integer from SettingsScreen
+    //the changes occur whenever the user clicks the right and left buttons of volume
+    //from the SettingsScreen and later on from MiniSettingScreen on PlayScreen
+    public void setVolume(){
+        //this if statement captures the changes on the volume from the settings
+        if(SettingsScreen.volumeChanges == 1)
+            volume = 0.1f;
+        else if(SettingsScreen.volumeChanges == 2)
+            volume = 0.2f;
+        else if(SettingsScreen.volumeChanges == 3)
+            volume = 0.3f;
+        else if(SettingsScreen.volumeChanges == 4)
+            volume = 0.4f;
+        else if(SettingsScreen.volumeChanges == 5)
+            volume = 0.5f;
+        else if(SettingsScreen.volumeChanges == 6)
+            volume = 0.6f;
+        else if(SettingsScreen.volumeChanges == 7)
+            volume = 0.7f;
+        else if(SettingsScreen.volumeChanges == 8)
+            volume = 0.8f;
+        else if(SettingsScreen.volumeChanges == 9)
+            volume = 0.9f;
+        else if(SettingsScreen.volumeChanges == 10)
+            volume = 1.0f;
     }
 
 
