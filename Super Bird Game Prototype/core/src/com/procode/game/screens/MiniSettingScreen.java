@@ -127,7 +127,9 @@ public class MiniSettingScreen{
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //btnLoginClicked();
+                Gdx.app.log("Pressed: " , "Play");
                 HUD.state = 0;
+                Gdx.app.log("Hud.state", String.valueOf(HUD.state));
             }
         });
 

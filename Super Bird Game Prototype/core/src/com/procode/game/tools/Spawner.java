@@ -3,6 +3,7 @@ package com.procode.game.tools;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.utils.Array;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.scenes.HUD;
 import com.procode.game.sprites.Bird;
 import com.procode.game.sprites.BirdSpit;
 import com.procode.game.sprites.Drone;
@@ -37,13 +38,15 @@ public class Spawner {
     private float lastTimeIncreaseDifficulty;
     private boolean changeEnemyAttacks;
     public float addedDifficultyTime = 25;
+    // point system related
+    private HUD hud;
 
 
 
     // will initialize variables and also initialize enemies depending on the maxEnemies,
     // will initialize that many enemies per enemy variant
     public Spawner(int maxEnemies, int minEnemies, float enemyMaxSpeed, float enemyMinSpeed,
-                   float newSpawnPerS, float spawnFrequency, Camera gameCam) {
+                   float newSpawnPerS, float spawnFrequency, Camera gameCam, HUD hud) {
         this.maxEnemies = maxEnemies;
         this.orgininalMaxEnemies = maxEnemies;
         this.minEnemies = minEnemies;
@@ -59,6 +62,7 @@ public class Spawner {
         lastTimeIncreaseDifficulty = 0;
         changeEnemyAttacks = true;
 
+        this.hud = hud;
         // initialize all variants of enemies based off of the max into the inactive enemies
         // initialize mechaBirds
         int mechaBirdWidth = SuperBirdGame.GAME_WIDTH / 5;
@@ -114,11 +118,11 @@ public class Spawner {
 
             // mecha bird update
             if (activeEnemies.get(i) instanceof MechaBird){
-                ((MechaBird) activeEnemies.get(i)).updateMechaBird(dt, playerHitbox, playerSpit);
+                ((MechaBird) activeEnemies.get(i)).updateMechaBird(dt, playerHitbox, playerSpit, hud);
             }
             // remaining cases for updating for a drone or other enemy type
             else if(activeEnemies.get(i) instanceof Drone){
-                ((Drone) activeEnemies.get(i)).updateDrone(dt, playerSpit, playerHitbox);
+                ((Drone) activeEnemies.get(i)).updateDrone(dt, playerSpit, playerHitbox, hud);
             }
         }
 

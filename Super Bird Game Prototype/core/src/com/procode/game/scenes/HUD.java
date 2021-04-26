@@ -43,7 +43,7 @@ public class HUD implements Disposable {
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     public static int state;
     public int bird_State = 0;
-    private final int GAME_PLAY = 0, GAME_PAUSE = 1, GAME_QUIT = 4;
+    public static final int GAME_PLAY = 0, GAME_PAUSE = 1, GAME_QUIT = 4;
     public static MiniSettingScreen settingScreen;
 
     public HUD(SuperBirdGame game){
@@ -58,7 +58,7 @@ public class HUD implements Disposable {
         leftTable.setFillParent(true);
 
         Table scoreTable = new Table();
-        scoreTable.bottom();
+        scoreTable.left();
         scoreTable.setFillParent(true);
 
         // for changing the fonts when displaying score
@@ -80,7 +80,7 @@ public class HUD implements Disposable {
         // displays
         healthBar = new Image(ImageFunctions.resize("screen icons//bird health 6.png", SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /5));
         pauseBtn = ImageFunctions.resizeImageButton("screen icons//pause button.png", SuperBirdGame.GAME_WIDTH /35, SuperBirdGame.GAME_HEIGHT /25);
-        scoreBackground = new Image(ImageFunctions.resize("screen icons//score-backgroundTwo.png", SuperBirdGame.GAME_WIDTH /4, SuperBirdGame.GAME_HEIGHT /7));
+        scoreBackground = new Image(ImageFunctions.resize("screen icons//score-backgroundTwo.png", SuperBirdGame.GAME_WIDTH /4, SuperBirdGame.GAME_HEIGHT/12));
         scoreTextLabel = new Label("SCORE: ", style);
         scoreLabel = new Label(score + " ", style);
 
@@ -90,7 +90,8 @@ public class HUD implements Disposable {
         //--Nikko: (Changeable) I have placed the score to be in the middle of the screen as opposed to the right as the user doesn't have to look very far to see their score
         leftTable.add(scoreTextLabel).padBottom((int) (SuperBirdGame.GAME_HEIGHT /1.1)).padLeft((int) (SuperBirdGame.GAME_WIDTH /4.5));
         leftTable.add(scoreLabel).padBottom((int) (SuperBirdGame.GAME_HEIGHT /1.1));
-        scoreTable.add(scoreBackground).padBottom((float) (SuperBirdGame.GAME_HEIGHT /1.1));
+        scoreTable.add(scoreBackground).padBottom(SuperBirdGame.GAME_HEIGHT/2 + SuperBirdGame.GAME_HEIGHT/3 + SuperBirdGame.GAME_HEIGHT/15)
+                .padLeft(SuperBirdGame.GAME_WIDTH/2 - SuperBirdGame.GAME_WIDTH/8);
 
         //set the sate of the PauseBtn
         setPauseBtn();
@@ -112,7 +113,7 @@ public class HUD implements Disposable {
         stage.addListener(gamepad.clickListener);
 
         //Display table to screen
-//        stage.addActor(scoreTable);
+        stage.addActor(scoreTable);
         stage.addActor(leftTable);
 
         //set up the mini settings for the PlayScreen
@@ -139,14 +140,20 @@ public class HUD implements Disposable {
         });
     }
 
+    //GAME_PLAY, GAME_PAUSE, GAME_QUIT
+    public void setState(int gameState){
+        state = gameState;
+    }
 
-
-    //--Nikko: Might change this to update as I can just use one method to update the healthbar and score label--//
     public void updateHealthBar(int currentHealth){
         Texture newHealth = ImageFunctions.resize("screen icons//bird health " + String.valueOf(currentHealth) + ".png", SuperBirdGame.GAME_WIDTH /7, SuperBirdGame.GAME_HEIGHT /5);
         healthBar.setDrawable(new TextureRegionDrawable(new TextureRegion(newHealth)));
     }
 
+    public void updatePoints(int point){
+        score += point;
+        scoreLabel.setText(score);
+    }
     @Override
     public void dispose() {
         stage.dispose();

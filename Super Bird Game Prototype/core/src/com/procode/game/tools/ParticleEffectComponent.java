@@ -5,13 +5,12 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
-public class ParticleEffectComponent{
+public class ParticleEffectComponent implements Disposable {
     private ParticleEffect particleEffect;
     private ParticleEffectPool particleEffectPool; // manages the particles
     private Array<ParticleEffectPool.PooledEffect> effects;
-    private float deltaTime;
-
 
     // particleDir refers to the directory the .p file is located at
     // imagesDir refers to the directory where the images used to create the .p file is located at
@@ -29,20 +28,15 @@ public class ParticleEffectComponent{
 
     }
 
-    public Array<ParticleEffectPool.PooledEffect> getEffects(){return effects;}
-
     public void createParticle(float x, float y){ // create particle only when collisions occur
         ParticleEffectPool.PooledEffect effect = particleEffectPool.obtain();
         effect.setPosition(x, y);
         this.effects.add(effect);
-        Gdx.app.log("(Create Particle) Effect Size: ", String.valueOf(effects.size));
     }
 
     public void update(float delta){
-        deltaTime = delta; //Nikko: might be a better way of organizing this
         for(ParticleEffectPool.PooledEffect effect : this.effects){
             effect.update(delta);
-
             if(effect.isComplete()){
                 effect.free();
                 this.effects.removeValue(effect, true);
@@ -54,8 +48,13 @@ public class ParticleEffectComponent{
     public void renderParticles(SpriteBatch sb){ // renders particles that are created
         for(ParticleEffectPool.PooledEffect effect : this.effects){
             effect.draw(sb);
-            Gdx.app.log("Effect Complete:", String.valueOf(effect.isComplete()));
         }
     }
 
+    @Override
+    public void dispose() {
+        particleEffect.dispose();
+        particleEffectPool.clear();
+        effects.clear();
+    }
 }

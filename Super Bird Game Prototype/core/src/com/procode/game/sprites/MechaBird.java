@@ -1,11 +1,14 @@
 package com.procode.game.sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Enemy;
 import com.procode.game.tools.Hitbox;
@@ -42,6 +45,10 @@ public class MechaBird extends Enemy {
     private boolean spinFinished;
     private Vector2 originalPos;
 
+    // sounds
+    private float volume;
+    private Sound deadSound;
+
     // stuff for the shoot
     private Vector2 playerPos; // needs the players position so the enemy can follow the player
     private float currTimeEnteredShoot; // current time the bird shot
@@ -53,6 +60,7 @@ public class MechaBird extends Enemy {
     // amount of total hits before destruction
     private int originalHits; // original amount of hits
     private int totalCurrHits; // current hits before destruction
+    public boolean isHit;
 
     // initializing the mecha bird
     public MechaBird(int mechaBWidth, int mechaBHeight, float speed, final Camera gameCamera){
@@ -66,6 +74,8 @@ public class MechaBird extends Enemy {
 
         originalHits = 20; // 45 total hits before destroying the enemy
         totalCurrHits = originalHits;
+        this.isHit = false;
+        this.pointValue = 100; // point value is 10 pts (can change)
 
         // stuff for hitbox
         this.gameCamera = gameCamera;
@@ -122,6 +132,10 @@ public class MechaBird extends Enemy {
         Animation mechaBirdShoot = new Animation();
         mechaBirdShoot.setAnimation("mecha bird animations//mecha bird shoot ", super.enemyWidth, super.enemyHeight, 1, 5, .75f, true);
 
+        // damaged animations
+        Animation mechaBirdDamaged = new Animation();
+        mechaBirdDamaged.setAnimation("mecha bird animations//damaged//mecha bird damaged ", super.enemyWidth, super.enemyHeight, 1, 8, .50f, false);
+
         // add all of the animations to the arraylist from the super class
         super.setAttackAnimation(mechaBirdDashCharge);
         super.setAttackAnimation(mechaBirdDashing);
@@ -143,12 +157,16 @@ public class MechaBird extends Enemy {
         super.hitboxBoundsOffset = new Vector2((int) (super.enemyWidth/ 1.5), ((int)(super.enemyHeight) - (super.enemyHeight/3)));
         super.hitbox = new Hitbox(new Vector2((int)(super.position.x + super.hitboxPosOffset.x), (int)(super.position.y + super.hitboxPosOffset.y)), (int) super.hitboxBoundsOffset.x, (int) super.hitboxBoundsOffset.y, gameCamera);
 
+        // sounds
+        deadSound = SuperBirdGame.manager.get("audio/sound/mecha_dead.wav", Sound.class);
+
         // now do the following: move the mecha bird until it reaches the screen visually, (is on the screen)
         // idle animation will play until this position is reached.
         setDestination();
     }
 
 
+    public State getCurrentState(){return super.currentState;}
 
     // randomly chooses the attacks to do
     // will pick out random attacks until a point where the mecha bird does a dash
@@ -247,7 +265,7 @@ public class MechaBird extends Enemy {
     // updates the frames, state, position and actions depending on the current state/attack
     // need to pass in the player hitbox to see if there is a collision
     // and pass in the players active spits to see if there is a collision between the spits
-    public void updateMechaBird(float deltaTime, Hitbox playerHitbox, Array<BirdSpit> playerSpits){
+    public void updateMechaBird(float deltaTime, Hitbox playerHitbox, Array<BirdSpit> playerSpits, HUD hud){
 
         super.update(deltaTime); // updates the frames of the current animation
 
@@ -336,6 +354,7 @@ public class MechaBird extends Enemy {
                         if (Math.abs(super.position.x - currDestination.x) < super.enemySpeed || super.hitbox.isHit(playerHitbox) ||
                                 playerHitbox.isHit(super.hitbox) || spitHits <= 0) {
                             super.changeState(State.DEAD, -1);
+                            this.isDead = true;
                             currAttackInList = 0;
                         }
 
@@ -444,8 +463,7 @@ public class MechaBird extends Enemy {
                         if(super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() == 3 && shootPerframe == false) {
                             shootPerframe = true;
                             MechaLaser item = shootPool.obtain();
-                            item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.9)); //Nikko: change to this when the image has been adjusted
-                            activeShots.add(item);
+                            item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.9));
                         }
                         else if (super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() != 3){
                             shootPerframe = false;
@@ -470,7 +488,6 @@ public class MechaBird extends Enemy {
 
         // enemy is destroyed
         else if (super.currentState == State.DEAD) {
-
             // resize hitbox to a larger size for the explosion effect
             super.hitbox.resize((int) (hitboxBoundsOffset.x * 1.5), (int) (hitboxBoundsOffset.y * 1.5));
 
@@ -481,16 +498,25 @@ public class MechaBird extends Enemy {
             }
         }
 
+        if(this.isDead){
+            // update point value when the mecha bird is dead (Nikko: I place this here because it wasn't working properly when I placed it in the other statement)
+            deadSound.play();
+            hud.updatePoints(pointValue);
+            this.isDead = false;
+        }
+
         // takes into account the current hits taken so far
         for (BirdSpit spits: playerSpits ) {
             Hitbox currSpitHitbox = spits.getHitbox();
             if (currSpitHitbox.isHit(super.hitbox) || super.hitbox.isHit(currSpitHitbox)) {
+                this.isHit = true;
                 totalCurrHits -= 1;
             }
         }
 
         // if taken more than the limit, destroy the enemy
         if (totalCurrHits < 1 && super.currentState != State.DEAD){
+            this.isDead = true;
             super.changeState(State.DEAD, -1);
         }
 
@@ -501,7 +527,7 @@ public class MechaBird extends Enemy {
 
         // manage spits that exit the screen
         for(MechaLaser laser: activeShots){
-            if(laser.isOutOfScreen()){
+            if(laser.isOutOfScreen() || laser.isCollided()){
                 shootPool.free(laser);
                 activeShots.removeValue(laser, true);
             }
