@@ -1,6 +1,8 @@
 package com.procode.game.screens;
 
 
+import android.provider.ContactsContract;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -55,10 +57,13 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     private Container<Table> tableContainer;
     public static User currentUser;
     public static boolean userStatus = false;
+    private Database database;
 
     public LoginScreen(SuperBirdGame g){
         currentUser = new User();
         game = g;
+
+        database = new Database();
 
         stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
@@ -176,7 +181,11 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                btnLoginClicked();
+
+               // User user = new User();
+               // user.Test(userName.getText(), password.getText());
+                //btnLoginClicked();
+                database.signInAuthentication(userName.getText(),password.getText());
                 return true;
             }
         });
@@ -192,7 +201,11 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         btnSignUp.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                btnSignUpClicked();
+                //User user = new User();
+               // user.resetPassword(userName.getText(), password.getText());
+               // btnSignUpClicked();
+               // database.upDatePassword("1231234","321321");
+                database.resetPassword(userName.getText());
             }
         });
 

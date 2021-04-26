@@ -4,7 +4,14 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -12,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.procode.game.User;
 import com.procode.game.screens.LoginScreen;
-
+import java.lang.Object;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
@@ -22,14 +29,28 @@ public class Database {
     private final HashMap<String,Object> userdataMap = new HashMap<>();
     private String parentDbName; // this is the parent node from the database
 
+    private FirebaseAuth myAuth;
+
     private String username, password, email, fullName;
     public static boolean userStatus;
+
+    public Database(){
+        this.username = "";
+        this.password = "";
+        this.email = "";
+        this.fullName = "";
+        this.parentDbName = "Users";
+        this.userStatus = false;
+        this.myAuth = FirebaseAuth.getInstance();
+    }
 
     public Database(String username, String password){
         this.username = username;
         this.password = password;
         this.parentDbName = "Users";
         this.userStatus = false;
+        this. myAuth = FirebaseAuth.getInstance();
+
     }
 
     public Database(String username, String password, String email, String fullname){
@@ -39,6 +60,87 @@ public class Database {
         this.fullName = fullname;
         this.parentDbName = "Users";
         this.userStatus = false;
+        this.myAuth = FirebaseAuth.getInstance();
+    }
+
+    public void resetPassword(String email){
+
+        myAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    System.out.println(FirebaseAuth.getInstance().getCurrentUser());
+                }
+            }
+        });
+
+    }
+
+    public void upDatePassword(String oldpassword,final String newpassword){
+      //  myAuth = FirebaseAuth.getInstance();
+        //get current user
+        final FirebaseUser user = myAuth.getCurrentUser();
+        //re-authenticate the user
+        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(),oldpassword);
+
+        user.reauthenticate(credential).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                //successfully authenticated begin to update
+                user.updatePassword(newpassword).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        System.out.println("succesffully");
+                    }
+                });
+            }
+        });
+
+    }
+
+    public void signInAuthentication(String email, String password){
+        //myAuth = FirebaseAuth.getInstance();
+        myAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful())
+                    System.out.println("I'm here: " + FirebaseAuth.getInstance().getUid());
+            }
+        });
+
+    }
+
+    //this method will insert information to the database after authenticating if the email
+    //and password matches or exist
+    public void authenticateUser(String email, String password){
+        userdataMap.put("username", this.username);
+        userdataMap.put("password", this.password);
+        userdataMap.put("email", this.email);
+        userdataMap.put("name", this.fullName);
+        userdataMap.put("scoreboard", 0);
+
+        myAuth = FirebaseAuth.getInstance();
+
+        myAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if(task.isSuccessful())
+                        rootRef.child("Authentication").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).updateChildren(userdataMap).
+                                addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            // Toast
+                                            // userStatus = true;
+                                        }else{
+                                        }
+                                    }
+                                });;
+                    }
+                }
+        );
     }
 
     //this class will insert the data to the database including the username, password,
@@ -54,13 +156,13 @@ public class Database {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                rootRef.child("Users").child(username).updateChildren(userdataMap).
+                rootRef.child("Users").child(username).child(password).updateChildren(userdataMap).
                         addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
                                    // Toast
-                                    userStatus = true;
+                                   // userStatus = true;
                                }else{
                                }
                             }
@@ -163,6 +265,7 @@ public class Database {
 
     //=============================Start of User Validation ========================================
 
+    //this method will check if the username and password matches
     public void checkDatabase(final String userName, final String userPassword){
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {

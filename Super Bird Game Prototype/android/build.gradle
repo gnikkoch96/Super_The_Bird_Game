@@ -89,4 +89,8 @@ task run(type: Exec) {
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.procode.game/com.procode.game.AndroidLauncher'
 }
 
+dependencies {
+    implementation 'com.google.firebase:firebase-auth:20.0.3'
+}
+
 eclipse.project.name = appName + "-android"

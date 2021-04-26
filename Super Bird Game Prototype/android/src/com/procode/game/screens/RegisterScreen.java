@@ -261,7 +261,10 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         btnNext.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                //if(userName.getText())
                 //go to password
+
+
                 btnNextClicked("Username");
             }
         });
@@ -412,6 +415,14 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             game.setScreen(new ConfirmationScreen(game, map));
         }
 
+    }
+
+    //this method will validate the user input, it will check if the account already exist
+    //if so prompt user to enter a different one.
+    private void validateInput(String state){
+        if(state.equals("username")){
+
+        }
     }
 
     public void btnNextClicked(){

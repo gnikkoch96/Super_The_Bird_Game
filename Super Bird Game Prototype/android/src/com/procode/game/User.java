@@ -1,5 +1,7 @@
 package com.procode.game;
 
+import android.provider.ContactsContract;
+
 import com.procode.game.screens.LoginScreen;
 
 public class User {
@@ -39,6 +41,19 @@ public class User {
         Database data = new Database(username, password, email, fullName);
         //insert data to the database
         data.insertData();
+    }
+
+    public void resetPassword(String email, String password){
+        Database data = new Database(email,"null");
+        data.authenticateUser(email, password);
+        data.resetPassword(email);
+    }
+
+    public void Test(String email, String password){
+        Database data = new Database(email, password);
+
+        //data.authenticateUser(email, password);
+        data.signInAuthentication(email,password);
     }
 
 
