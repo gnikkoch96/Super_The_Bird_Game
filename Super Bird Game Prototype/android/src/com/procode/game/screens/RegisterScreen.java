@@ -292,37 +292,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         tableContainer0.setActor(userNameTable);
     }
 
-    public boolean validateAccount(){
-        FreeTypeFontGenerator fg = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter fp = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fp.size = 80;
-        BitmapFont f = new BitmapFont();
-        f = fontGenerator.generateFont(fp);
-        Label.LabelStyle ls = new Label.LabelStyle();
-        ls = skin.get(Label.LabelStyle.class);
-        ls.font = f;
-        if(username_input.length() >= 0 && username_input.length() < 6){
-            if(message == null) {
-                message = new Label("Username should be atleast 6 characters", ls);
-                message.setPosition(game.GAME_WIDTH / 2 - (game.GAME_HEIGHT / 2), (game.GAME_HEIGHT / 2) - 400);
-                message.setSize(300, 300);
-                message.setVisible(true);
-                stage.addActor(message);
-            }
-            return false;
-        }else if(password.isVisible() == true && password.getText().length() == 0){
-
-
-            return false;
-        }/*else if(fullName.isVisible() == true && fullName.getText().length() == 0){
-
-            return false;
-        }else if(email.isVisible() == true && email.getText().length() == 0){
-
-            return false;
-        }*/
-        return true;
-    }
 
 
     public void userPassword(){
@@ -425,83 +394,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         }
     }
 
-    public void btnNextClicked(){
-        //just to see the user name in the console
 
-        username_input = userName.getText();
-
-        System.out.println("Clicked");
-        //if(validateAccount() == true && password.isVisible() == false
-       // && fullName.isVisible() == false && email.isVisible() == false) {
-
-        tableContainer0.setVisible(false);
-        tableContainer1.setVisible(true);
-
-        if(validateAccount() == true && tableContainer1.isVisible() == false) {
-            tableContainer0.setVisible(false);
-            tableContainer1.setVisible(true);
-
-
-        }else if(validateAccount() == true && passwordTable.isVisible() == true) {
-            passwordTable.setVisible(false);
-            txtPassword.setVisible(false);
-            password.setVisible(false);
-            fullNameTable.setVisible(true);
-            fullName.setVisible(true);
-            txtFullName.setVisible(true);
-            btnBack.setVisible(true);
-
-        }else if(validateAccount() == true && fullNameTable.isVisible() == true){
-            fullNameTable.setVisible(false);
-            txtFullName.setVisible(false);
-            fullName.setVisible(false);
-            emailTable.setVisible(true);
-            txtEmail.setVisible(true);
-            email.setVisible(true);
-
-
-        }else if(validateAccount() == true && email.isVisible() == true){
-            HashMap<String,String> map = new HashMap<String,String>();
-            map.put("name", fullName.getText());
-            map.put("username", userName.getText());
-            map.put("password", password.getText());
-            map.put("email", email.getText());
-            System.out.println("olla" + email.getText());
-            game.setScreen(new ConfirmationScreen(game, map));
-        }
-        //game.setScreen(new PlayScreen(game));
-    }
-
-    public void btnBackClicked(){
-        if(userName.isVisible() == true && userNameTable.isVisible())
-            game.setScreen(new LoginScreen(game));
-        if(password.isVisible() == true && passwordTable.isVisible() == true){
-            passwordTable.setVisible(false);
-            password.setVisible(false);
-            txtPassword.setVisible(false);
-            userNameTable.setVisible(true);
-            userName.setVisible(true);
-            txtUserName.setVisible(true);
-        }
-        if(fullName.isVisible() == true && fullNameTable.isVisible()){
-            fullNameTable.setVisible(false);
-            fullName.setVisible(false);
-            txtFullName.setVisible(false);
-            passwordTable.setVisible(false);
-            txtPassword.setVisible(true);
-            password.setVisible(true);
-        }
-        if(email.isVisible() == true && emailTable.isVisible()){
-            emailTable.setVisible(false);
-            email.setVisible(false);
-            txtEmail.setVisible(false);
-            fullNameTable.setVisible(true);
-            fullName.setVisible(true);
-            txtFullName.setVisible(true);
-        }
-
-
-    }
 
 
 

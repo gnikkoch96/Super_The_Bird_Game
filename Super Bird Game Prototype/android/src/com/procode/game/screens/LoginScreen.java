@@ -203,9 +203,9 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //User user = new User();
                // user.resetPassword(userName.getText(), password.getText());
-               // btnSignUpClicked();
+                btnSignUpClicked();
                // database.upDatePassword("1231234","321321");
-                database.resetPassword(userName.getText());
+             //   database.resetPassword(userName.getText());
             }
         });
 
