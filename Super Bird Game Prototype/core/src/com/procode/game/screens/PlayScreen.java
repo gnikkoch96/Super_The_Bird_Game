@@ -190,7 +190,7 @@ public class PlayScreen extends BaseScene implements Screen {
                 timePlayerDied = dt;
             }
             if (dt - timePlayerDied > 1) {
-                game.setScreen(new GameOverScreen());
+                game.setScreen(new GameOverScreen(game, hud.score));
             }
         }
 

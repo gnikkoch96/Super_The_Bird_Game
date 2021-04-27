@@ -28,7 +28,7 @@ import com.procode.game.tools.ImageFunctions;
 public class HUD implements Disposable {
     public Stage stage;
     // values that get updated dynamically
-    private static Integer score;
+    public static Integer score;
 
     // what is shown on the HUD
     private Image healthBar;
