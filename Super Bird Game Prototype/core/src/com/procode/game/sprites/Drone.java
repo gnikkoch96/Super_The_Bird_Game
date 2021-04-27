@@ -17,6 +17,7 @@ public class Drone extends Enemy {
     public Vector2 currDestination;
     private boolean hasBeenSet;
     private boolean hasBeenHit;
+
     private Camera gameCamera;
     public float explosionMultiplier;
     private boolean hasExploded;
@@ -72,13 +73,14 @@ public class Drone extends Enemy {
         // if was hit, will go to do a large explode in a random position on the screen
         if(hasBeenHit){
             currDestination.y = playerPos.y; // random pos between top and bottom of screen
-            currDestination.x = playerPos.x + super.enemyWidth;
+            currDestination.x = playerPos.x + (super.enemyWidth * explosionMultiplier /2);
         }
+
         else {
 
             // will just go to the destination until
             currDestination.y = (int) super.position.y;
-            currDestination.x = (int) (-1 * ((Math.random() * super.enemyWidth) + super.enemyWidth));
+            currDestination.x = (-1 * (3 * super.enemyWidth));
         }
     }
 
@@ -130,7 +132,7 @@ public class Drone extends Enemy {
                 // big explosion
                 if (Math.abs(super.position.x - currDestination.x) < super.enemySpeed && Math.abs(super.position.y - currDestination.y) < super.enemySpeed){
                     if(hasBeenHit){
-                        explosionMultiplier = 2.5f;
+                        explosionMultiplier = 2.75f;
                     }
                     else {
                         explosionMultiplier = 1.5f;
@@ -148,21 +150,18 @@ public class Drone extends Enemy {
         else if ( super.currentState == State.DEAD){
             if(!hasExploded && hasBeenHit) {
                 // resize hitbox to a larger size for the explosion effect
-                if(spitHits > 0) {
-                    super.hitbox.resize((int) (hitboxBoundsOffset.x * explosionMultiplier * .6), (int) (hitboxBoundsOffset.y * explosionMultiplier * .7));
-                    super.deadEnemy.resizeAnim((int) (super.enemyWidth * explosionMultiplier), (int) (super.enemyHeight * explosionMultiplier));
-                    super.position.x = super.position.x - (super.enemyWidth * explosionMultiplier / 2);
-                    super.position.y = super.position.y - (super.enemyHeight * explosionMultiplier / 2);
-                    updateHitboxPos();
-                }
-                else{
-                    super.hitbox.resize((int) (hitboxBoundsOffset.x * explosionMultiplier), (int) (hitboxBoundsOffset.y * explosionMultiplier));
-                    super.deadEnemy.resizeAnim((int) (super.enemyWidth * explosionMultiplier), (int) (super.enemyHeight * explosionMultiplier));
-                    super.position.x = super.position.x - (super.enemyWidth * explosionMultiplier / 2);
-                    super.position.y = super.position.y - (super.enemyHeight * explosionMultiplier / 2);
-                    updateHitboxPos();
+                if(spitHits == 0) {
                     hud.updatePoints(pointValue); // only points added when player kills the drone
+                    super.hitbox.resize((int) (hitboxBoundsOffset.x * explosionMultiplier * .25), (int) (hitboxBoundsOffset.y * explosionMultiplier * .3));
                 }
+                else {
+                    super.hitbox.resize((int) (hitboxBoundsOffset.x * explosionMultiplier * .35), (int) (hitboxBoundsOffset.y * explosionMultiplier * .35));
+                }
+                super.enemyWidth = (int) (super.enemyWidth * explosionMultiplier);
+                super.enemyHeight = (int) (super.enemyHeight * explosionMultiplier);
+                super.position.x = super.position.x - (super.enemyWidth / 2);
+                super.position.y = super.position.y - (super.enemyHeight/ 2);
+                updateHitboxPos();
                 hasExploded = true;
             }
 
@@ -198,6 +197,7 @@ public class Drone extends Enemy {
                 position.x -= (int) super.enemySpeed;
             }
         }
+
         if (Math.abs(currDestination.y - super.position.y ) > super.enemySpeed / 2){
             if (currDestination.y > super.position.y){
                 position.y += (int) super.enemySpeed;
@@ -217,18 +217,24 @@ public class Drone extends Enemy {
         super.position.y = (int) ((Math.random()) * (SuperBirdGame.GAME_HEIGHT - enemyHeight)); // random pos between top and bottom of screen
     }
 
-    public void respawn(){
+    public void respawn() {
+
         hasBeenHit = false;
         hasBeenSet = false;
         hasExploded = false;
         spitHits = maxSpitHits;
+
+        super.enemyHeight = super.enemyOriginalHeight;
+        super.enemyWidth = super.enemyOriginalWidth;
         explosionMultiplier = 1.5f;
-        super.deadEnemy.resizeAnim((int) (super.enemyWidth),(int) (super.enemyHeight));
+
         super.deadEnemy.replayLoop();
         super.setEnemySpeed(super.originalSpeed);
         super.changeState(State.IDLE, -1);
+
         setEnemyInitialPosition();
         setDestination();
+
         // update the hitbox pos by replacing it
         super.hitbox = new Hitbox(new Vector2((int)(super.position.x + super.hitboxPosOffset.x), (int)(super.position.y + super.hitboxPosOffset.y)), (int) super.hitboxBoundsOffset.x, (int) super.hitboxBoundsOffset.y, gameCamera);
     }

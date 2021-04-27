@@ -40,7 +40,6 @@ public class GameOverScreen implements Screen {
         stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
-        PlayScreen.changeBackground = "black";
 
         // background and animation
         deltaTime = 0;
@@ -65,7 +64,7 @@ public class GameOverScreen implements Screen {
 
         btnExitGame = new TextButton("Exit To Home", style_button);
 
-        scoreVal = new TextButton("Final Score: " + new Integer(this.score).toString(), style_button);
+        scoreVal = new TextButton("Score: " + new Integer(this.score).toString(), style_button);
 
         //=================Table Containers and Tables =================================
 
@@ -81,13 +80,10 @@ public class GameOverScreen implements Screen {
 
 
         table = new Table(skin);
+        table.add(btnRestartGame).width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padTop(50);
+        table.add(btnExitGame).width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padTop(50);
         table.row().colspan(3).expandX().fillX();
-        table.row().colspan(3).expandX().fillX();
-        table.add(scoreVal).fillX().width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padRight(cw).padTop(150);
-        table.row().colspan(3).expandX().fillX();
-        table.add(btnRestartGame).fillX().width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padTop(50);
-        table.row().colspan(3).expandX().fillX();
-        table.add(btnExitGame).fillX().width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padTop(50);
+        table.add(scoreVal).fillX().width((float)game.GAME_WIDTH /2).height((float)game.GAME_HEIGHT /6).padTop(50);
         table.row().colspan(3).expandX().fillX();
         table.row().colspan(3).expandX().fillX();
 
@@ -117,7 +113,6 @@ public class GameOverScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //btnLoginClicked();
                 gameOverAnimation.replayLoop();
-                PlayScreen.changeBackground = "blue";
                 game.setScreen(new HomeScreen(game));
 
             }
@@ -130,7 +125,6 @@ public class GameOverScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //btnLoginClicked();
                 gameOverAnimation.replayLoop();
-                PlayScreen.changeBackground = "blue";
                 game.setScreen(new LoadingScreen(game));
             }
         });
@@ -145,7 +139,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,1,1,0);
+        Gdx.gl.glClearColor(0,0,0,0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         deltaTime += delta;
 

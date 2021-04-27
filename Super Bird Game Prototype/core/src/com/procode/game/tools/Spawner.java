@@ -132,7 +132,16 @@ public class Spawner {
             if (activeEnemies.get(i).getState() == Enemy.State.DEAD && activeEnemies.get(i).deadEnemy.isAnimFinished() == true){
 
                 // make inactive
-                inactiveEnemies.add(activeEnemies.remove(i));
+                if (activeEnemies.get(i) instanceof MechaBird) {
+                    ((MechaBird) activeEnemies.get(i)).reSpawn();
+                    inactiveEnemies.add(activeEnemies.remove(i));
+                }
+
+                // respawn drones
+                else if (activeEnemies.get(i) instanceof Drone) {
+                    ((Drone) activeEnemies.get(i)).respawn();
+                    inactiveEnemies.add(activeEnemies.remove(i));
+                }
             }
 
         }
@@ -142,16 +151,7 @@ public class Spawner {
 
             // get a random position in the inactive list and add it to the active
             int randListPos = (int) Math.random() * inactiveEnemies.size();
-            if (inactiveEnemies.get(randListPos) instanceof MechaBird) {
-                ((MechaBird) inactiveEnemies.get(randListPos)).reSpawn();
-                activeEnemies.add(inactiveEnemies.remove(randListPos));
-            }
-
-            // respawn drones
-            else if (inactiveEnemies.get(randListPos) instanceof Drone) {
-                ((Drone) inactiveEnemies.get(randListPos)).respawn();
-                activeEnemies.add(inactiveEnemies.remove(randListPos));
-            }
+            activeEnemies.add(inactiveEnemies.remove(randListPos));
         }
 
         // finally, random chance of spawning a new enemy if the number is less than the max
@@ -167,16 +167,7 @@ public class Spawner {
 
                 // get a random position in the inactive list and add it to the active
                 int randListPos = (int) Math.random() * inactiveEnemies.size();
-                if (inactiveEnemies.get(randListPos) instanceof MechaBird) {
-                    ((MechaBird) inactiveEnemies.get(randListPos)).reSpawn();
-                    activeEnemies.add(inactiveEnemies.remove(randListPos));
-                }
-
-                // now for drones
-                else if (inactiveEnemies.get(randListPos) instanceof Drone) {
-                    ((Drone) inactiveEnemies.get(randListPos)).respawn();
-                    activeEnemies.add(inactiveEnemies.remove(randListPos));
-                }
+                activeEnemies.add(inactiveEnemies.remove(randListPos));
 
             }
         }
