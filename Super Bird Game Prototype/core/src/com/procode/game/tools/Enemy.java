@@ -21,6 +21,8 @@ public class Enemy implements Disposable {
     protected Vector2 position;
     protected int enemyWidth;
     protected int enemyHeight;
+    protected int enemyOriginalWidth;
+    protected int enemyOriginalHeight;
     protected boolean isDead;
 
     // point related
@@ -46,6 +48,8 @@ public class Enemy implements Disposable {
 
         enemyWidth = width;
         enemyHeight = height;
+        enemyOriginalHeight = height;
+        enemyOriginalWidth = width;
         enemySpeed = speed;
         originalSpeed = speed;
         numOfAttacks = 0;

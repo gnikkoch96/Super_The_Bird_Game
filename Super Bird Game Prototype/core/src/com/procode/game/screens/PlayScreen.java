@@ -66,6 +66,11 @@ public class PlayScreen extends BaseScene implements Screen {
 
     public static String changeBackground = "orange";
 
+    // game over screen stuff
+    private float timePlayerDied;
+
+    private boolean debugging = false;
+
     public PlayScreen(SuperBirdGame game){
         super(game);
 
@@ -75,6 +80,7 @@ public class PlayScreen extends BaseScene implements Screen {
         hud = new HUD(game);
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
         currTime = 0;
+        timePlayerDied = -1;
         bg = new Background(); //this is the background class that contains all textures of images for the background
 
 
@@ -106,7 +112,7 @@ public class PlayScreen extends BaseScene implements Screen {
 //        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
 
         int minEnemies = 1; // easy = 2 hard = 5
-        int maxEnemies = 20; // easy = 3 hard = 15
+        int maxEnemies = 15; // max should always be 15
         float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40, hard = /10
         float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80, hard = /40
         float spawnPerSec = .001f; // easy = .001f hard = 1f
@@ -159,11 +165,11 @@ public class PlayScreen extends BaseScene implements Screen {
     }
 
     public void update(float dt){
-        handleInput(dt);
 
         state = HUD.state;
 
         if(!player.isDead()){
+            handleInput(dt);
             player.update(dt);
             player.updateHitDetection(enemySpawner.activeEnemies, hud);
             if(rapidFireSpit) {
@@ -176,8 +182,18 @@ public class PlayScreen extends BaseScene implements Screen {
             setBackgroundMovement();
 
         }else{
-            //--TEST--//
-            game.setScreen(new GameOverScreen());
+
+            //disable movement for 1 second to show the bird turning into food animation
+            // then gameover screen
+            player.update(dt);
+            setBackgroundMovement();
+
+            if (timePlayerDied == -1){
+                timePlayerDied = dt;
+            }
+            if (dt - timePlayerDied > 1) {
+                game.setScreen(new GameOverScreen(game, hud.score));
+            }
         }
 
         enemySpawner.updateSpawner(dt, player.hitbox, player.getActiveSpits());
@@ -256,13 +272,13 @@ public class PlayScreen extends BaseScene implements Screen {
             }
 
             if(currEnemy instanceof Drone){
-                if(((Drone) currEnemy).getIsHit()){
+                if(((Drone) currEnemy).getIsHit() && (currEnemy.getState()) != Enemy.State.DEAD){
                     Sprite sprite = new Sprite(currEnemyImg);
                     sprite.setPosition(enemyPos.x, enemyPos.y);
                     sprite.setColor(Color.RED);
                     sprite.draw(game.batch);
                 }else {
-                    game.batch.draw(currEnemyImg, enemyPos.x, enemyPos.y);
+                    game.batch.draw(currEnemyImg, enemyPos.x, enemyPos.y, currEnemy.getEnemySize().x, currEnemy.getEnemySize().y);
                 }
             }
 
@@ -319,14 +335,16 @@ public class PlayScreen extends BaseScene implements Screen {
         game.batch.end();
 
         //--DEBUGGING--//
-        player.debugHitbox();
-        for (int i = 0; i < enemySpawner.activeEnemies.size(); i++){
-            if(enemySpawner.activeEnemies.get(i).hitbox != null) { // this is because hitboxes are deleted and replaced with new ones
-                enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
+        if(debugging) {
+            player.debugHitbox();
+            for (int i = 0; i < enemySpawner.activeEnemies.size(); i++) {
+                if (enemySpawner.activeEnemies.get(i).hitbox != null) { // this is because hitboxes are deleted and replaced with new ones
+                    enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
 
-                if(enemySpawner.activeEnemies.get(i) instanceof MechaBird){ // debugs laser hitboxes
-                    for(MechaLaser laser: ((MechaBird) enemySpawner.activeEnemies.get(i)).activeShots){
-                        laser.hitbox.debugHitbox();
+                    if (enemySpawner.activeEnemies.get(i) instanceof MechaBird) { // debugs laser hitboxes
+                        for (MechaLaser laser : ((MechaBird) enemySpawner.activeEnemies.get(i)).activeShots) {
+                            laser.hitbox.debugHitbox();
+                        }
                     }
                 }
             }
@@ -372,6 +390,8 @@ public class PlayScreen extends BaseScene implements Screen {
         hud.gamepad.leftArrow.setVisible(false);
         hud.gamepad.rightArrow.setVisible(false);
         hud.gamepad.shootButton.setVisible(false);
+        hud.gamepad.resizeButton.setVisible(false);
+        hud.pauseBtn.setVisible(false);
 
         //Nikko: I am trying to figure out a way to make this work
 //        hud.gamepad.upArrow.setTouchable(Touchable.disabled);
@@ -385,8 +405,6 @@ public class PlayScreen extends BaseScene implements Screen {
 //        hud.gamepad.leftArrow.setTouchable(Touchable.enabled);
 //        hud.gamepad.rightArrow.setTouchable(Touchable.enabled);
 //        hud.gamepad.shootButton.setTouchable(Touchable.enabled);
-
-        hud.pauseBtn.setVisible(false);
 
         state = HUD.state;
 

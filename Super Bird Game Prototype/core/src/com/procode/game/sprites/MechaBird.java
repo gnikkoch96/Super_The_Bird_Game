@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.screens.SettingsScreen;
 import com.procode.game.scenes.HUD;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.Enemy;
@@ -61,6 +62,12 @@ public class MechaBird extends Enemy {
     private int originalHits; // original amount of hits
     private int totalCurrHits; // current hits before destruction
 
+    // sounds for mecha bird
+    private Sound mechaBirdSpin;
+    private Sound mechaBirdLaser;
+
+    private boolean playerCollided;
+
     // initializing the mecha bird
     public MechaBird(int mechaBWidth, int mechaBHeight, float speed, final Camera gameCamera){
 
@@ -70,6 +77,7 @@ public class MechaBird extends Enemy {
         timeActionPaused = 0;
         spitHits = maxSpitHits;
         maxAttacksPerEnemy = 1; // 4 hits to destroy enemy in dashing state
+        playerCollided = false;
 
         originalHits = 20; // 45 total hits before destroying the enemy
         totalCurrHits = originalHits;
@@ -162,6 +170,11 @@ public class MechaBird extends Enemy {
         // now do the following: move the mecha bird until it reaches the screen visually, (is on the screen)
         // idle animation will play until this position is reached.
         setDestination();
+
+        // initialize sounds
+        setVolume();
+        mechaBirdSpin = SuperBirdGame.manager.get("audio/sound/mechaBirdSpin.mp3", Sound.class);
+        mechaBirdLaser = SuperBirdGame.manager.get("audio/sound/mechaBirdLaser.mp3", Sound.class);
     }
 
     public boolean getIsHit(){return this.isHit;}
@@ -354,6 +367,12 @@ public class MechaBird extends Enemy {
                         // destroys the enemy when it is hit by 4 spits, is off screen or hit the player
                         if (Math.abs(super.position.x - currDestination.x) < super.enemySpeed || super.hitbox.isHit(playerHitbox) ||
                                 playerHitbox.isHit(super.hitbox) || spitHits <= 0) {
+
+                            // confirms if player collided with the mecha bird, so points do not count
+                            if(super.hitbox.isHit(playerHitbox) ||
+                                    playerHitbox.isHit(super.hitbox)){
+                                playerCollided = true;
+                            }
                             super.changeState(State.DEAD, -1);
                             this.isDead = true;
                             currAttackInList = 0;
@@ -382,12 +401,14 @@ public class MechaBird extends Enemy {
                     if ((super.currAttackState != 2 && super.currAttackState != 4 && super.currAttackState != 3)){
                         super.changeState(State.ATTACK, 2);
                         setDestination();
+                        mechaBirdSpin.play(volume);
                     }
 
                     // charge up until the animation is complete, then start to spin in a circular motion
                     if (super.currAttackState == 2 && super.enemyAttacks.get(super.currAttackState).isAnimFinished() == true) {
                         super.changeState(State.ATTACK, 3);
                         super.setEnemySpeed((float) (super.enemySpeed * 1.5)); // needs to spin fast
+                        mechaBirdSpin.play();
                     }
 
                     // will spin until it reaches its destination and when it does,
@@ -465,6 +486,8 @@ public class MechaBird extends Enemy {
                             shootPerframe = true;
                             MechaLaser item = shootPool.obtain();
                             item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.9));
+                            activeShots.add(item);
+                            mechaBirdLaser.play(volume);
                         }
                         else if (super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() != 3){
                             shootPerframe = false;
@@ -499,10 +522,12 @@ public class MechaBird extends Enemy {
             }
         }
 
-        if(this.isDead){
+        if(this.isDead && (totalCurrHits == 0 || spitHits == 0 || playerCollided)){
             // update point value when the mecha bird is dead (Nikko: I place this here because it wasn't working properly when I placed it in the other statement)
             deadSound.play();
-            hud.updatePoints(pointValue);
+            if(!playerCollided) {
+                hud.updatePoints(pointValue);
+            }
             this.isDead = false;
         }
 
@@ -603,6 +628,7 @@ public class MechaBird extends Enemy {
         spinFinished = false;
         shootPerframe = false;
         currTimeEnteredShoot = 0;
+        playerCollided = false;
     }
 
 
@@ -618,6 +644,34 @@ public class MechaBird extends Enemy {
     // reset the maximum amount of attacks for the mecha bird
     public void resetMaxAttacks(int maxAttack) {
         this.maxAttacksPerEnemy = maxAttack;
+    }
+
+
+    //this method changes the volume from the static integer from SettingsScreen
+    //the changes occur whenever the user clicks the right and left buttons of volume
+    //from the SettingsScreen and later on from MiniSettingScreen on PlayScreen
+    public void setVolume(){
+        //this if statement captures the changes on the volume from the settings
+        if(SettingsScreen.volumeChanges == 1)
+            volume = 0.1f;
+        else if(SettingsScreen.volumeChanges == 2)
+            volume = 0.2f;
+        else if(SettingsScreen.volumeChanges == 3)
+            volume = 0.3f;
+        else if(SettingsScreen.volumeChanges == 4)
+            volume = 0.4f;
+        else if(SettingsScreen.volumeChanges == 5)
+            volume = 0.5f;
+        else if(SettingsScreen.volumeChanges == 6)
+            volume = 0.6f;
+        else if(SettingsScreen.volumeChanges == 7)
+            volume = 0.7f;
+        else if(SettingsScreen.volumeChanges == 8)
+            volume = 0.8f;
+        else if(SettingsScreen.volumeChanges == 9)
+            volume = 0.9f;
+        else if(SettingsScreen.volumeChanges == 10)
+            volume = 1.0f;
     }
 
 
