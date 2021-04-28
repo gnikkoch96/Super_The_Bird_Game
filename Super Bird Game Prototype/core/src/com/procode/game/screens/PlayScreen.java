@@ -69,7 +69,7 @@ public class PlayScreen extends BaseScene implements Screen {
     // game over screen stuff
     private float timePlayerDied;
 
-    private boolean debugging = true;
+    private boolean debugging = false;
 
     public PlayScreen(SuperBirdGame game){
         super(game);
