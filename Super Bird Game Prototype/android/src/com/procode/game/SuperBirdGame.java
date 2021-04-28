@@ -3,6 +3,7 @@ package com.procode.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -54,11 +55,18 @@ public class SuperBirdGame extends Game {
 		// asset manager stuff
 		manager = new AssetManager();
 		manager.load("audio/sound/spit.wav", Sound.class);
+		manager.load("audio/sound/bird_flap.mp3", Sound.class);
 		manager.load("audio/sound/bird_dead.wav", Sound.class);
 		manager.load("audio/sound/bird_dead_sad.wav", Sound.class);
 		manager.load("audio/sound/bird_scream_loud.wav", Sound.class);
 		manager.load("audio/sound/bird_scream_normal.wav", Sound.class);
-		manager.load("audio/sound/spitCollision.mp3", Sound.class);
+		//manager.load("audio/sound/spitCollision.mp3", Sound.class);
+		manager.load("audio/sound/mechaBirdSpin.mp3", Sound.class);
+		manager.load("audio/sound/mechaBirdLaser.mp3", Sound.class);
+//		manager.load("audio/sound/spitCollision.mp3", Sound.class);
+		manager.load("audio/sound/mecha_dead.wav", Sound.class);
+		manager.load("audio/music/music.mp3", Music.class);
+		manager.load("audio/music/Homescreen.mp3", Music.class);
 		manager.finishLoading();
 
 		this.setScreen(new SplashScreen(this));
