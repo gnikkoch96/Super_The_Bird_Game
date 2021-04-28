@@ -82,6 +82,7 @@ public class EditAccountScreen implements Screen {
 
 
 
+
     public void buttons(){
 
         float sw = SuperBirdGame.GAME_WIDTH;
@@ -100,8 +101,6 @@ public class EditAccountScreen implements Screen {
         buttonTable.row().fillX().expandX();
         buttonTable.add(btnBack).width(cw/4.0f).height(ch / 8.0f);
         buttonTable.add(btnSave).width(cw/4.0f).height(ch / 8.0f);
-
-
 
     }
 

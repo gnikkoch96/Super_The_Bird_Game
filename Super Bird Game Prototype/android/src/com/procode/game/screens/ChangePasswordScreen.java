@@ -15,20 +15,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.procode.game.Database;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.User;
 
 public class ChangePasswordScreen implements Screen {
 
     private SuperBirdGame game;
     private Stage stage;
     private Skin skin;
-    private Container<Table> tableContainer;
+    private Container<Table> tableContainer, passwordLabelContainer, passwordLabelContainer1;
     private BitmapFont font;
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private TextButton.TextButtonStyle style_button;
     private Label txtOldPassword, txtNewPassword;
-    private Table table;
+    private Table table, passwordLabeltable, passwordLabeltable1;
     private TextField oldPassword, newPassword;
     private TextField.TextFieldStyle txtFieldStyle;
     private Label.LabelStyle labelStyle;
@@ -68,28 +70,49 @@ public class ChangePasswordScreen implements Screen {
         labelStyle = new Label.LabelStyle();
         labelStyle = skin.get(Label.LabelStyle.class);
         labelStyle.font = font;
+
         table = new Table(skin);
+        passwordLabeltable = new Table(skin);
+        passwordLabeltable1 = new Table(skin);
 
         tableContainer = new Container<Table>();
         tableContainer.setSize(sw,sh);
         //tableContainer.setPosition((sw-cw)/2.0f, (sh-ch));
         tableContainer.setPosition(0,0);
 
+        passwordLabelContainer = new Container<Table>();
+        passwordLabelContainer.setSize(sw,sh);
+        passwordLabelContainer.setPosition(0,0);
 
+        passwordLabelContainer1 = new Container<Table>();
+        passwordLabelContainer1.setSize(sw,sh);
+        passwordLabelContainer1.setPosition(0,0);
 
     }
 
-    @Override
-    public void show() {
-        enterOldPassword();
-        changePassword();
-        buttons();
-        buttonClickListeners();
-        //adding the table into the container
-        tableContainer.setActor(table);
-        //set the table container with all the labels, textfields and buttons
-        stage.addActor(tableContainer);
+    private void showPasswordLabel(){
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
+
+        float cw = sw * 0.7f;
+        float ch = sh * 0.8f;
+
+        Label passwordLabel = new Label("Old Password is incorrect", labelStyle);
+        passwordLabel.setAlignment(Align.center);
+        passwordLabeltable.row().colspan(3).expandX().fillX();
+        passwordLabeltable.add(passwordLabel).fillX().width(cw /2.0f).height(ch /2.0f).padBottom(sh/1.3f);;
+
+        Label passwordEmpty = new Label("New Password Cannot Be Empty", labelStyle);
+        passwordEmpty.setAlignment(Align.center);
+        passwordLabeltable1.row().colspan(3).expandX().fillX();
+        passwordLabeltable1.add(passwordEmpty).fillX().width(cw /2.0f).height(ch /2.0f).padBottom(sh/1.3f);;
+
+        passwordLabelContainer.setVisible(false);
+        passwordLabelContainer1.setVisible(false);
+        passwordLabelContainer.setActor(passwordLabeltable);
+        passwordLabelContainer1.setActor(passwordLabeltable1);
     }
+
 
     public void buttonClickListeners(){
         btnBack.addListener(new ClickListener(){
@@ -102,7 +125,14 @@ public class ChangePasswordScreen implements Screen {
         btnSave.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new ChangePasswordScreen(game));
+              // passwordLabelContainer1.setVisible(true);
+
+            }
+
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+               // passwordLabelContainer1.setVisible(true);
+                validateOldPassword();
+                return true;
             }
         });
     }
@@ -143,7 +173,7 @@ public class ChangePasswordScreen implements Screen {
         table.add(oldPassword).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
         //adding the table into the container
-        tableContainer.setActor(table);
+      //  tableContainer.setActor(table);
     }
 
     public void changePassword(){
@@ -161,15 +191,65 @@ public class ChangePasswordScreen implements Screen {
         table.add(newPassword).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
         //adding the table into the container
-        tableContainer.setActor(table);
+       // tableContainer.setActor(table);
     }
 
+    public void validateOldPassword(){
+        Database database = new Database();
+        database.checkDatabase(User.currentUser, oldPassword.getText());
+        //database.checkDatabase("Mario1234", oldPassword.getText());
+    }
+
+    public void setUpNewScreen(){
+        //if the old password exist then update the database and save it
+        if(Database.usernameStatus.equals("Exist")) {
+            Database.usernameStatus = "NULL";
+            if(newPassword.getText().length() == 0){
+                passwordLabelContainer.setVisible(false);
+                passwordLabelContainer1.setVisible(true);
+
+            }else if(newPassword.getText().charAt(0) == ' '){
+                passwordLabelContainer.setVisible(false);
+                passwordLabelContainer1.setVisible(true);
+            }
+            else {
+                Database database = new Database();
+                database.upDatePassword(newPassword.getText());
+                game.setScreen(new SettingsScreen(game));
+            }
+        }
+
+
+            if(Database.usernameStatus.equals("DNE")) {
+                passwordLabelContainer1.setVisible(false);
+                passwordLabelContainer.setVisible(true);
+            }
+
+
+
+    }
+
+    @Override
+    public void show() {
+        enterOldPassword();
+        changePassword();
+        buttons();
+        buttonClickListeners();
+        showPasswordLabel();
+        //adding the table into the container
+        tableContainer.setActor(table);
+        //set the table container with all the labels, textfields and buttons
+        stage.addActor(tableContainer);
+        stage.addActor(passwordLabelContainer);
+        stage.addActor(passwordLabelContainer1);
+    }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0,1,1,0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        setUpNewScreen();
         game.batch.begin();
         //game.batch.draw(volumeImage,game.GAME_WIDTH - (game.GAME_WIDTH - 700),100);
         game.batch.end();

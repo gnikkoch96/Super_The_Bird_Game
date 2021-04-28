@@ -7,6 +7,7 @@ import com.procode.game.screens.LoginScreen;
 public class User {
 
     private String username, password, email, birthday, fullName, scoreboard;
+    public static String currentUser = "";
 
     public User(String username, String password, String email, String birthday, String scoreboard){
         this.username = username;

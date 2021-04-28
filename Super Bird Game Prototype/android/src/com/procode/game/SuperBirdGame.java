@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.procode.game.screens.ChangePasswordScreen;
 import com.procode.game.screens.EditAccountScreen;
 import com.procode.game.screens.LoginScreen;
 import com.procode.game.screens.PlayScreen;
@@ -61,7 +62,8 @@ public class SuperBirdGame extends Game {
 		manager.finishLoading();
 
 		//this.setScreen(new SplashScreen(this));
-		this.setScreen(new SettingsScreen(this));
+		this.setScreen(new LoginScreen(this));
+		//this.setScreen(new ChangePasswordScreen(this));
 		//this.setScreen(new PlayScreen(this));
 	}
 

@@ -176,13 +176,13 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         btnLogin.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-
+                btnLoginClicked();
             }
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-                btnLoginClicked();
+
 
                 return true;
             }
@@ -236,6 +236,9 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     public void setHomeScreen(){
 
         if(Database.userStatus && !userName.getText().equals("") && !password.getText().equals("")) {
+            User.currentUser = userName.getText();
+            Database.usernameStatus = "NULL";
+            Database.emailStatus = "NULL";
             game.setScreen(new HomeScreen(game));
         }
 

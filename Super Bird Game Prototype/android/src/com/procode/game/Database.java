@@ -239,7 +239,7 @@ public class Database {
     //update the username from the database
     public void upDateUsername(String username){
 
-        rootRef.child("Users").child(this.username).child(this.username).setValue(username)
+        rootRef.child("Users").child(username).child("username").setValue(username)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -249,7 +249,11 @@ public class Database {
                     }
                 });
 
-        rootRef.child("Users").child(this.username).setValue(username)
+    }
+
+    //update fullname
+    public void upDateFullName(String fullname){
+        rootRef.child("Users").child(User.currentUser).child("name").setValue(fullname)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -262,7 +266,7 @@ public class Database {
 
     //update the password from the database
     public void upDatePassword(String password){
-        rootRef.child("Users").child(this.username).child(this.password).setValue(password)
+        rootRef.child("Users").child(User.currentUser).child("password").setValue(password)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -275,7 +279,7 @@ public class Database {
 
     //update the email from the database
     public void upDateEmail(String email){
-        rootRef.child("Users").child(this.username).child(this.email).setValue(email)
+        rootRef.child("Users").child(User.currentUser).child("email").setValue(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -288,18 +292,7 @@ public class Database {
 
 
 
-    //update the fullname from the database
-    public void upDateFullName(String fullname){
-        rootRef.child("Users").child(this.username).child(this.fullName).setValue(fullname)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
 
-                        }
-                    }
-                });
-    }
 
     public void upDateScore(int score){
         
@@ -337,6 +330,8 @@ public class Database {
                             Database.usernameStatus = "Exist";
                             LoginScreen.currentUser = userData;
                             System.out.println("it exist : " + LoginScreen.userStatus);
+                        }else{
+                            Database.usernameStatus = "DNE";
                         }
                     }
                 }else{
@@ -354,8 +349,6 @@ public class Database {
 
         });
 
-
-       // System.out.println("i am here " + LoginScreen.userStatus);
     }
 
     public void checkUserName(final String username){
@@ -363,16 +356,18 @@ public class Database {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                boolean itExist = false;
                 Iterator<DataSnapshot> ds = dataSnapshot.getChildren().iterator();
                 while(ds.hasNext()){
                     User user = ds.next().getValue(User.class);
                     if(username.equals(user.getUserName())) {
                         Database.usernameStatus = "Exist";
                         System.out.println("Username exist");
+                        itExist = true;
                     }
                     System.out.println("e: " + user.getEmail());
                 }
-                if(!Database.usernameStatus.equals("Exist")) {
+                if(itExist == false) {
                     System.out.println("New email");
                     Database.usernameStatus = "DNE";
                 }

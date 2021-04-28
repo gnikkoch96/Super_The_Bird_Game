@@ -190,18 +190,20 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         ubtnNext.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-
-            }
-
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Database database = new Database();
-                database.checkDatabase(userName.getText(), "random");
+                database.checkUserName(userName.getText());
                 if(Database.usernameStatus.equals("DNE") ){
+                    accountImageContainer.setVisible(false);
                     btnNextClicked("Username");
                 }else if(Database.usernameStatus.equals("Exist")){
                     System.out.println("The User Already Exist");
                     accountImageContainer.setVisible(true);
                 }
+
+            }
+
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+               // accountImageContainer.setVisible(true);
 
                 return true;
             }
@@ -305,6 +307,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             btnNextClicked("Email");
         else if(Database.emailStatus.equals("Exist"))
             accountEmailImageContainer.setVisible(true);
+
     }
 
     public void enterUserName(){
@@ -414,7 +417,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             tableContainer0.setVisible(false);
             tableContainer1.setVisible(true);
         }else if(state.equals("Password")){
-            accountImageContainer.setVisible(false);
+            //accountImageContainer.setVisible(false);
             tableContainer1.setVisible(false);
             tableContainer2.setVisible(true);
         }else if(state.equals("FullName")){
