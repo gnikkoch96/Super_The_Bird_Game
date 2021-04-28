@@ -70,8 +70,8 @@ public class SuperBirdGame extends Game {
 		manager.finishLoading();
 
 
-		//this.setScreen(new SplashScreen(this));
-		this.setScreen(new PlayScreen(this));
+		this.setScreen(new SplashScreen(this));
+		//this.setScreen(new PlayScreen(this));
 	}
 
 
