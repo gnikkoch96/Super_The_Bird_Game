@@ -20,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.procode.game.Database;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.sprites.Bird;
 import com.procode.game.tools.ImageFunctions;
@@ -156,11 +155,9 @@ public class HomeScreen implements Screen {
         btnExit.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.exit();
+               Gdx.app.exit();
             }
         });
-
-        System.out.println("database " + Database.userStatus);
     }
 
     @Override

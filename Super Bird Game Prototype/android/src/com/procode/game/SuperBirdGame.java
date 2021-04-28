@@ -61,8 +61,8 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/sound/spitCollision.mp3", Sound.class);
 		manager.finishLoading();
 
-		//this.setScreen(new SplashScreen(this));
-		this.setScreen(new LoginScreen(this));
+		this.setScreen(new SplashScreen(this));
+		//this.setScreen(new LoginScreen(this));
 		//this.setScreen(new ChangePasswordScreen(this));
 		//this.setScreen(new PlayScreen(this));
 	}

@@ -19,7 +19,8 @@ public class Gamepad {
     public int buttonSize; // because image is a circle only need the radius so size is a single variable
     public ImageButton upArrow, downArrow, leftArrow, rightArrow; // need to be images to add on click listeners does not work well with textures
     public ImageButton upLeft, upRight, downLeft, downRight;
-    public ImageButton shootButton;
+    public ImageButton shootButton, resizeButton;
+    private Texture shrinkImage, growImage;
     public boolean shoot = false;
 
     public ClickListener clickListener;
@@ -40,7 +41,6 @@ public class Gamepad {
         downLeft = ImageFunctions.resizeImageButton("screen icons//blank png.png", buttonSize, buttonSize);
         downRight = ImageFunctions.resizeImageButton("screen icons//blank png.png", buttonSize, buttonSize);
 
-
         // pressed icons
         Texture upButtonPressed = ImageFunctions.resize("screen icons//pressed up button.png", buttonSize, buttonSize);
         upArrow.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(upButtonPressed));
@@ -55,6 +55,10 @@ public class Gamepad {
         Texture shootButtonPressed = ImageFunctions.resize("screen icons//pressed shoot button.png", buttonSize, buttonSize);
         shootButton.getStyle().imageDown =  new TextureRegionDrawable(new TextureRegion(shootButtonPressed));
 
+        resizeButton = ImageFunctions.resizeImageButton("screen icons//shrink button.png", (int)(buttonSize * 1.5), (int)(buttonSize * 1.5));
+        shrinkImage = ImageFunctions.resize("screen icons//shrink button.png", (int) (buttonSize * 1.5), (int) (buttonSize * 1.5));
+        growImage = ImageFunctions.resize("screen icons//grow button.png", (int) (buttonSize * 1.5), (int) (buttonSize * 1.5));
+
         //set where the buttons will be placed on screen
         downArrow.setPosition(buttonSize,0);
         leftArrow.setPosition(0,buttonSize);
@@ -67,6 +71,7 @@ public class Gamepad {
         downRight.setPosition(buttonSize * 2, 0);
 
         shootButton.setPosition(SuperBirdGame.GAME_WIDTH - buttonSize * 3, (int)(buttonSize/1.5));
+        resizeButton.setPosition(SuperBirdGame.GAME_WIDTH - buttonSize * 3,(int)(buttonSize * 2.5));
 
         shootButton.addListener(new ClickListener() {
             @Override
@@ -81,6 +86,28 @@ public class Gamepad {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 shoot = false;
                 PlayScreen.rapidFireSpit = false;
+            }
+        });
+
+        resizeButton.addListener(new ClickListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if(HUD.state == 0)
+
+                    // if the player hasnt alreayd shrunk yet, then it will be.
+                    // also reset the image to grow
+                    if(PlayScreen.player.isShrunk == false){
+                        PlayScreen.player.shrinkBird();
+                        resizeButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(growImage));
+                    }
+
+                    // else grow the player
+                    // and reset the image to shrink
+                    else{
+                        PlayScreen.player.growBird();
+                        resizeButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(shrinkImage));
+                    }
+                return true;
             }
         });
 

@@ -25,20 +25,28 @@ public class Bird implements Disposable {
     public static long timeVar;  // used for the invincible property
     private static int BirdWidth;
     private static int BirdHeight;
+    private static int ShrunkBirdWidth;
+    private static int ShrunkBirdHeight;
+    private static int OriginalBirdWidth;
+    private static int OriginalBirdHeight;
 
     //volume changes
     private float volume;
 
     // states
     public enum State {IDLE, SHOOT, DAMAGED, DEAD}
-    private Animation currentAnimation, idleAnimation, shootAnimation, damageAnimation, deadAnimation, invincibleIdleAnimation, invincibleShootAnimation;
+    private Animation currentAnimation, idleAnimation, shootAnimation, damageAnimation,
+            deadAnimation, invincibleIdleAnimation, invincibleShootAnimation;
+
+    private Animation shrunkResizeTransitionAnimation, shrunkIdleAnimation, shrunkShootAnimation, shrunkDamageAnimation,
+            shrunkInvincibleIdleAnimation, shrunkInvincibleShootAnimation;
 
     // state variables (used to prevent animations from interfering with each other)
     private State currentState;
     private State previousState;
 
     // boolean vars for bird (used in the damagedBird())
-    private boolean isDead;
+    private boolean dead;
     public boolean isInvincible;
 
     // bird properties
@@ -57,19 +65,43 @@ public class Bird implements Disposable {
     private final Array<BirdSpit> activeSpits = new Array<BirdSpit>(); // active spits is defined as in the screen and hasn't made contact with anything yet
     private final Pool<BirdSpit> spitPool;
 
+    // shrunk effects for projectiles
+    private float currentTime; // keeps track of current delta time so bird can only shoot every .2 seconds
+    private float rateOfFireTime;
+    private float lastTimeShot;
+
     // particles
     private ParticleEffectComponent spitParticles;
+
+    // enabled when the bird is shrunk
+    public boolean isShrunk;
+    private boolean shrinking;
+    private boolean growing;
+
+    private float speedOffset;
 
     public Bird(int x, int y, int birdWidth, int birdHeight, final Camera gameCamera) {
         currentAnimation = new Animation();
         shootAnimation = new Animation();
         position = new Vector2(x,y);
-        isDead = false;
+        dead = false;
         isInvincible = false;
+        isShrunk = false;
+        shrinking = false;
+        growing = false;
+        speedOffset = 1;
+
+        currentTime = 0;
+        rateOfFireTime = .23f;
+        lastTimeShot = 0;
 
         healthCount = 6;
         BirdWidth = (int) birdWidth;
         BirdHeight = (int) birdHeight;
+        OriginalBirdHeight = BirdHeight;
+        OriginalBirdWidth = BirdWidth;
+        ShrunkBirdHeight = (int) birdHeight / 2;
+        ShrunkBirdWidth = (int) birdWidth / 2;
         spitPool = new Pool<BirdSpit>(){ // spit pool (16 by default)
             @Override
             protected BirdSpit newObject() {
@@ -98,12 +130,29 @@ public class Bird implements Disposable {
         deadAnimation = new Animation();
         invincibleIdleAnimation = new Animation();
         invincibleShootAnimation = new Animation();
+
+        // shrunk animations
+        shrunkIdleAnimation = new Animation();
+        shrunkShootAnimation = new Animation();
+        shrunkDamageAnimation = new Animation();
+        shrunkInvincibleIdleAnimation = new Animation();
+        shrunkInvincibleShootAnimation = new Animation();
+        shrunkResizeTransitionAnimation = new Animation();
+
         idleAnimation.setAnimation("bird animations//idle bird ", BirdWidth, BirdHeight, 1, 4, .25f, true);
         shootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth, BirdHeight, 1, 3, .1f, false);
         damageAnimation.setAnimation("bird animations//damage bird ", BirdWidth, BirdHeight, 1, 8, .45f, false);
         deadAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 1, 7, .50f, false);
         invincibleIdleAnimation.setAnimation("bird animations//invincible animations//idle//invincible ", BirdWidth, BirdHeight, 1, 8, 0.25f, true);
         invincibleShootAnimation.setAnimation("bird animations//invincible animations//shoot//invincible shoot ", BirdWidth, BirdHeight, 1, 6, .1f, false);
+
+        shrunkResizeTransitionAnimation.setAnimation("bird animations//dead bird ", BirdWidth, BirdHeight, 2,4, .15f, false);
+        shrunkIdleAnimation.setAnimation("bird animations//idle bird ", BirdWidth/2, BirdHeight/2, 1, 4, .25f, true);
+        shrunkShootAnimation.setAnimation("bird animations//shoot bird ", BirdWidth/2, BirdHeight/2, 1, 3, .1f, false);
+        shrunkDamageAnimation.setAnimation("bird animations//damage bird ", BirdWidth/2, BirdHeight/2, 1, 8, .45f, false);
+        shrunkInvincibleIdleAnimation.setAnimation("bird animations//invincible animations//idle//invincible ", BirdWidth/2, BirdHeight/2, 1, 8, 0.25f, true);
+        shrunkInvincibleShootAnimation.setAnimation("bird animations//invincible animations//shoot//invincible shoot ", BirdWidth/2, BirdHeight/2, 1, 6, .1f, false);
+
         currentAnimation = idleAnimation; // idle is always the first state the bird is in
     }
 
@@ -116,19 +165,21 @@ public class Bird implements Disposable {
     // gets the current image of the bird
     public Texture getBirdImage(){return currentAnimation.getCurrImg();}
 
+    // determines if the bird is dead or not
+    public boolean isDead(){return dead;}
+
     // gets the position of the bird
     public Vector2 getPosition(){
         return this.position;
     }
 
-
     //sets the new position of the bird
     public void movePosition(float newX, float newY){
-        if(position.x + newX >= 0 && (position.x + BirdWidth + newX) <= SuperBirdGame.GAME_WIDTH) {
-            position.x += (newX);
+        if(position.x + (newX * speedOffset) >= 0 && (position.x + BirdWidth + (newX * speedOffset)) <= SuperBirdGame.GAME_WIDTH) {
+            position.x += (newX * speedOffset);
         }
-        if(position.y + newY >= 0 && (position.y + BirdHeight + newY) <= SuperBirdGame.GAME_HEIGHT) {
-            position.y += newY;
+        if(position.y + (newY * speedOffset) >= 0 && (position.y + BirdHeight + (newY * speedOffset)) <= SuperBirdGame.GAME_HEIGHT) {
+            position.y += (newY * speedOffset);
         }
     }
 
@@ -148,20 +199,36 @@ public class Bird implements Disposable {
     public void update(float deltaTime){
         //this method captures the changes on the volume from the settings
         setVolume();
+        currentTime = deltaTime;
 
         if(currentAnimation.animationEnded == true){ // transitions from non-idle animation back to idle
+
+            if(shrinking || growing){
+                shrinking = false;
+                growing = false;
+            }
+
             currentAnimation.setAnimFinished();
             previousState = currentState;
             //keep running if state is not dead
             if(currentState != State.DEAD) {
-
                 if (!this.isInvincible) {
                     switchAnimations(State.IDLE);
                 } else { // is currently invincible
                     if (previousState == State.SHOOT) {
-                        currentAnimation = invincibleShootAnimation;
+                        if(isShrunk){
+                            currentAnimation = shrunkInvincibleShootAnimation;
+                        }
+                        else {
+                            currentAnimation = invincibleShootAnimation;
+                        }
                     } else {
-                        currentAnimation = invincibleIdleAnimation;
+                        if(isShrunk){
+                            currentAnimation = shrunkInvincibleIdleAnimation;
+                        }
+                        else {
+                            currentAnimation = invincibleIdleAnimation;
+                        }
                     }
                 }
 
@@ -177,11 +244,12 @@ public class Bird implements Disposable {
                         switchAnimations(State.IDLE);
                     }
                 }
-            //stops the dead animation from updating after reaching the final frame
+
+                //stops the dead animation from updating after reaching the final frame
            if(currentState != State.DEAD)
             currentAnimation.updateFrame(deltaTime);
            else
-               if(currentAnimation.getCurrFrameIndex() != 6)
+               if (currentAnimation.getCurrFrameIndex() != 6)
                    currentAnimation.updateFrame(deltaTime);
         }
 
@@ -189,15 +257,12 @@ public class Bird implements Disposable {
         this.hitboxPosOffset.set((float) (position.x + (int)(BirdWidth/8)), (float) (position.y +  (this.BirdHeight / 10)));
         this.hitbox.update(this.hitboxPosOffset);
 
-//        // particles
-//        spitParticles.update(deltaTime);
-
         // updates projectiles
         for(BirdSpit spit : activeSpits){
             spit.update(deltaTime);
         }
 
-        // manage spits that exit the screen
+        // manage spits that exit the screen (could have been put into the playscreen)
         for(BirdSpit spit: activeSpits){
             if(spit.isOutOfScreen() || spit.isCollided()){
                 spitPool.free(spit);
@@ -206,6 +271,18 @@ public class Bird implements Disposable {
         }
 
 
+        // for shrinking / growing the bird
+        if (shrinking == true && BirdWidth != ShrunkBirdWidth && currentState == State.IDLE){
+            setBirdSize((int) ShrunkBirdWidth, (int) ShrunkBirdHeight);
+            isShrunk = true;
+            switchAnimations(State.IDLE);
+        }
+
+        if (growing == true && BirdWidth != OriginalBirdWidth && currentState == State.IDLE){
+            setBirdSize((int) OriginalBirdWidth, (int) OriginalBirdHeight);
+            isShrunk = false;
+            switchAnimations(State.IDLE);
+        }
 
 //        Gdx.app.log("Position " + String.valueOf(this.getClass()), "\nPosition: " + this.hitboxBoundsOffset.x + " , " + this.hitboxBoundsOffset.y);
     }
@@ -233,15 +310,32 @@ public class Bird implements Disposable {
     }
 
     public void switchAnimations(State playerState){
-        switch(playerState){
+        switch (playerState) {
             case IDLE:
-                currentAnimation = idleAnimation;
+                if(shrinking || growing){
+                    currentAnimation = shrunkResizeTransitionAnimation;
+                }
+                else {
+                    if (isShrunk) {
+                        currentAnimation = shrunkIdleAnimation;
+                    } else {
+                        currentAnimation = idleAnimation;
+                    }
+                }
                 break;
             case SHOOT:
-                currentAnimation = shootAnimation;
+                if (isShrunk) {
+                    currentAnimation = shrunkShootAnimation;
+                } else {
+                    currentAnimation = shootAnimation;
+                }
                 break;
             case DAMAGED:
-                currentAnimation = damageAnimation;
+                if (isShrunk) {
+                    currentAnimation = shrunkDamageAnimation;
+                } else {
+                    currentAnimation = damageAnimation;
+                }
                 break;
             case DEAD:
                 currentAnimation = deadAnimation;
@@ -252,19 +346,23 @@ public class Bird implements Disposable {
 
 
     public void shoot() {
-        previousState = currentState;
-        currentState = State.SHOOT;
-        if(previousState != State.SHOOT && previousState == State.IDLE){ // to prevent overlapping of animations
-            // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
-            spitSound.play(volume);
+        if(isShrunk == false || (currentTime - lastTimeShot) > rateOfFireTime) {
+            lastTimeShot = currentTime;
+            previousState = currentState;
+            currentState = State.SHOOT;
+            if (previousState != State.SHOOT && previousState == State.IDLE) { // to prevent overlapping of animations
 
-            switchAnimations(State.SHOOT);
+                // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
+                spitSound.play(volume);
 
-            // create spit
-            BirdSpit item = spitPool.obtain();
-            item.init(this.position.x + (int)(BirdWidth/1.5), this.position.y + (int)(BirdWidth/3.8)); //Nikko: change to this when the image has been adjusted
-            activeSpits.add(item);
-            Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+                switchAnimations(State.SHOOT);
+
+                // create spit
+                BirdSpit item = spitPool.obtain();
+                item.init(this.position.x + (int) (BirdWidth / 1.5), this.position.y + (int) (BirdWidth / 3.8)); //Nikko: change to this when the image has been adjusted
+                activeSpits.add(item);
+                Gdx.app.log("Spits Left:", String.valueOf(spitPool.getFree()));
+            }
         }
     }
 
@@ -278,6 +376,8 @@ public class Bird implements Disposable {
         deadSoundSad.play(volume);
 
         // set the screen to game over screen
+        dead = true;
+
 
     }
 
@@ -286,11 +386,7 @@ public class Bird implements Disposable {
             previousState = currentState;
             currentState = State.DAMAGED;
 
-            if(this.healthCount == 2){
-//                damageSoundLoud.play();
-            }else{
-                damageSoundNormal.play(volume);
-            }
+            damageSoundNormal.play(volume);
 
             timeVar = System.currentTimeMillis(); // update time var to current time value every time the bird gets damaged
             setInvincible(true);
@@ -299,8 +395,17 @@ public class Bird implements Disposable {
             //need to validate so that when updateHealthbar is updated
             //it doesnt look for a negative image since images goes from
             //0 to n numbers from the assests folder
-            if(this.healthCount != 0)
-            this.healthCount--; //Nikko--turn this on when you are not debugging
+            if(this.healthCount != 0) {
+                if(isShrunk == false) {
+                    this.healthCount--; //Nikko--turn this on when you are not debugging
+                }
+                else{
+                    this.healthCount -= 2; // double damage when the bird is shrunk
+                }
+            }
+            if(this.healthCount < 0){
+                this.healthCount = 0;
+            }
 
             if(this.healthCount == 0){
                 this.deadBird(hud);
@@ -319,8 +424,35 @@ public class Bird implements Disposable {
         if((position.y + height) > SuperBirdGame.GAME_HEIGHT) {
             position.y = SuperBirdGame.GAME_HEIGHT - height;
         }
+
+        // resize hitbox
+        if (shrinking){
+            hitbox.resize((int) (hitbox.width / 2), (int) (hitbox.height / 2));
+        }
+        else if (growing){
+            hitbox.resize((int) (hitbox.width * 2), (int) (hitbox.height * 2));
+        }
+
         BirdWidth = width;
         BirdHeight = height;
+    }
+
+    // set the update action to growing
+    public void growBird(){
+        if(growing == false && BirdWidth != OriginalBirdWidth) {
+            shrinking = false;
+            growing = true;
+            speedOffset = 1;
+        }
+    }
+
+    // set the update action to shrinking
+    public void shrinkBird(){
+        if(shrinking == false && BirdWidth != ShrunkBirdWidth) {
+            shrinking = true;
+            growing = false;
+            speedOffset = 1.15f;
+        }
     }
 
     //this method changes the volume from the static integer from SettingsScreen
@@ -369,10 +501,11 @@ public class Bird implements Disposable {
             if(enemy instanceof MechaBird){
                 Array<MechaLaser> activeShots = ((MechaBird)(enemy)).activeShots;
                 for (MechaLaser laser : activeShots) {
-
                     if (this.hitbox.isHit(laser.hitbox) || laser.hitbox.isHit(this.hitbox)) {
 //                          Gdx.app.log("PLAYER->ENEMY", "HIT");
+                        laser.setCollision(true);
                         this.damageBird(hud);
+
                     }
                 }
             }

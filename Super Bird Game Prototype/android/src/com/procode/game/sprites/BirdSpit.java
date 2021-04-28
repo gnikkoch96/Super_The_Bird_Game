@@ -20,7 +20,7 @@ public class BirdSpit extends Projectile implements Disposable {
         this.projectileWidth = SuperBirdGame.GAME_WIDTH / 15;
         this.projectileHeight = SuperBirdGame.GAME_HEIGHT / 35;
         this.position = new Vector2(); // x and y are initialized in the init()
-        this.velocity = 20; //--Nikko: try changing speed (to fix the bird catching up to spit, make this equation include the speed of the bird)
+        this.velocity = 20;
         this.collided = false;
         this.alive = false;
 
@@ -49,11 +49,6 @@ public class BirdSpit extends Projectile implements Disposable {
             }
         }
 
-//        Gdx.app.log("Hitbox " + String.valueOf(this.getClass()), "\nbotleft: (" + this.getHitbox().botleft.x + ", " + this.getHitbox().botleft.y + ")\n"
-//                + "botright: (" + this.getHitbox().botright.x + ", " + this.getHitbox().botright.y + ")\n"
-//                + "topleft: (" + this.getHitbox().topleft.x + ", " + this.getHitbox().topleft.y + ")\n"
-//                + "topright: (" + this.getHitbox().topright.x + ", " + this.getHitbox().topright.y + ")\n");
-
     }
 
     public void render(SpriteBatch batch){
@@ -67,6 +62,5 @@ public class BirdSpit extends Projectile implements Disposable {
     @Override
     public void dispose() {
         projectileImage.dispose();
-
     }
 }

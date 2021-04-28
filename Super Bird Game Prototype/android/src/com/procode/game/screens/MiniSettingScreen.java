@@ -22,7 +22,7 @@ import com.procode.game.scenes.HUD;
 import com.procode.game.tools.ImageFunctions;
 import com.procode.game.tools.Volume;
 
-
+//import javax.swing.plaf.nimbus.State;
 
 public class MiniSettingScreen{
 
@@ -127,7 +127,9 @@ public class MiniSettingScreen{
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //btnLoginClicked();
+                Gdx.app.log("Pressed: " , "Play");
                 HUD.state = 0;
+                Gdx.app.log("Hud.state", String.valueOf(HUD.state));
             }
         });
 

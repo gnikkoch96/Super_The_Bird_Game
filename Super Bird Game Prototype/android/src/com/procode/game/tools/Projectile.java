@@ -29,9 +29,6 @@ public class Projectile implements Pool.Poolable {
     public Vector2 getPosition() {
         return this.position;
     }
-    public boolean isAlive() {
-        return this.alive;
-    }
 
     public boolean isOutOfScreen(){
         if(this.position.x >= SuperBirdGame.GAME_WIDTH)
