@@ -122,8 +122,6 @@ public class Drone extends Enemy {
             // unless it is hit 3 times before that, which will result in it being destroyed
             if (spitHits <= 0){
                 super.changeState(State.DEAD, -1);
-
-
             }
             else{
 

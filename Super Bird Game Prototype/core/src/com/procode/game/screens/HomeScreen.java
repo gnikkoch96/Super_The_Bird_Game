@@ -2,6 +2,7 @@ package com.procode.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -38,6 +39,7 @@ public class HomeScreen implements Screen {
     private float currTime;
     private int fly;
     private boolean moveUp;
+    private Music backgroundMusic;
 
     public int buttonSize; // because image is a circle only need the radius so size is a single variable
 
@@ -158,6 +160,11 @@ public class HomeScreen implements Screen {
                Gdx.app.exit();
             }
         });
+
+        backgroundMusic = SuperBirdGame.manager.get("audio/music/Homescreen.mp3", Music.class);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.play();
+
     }
 
     @Override
@@ -226,5 +233,6 @@ public class HomeScreen implements Screen {
         game.dispose();
         stage.dispose();
         bird.dispose();
+        backgroundMusic.dispose();
     }
 }
