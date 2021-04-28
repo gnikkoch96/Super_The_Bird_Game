@@ -69,6 +69,8 @@ public class PlayScreen extends BaseScene implements Screen {
     // game over screen stuff
     private float timePlayerDied;
 
+    private boolean debugging = false;
+
     public PlayScreen(SuperBirdGame game){
         super(game);
 
@@ -190,7 +192,7 @@ public class PlayScreen extends BaseScene implements Screen {
                 timePlayerDied = dt;
             }
             if (dt - timePlayerDied > 1) {
-                game.setScreen(new GameOverScreen());
+                game.setScreen(new GameOverScreen(game, hud.score));
             }
         }
 
@@ -279,7 +281,7 @@ public class PlayScreen extends BaseScene implements Screen {
                     sprite.setColor(Color.RED);
                     sprite.draw(game.batch);
                 }else {
-                    game.batch.draw(currEnemyImg, enemyPos.x, enemyPos.y);
+                    game.batch.draw(currEnemyImg, enemyPos.x, enemyPos.y, currEnemy.getEnemySize().x, currEnemy.getEnemySize().y);
                 }
             }
 
@@ -336,14 +338,16 @@ public class PlayScreen extends BaseScene implements Screen {
         game.batch.end();
 
         //--DEBUGGING--//
-        player.debugHitbox();
-        for (int i = 0; i < enemySpawner.activeEnemies.size(); i++){
-            if(enemySpawner.activeEnemies.get(i).hitbox != null) { // this is because hitboxes are deleted and replaced with new ones
-                enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
+        if(debugging) {
+            player.debugHitbox();
+            for (int i = 0; i < enemySpawner.activeEnemies.size(); i++) {
+                if (enemySpawner.activeEnemies.get(i).hitbox != null) { // this is because hitboxes are deleted and replaced with new ones
+                    enemySpawner.activeEnemies.get(i).hitbox.debugHitbox();
 
-                if(enemySpawner.activeEnemies.get(i) instanceof MechaBird){ // debugs laser hitboxes
-                    for(MechaLaser laser: ((MechaBird) enemySpawner.activeEnemies.get(i)).activeShots){
-                        laser.hitbox.debugHitbox();
+                    if (enemySpawner.activeEnemies.get(i) instanceof MechaBird) { // debugs laser hitboxes
+                        for (MechaLaser laser : ((MechaBird) enemySpawner.activeEnemies.get(i)).activeShots) {
+                            laser.hitbox.debugHitbox();
+                        }
                     }
                 }
             }
