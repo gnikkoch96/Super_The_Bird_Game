@@ -55,6 +55,7 @@ public class SuperBirdGame extends Game {
 		// asset manager stuff
 		manager = new AssetManager();
 		manager.load("audio/sound/spit.wav", Sound.class);
+		manager.load("audio/sound/bird_flap.mp3", Sound.class);
 		manager.load("audio/sound/bird_dead.wav", Sound.class);
 		manager.load("audio/sound/bird_dead_sad.wav", Sound.class);
 		manager.load("audio/sound/bird_scream_loud.wav", Sound.class);
@@ -68,8 +69,8 @@ public class SuperBirdGame extends Game {
 		manager.finishLoading();
 
 
-//		this.setScreen(new SplashScreen(this));
-		this.setScreen(new PlayScreen(this));
+		this.setScreen(new SplashScreen(this));
+		//this.setScreen(new PlayScreen(this));
 	}
 
 

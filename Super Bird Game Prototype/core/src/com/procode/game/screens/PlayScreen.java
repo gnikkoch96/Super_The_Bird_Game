@@ -223,6 +223,9 @@ public class PlayScreen extends BaseScene implements Screen {
         currTime += delta;
         update(currTime);
 
+        if(!player.isFlapping)
+            player.startFlap();
+
         //game.batch.draw(background, 0, 0);
 
         hud.settingScreen.setContainerVisible(false);
