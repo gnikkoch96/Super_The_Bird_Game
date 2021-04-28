@@ -135,6 +135,7 @@ public class HomeScreen implements Screen {
         btnPlay.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 game.setScreen(new LoadingScreen(game));
             }
         });
