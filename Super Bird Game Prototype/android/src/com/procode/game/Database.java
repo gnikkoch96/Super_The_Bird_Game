@@ -1,6 +1,7 @@
 package com.procode.game;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +22,7 @@ import com.procode.game.User;
 import com.procode.game.screens.LoginScreen;
 import java.lang.Object;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import androidx.annotation.NonNull;
 public class Database {
@@ -33,6 +35,7 @@ public class Database {
 
     private String username, password, email, fullName;
     public static boolean userStatus;
+    public static String usernameStatus = "NULL", emailStatus = "NULL";
 
     public Database(){
         this.username = "";
@@ -42,6 +45,8 @@ public class Database {
         this.parentDbName = "Users";
         this.userStatus = false;
         this.myAuth = FirebaseAuth.getInstance();
+        this.usernameStatus = "NULL";
+        this.emailStatus = "NULL";
     }
 
     public Database(String username, String password){
@@ -156,7 +161,7 @@ public class Database {
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                rootRef.child("Users").child(username).child(password).updateChildren(userdataMap).
+                rootRef.child("Users").child(username).updateChildren(userdataMap).
                         addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -165,6 +170,56 @@ public class Database {
                                    // userStatus = true;
                                }else{
                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        final HashMap<String,Object> usernameMap = new HashMap<>();
+        final HashMap<String,Object> emailMap = new HashMap<>();
+
+        usernameMap.put("username", this.username);
+        emailMap.put("email", this.email);
+
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                rootRef.child("Usernames").child("value").push().setValue(usernameMap).
+                        addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    // Toast
+                                    // userStatus = true;
+                                }else{
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                rootRef.child("Emails").child("value").push().setValue(emailMap).
+                        addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    // Toast
+                                    // userStatus = true;
+                                }else{
+                                }
                             }
                         });
             }
@@ -279,12 +334,14 @@ public class Database {
                         if(userData.getPassword().equals(userPassword)){
 
                             Database.userStatus = true;
+                            Database.usernameStatus = "Exist";
                             LoginScreen.currentUser = userData;
                             System.out.println("it exist : " + LoginScreen.userStatus);
                         }
-                    }else{
-                        System.out.println("it does not exist");
                     }
+                }else{
+                    Database.usernameStatus = "DNE";
+                    System.out.println("it does not exist");
                 }
 
             }
@@ -301,6 +358,66 @@ public class Database {
        // System.out.println("i am here " + LoginScreen.userStatus);
     }
 
+    public void checkUserName(final String username){
+        rootRef.child("Usernames").child("value").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Iterator<DataSnapshot> ds = dataSnapshot.getChildren().iterator();
+                while(ds.hasNext()){
+                    User user = ds.next().getValue(User.class);
+                    if(username.equals(user.getUserName())) {
+                        Database.usernameStatus = "Exist";
+                        System.out.println("Username exist");
+                    }
+                    System.out.println("e: " + user.getEmail());
+                }
+                if(!Database.usernameStatus.equals("Exist")) {
+                    System.out.println("New email");
+                    Database.usernameStatus = "DNE";
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //this method will check if the email exist
+    public void checkEmail(final String email){
+
+        rootRef.child("Emails").child("value").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Iterator<DataSnapshot> ds = dataSnapshot.getChildren().iterator();
+                while(ds.hasNext()){
+                    User user = ds.next().getValue(User.class);
+                    if(email.equals(user.getEmail())) {
+                        Database.emailStatus = "Exist";
+                        System.out.println("Email exist");
+                    }
+                    System.out.println("e: " + user.getEmail());
+                }
+                if(!Database.emailStatus.equals("Exist")) {
+                    System.out.println("New email");
+                    Database.emailStatus = "DNE";
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+
+        });
+
+
+        // System.out.println("i am here " + LoginScreen.userStatus);
+    }
     public boolean userExist(){
         return userStatus;
     }

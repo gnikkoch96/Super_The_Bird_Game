@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.procode.game.Database;
 import com.procode.game.SuperBirdGame;
 
 public class EditAccountScreen implements Screen {
@@ -79,18 +80,7 @@ public class EditAccountScreen implements Screen {
 
     }
 
-    @Override
-    public void show() {
-        changeUserName();
-        changeFullName();
-        changeEmail();
-        buttons();
-        buttonClickListeners();
-        //adding the table into the container
-        tableContainer.setActor(table);
-        //set the table container with all the labels, textfields and buttons
-        stage.addActor(tableContainer);
-    }
+
 
     public void buttons(){
 
@@ -111,6 +101,8 @@ public class EditAccountScreen implements Screen {
         buttonTable.add(btnBack).width(cw/4.0f).height(ch / 8.0f);
         buttonTable.add(btnSave).width(cw/4.0f).height(ch / 8.0f);
 
+
+
     }
 
     public void buttonClickListeners(){
@@ -118,15 +110,36 @@ public class EditAccountScreen implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(new SettingsScreen(game));
+
             }
         });
 
         btnSave.addListener(new ClickListener(){
             @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new ChangePasswordScreen(game));
+                validateUserName(userName.getText());
+                validateEmail(email.getText());
+
             }
         });
+    }
+
+    private void upDateDatabase(){
+
+    }
+
+    private void validateUserName(String username){
+        Database database = new Database();
+        database.checkUserName(username);
+    }
+
+    private void validateEmail(String email){
+        Database database = new Database();
+        database.checkEmail(email);
     }
 
     public void changeUserName(){
@@ -184,11 +197,35 @@ public class EditAccountScreen implements Screen {
 
     }
 
+    public void setUpNewScreen(){
+        if(Database.usernameStatus.equals("DNE") && Database.emailStatus.equals("DNE")) {
+            Database.usernameStatus = "NULL";
+            Database.emailStatus = "NULL";
+            game.setScreen(new SettingsScreen(game));
+        }
+        else if(Database.usernameStatus.equals("Exist") || Database.emailStatus.equals("Exist")){
+            System.out.println("Invalid Input the users exist");
+        }
+    }
+
+    @Override
+    public void show() {
+        changeUserName();
+        changeFullName();
+        changeEmail();
+        buttons();
+        buttonClickListeners();
+        //adding the table into the container
+        tableContainer.setActor(table);
+        //set the table container with all the labels, textfields and buttons
+        stage.addActor(tableContainer);
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0,1,1,0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        setUpNewScreen();
         game.batch.begin();
         //game.batch.draw(volumeImage,game.GAME_WIDTH - (game.GAME_WIDTH - 700),100);
         game.batch.end();

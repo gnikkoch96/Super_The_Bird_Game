@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.procode.game.Database;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.ImageFunctions;
 
@@ -39,7 +41,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
     private SuperBirdGame game;
     private Stage stage;
-    private TextButton btnRegisterUser, btnBack, btnNext;
+    private TextButton ubtnBack, pbtnBack, ebtnBack, fbtnBack;
+    private TextButton ubtnNext, pbtnNext, ebtnNext, fbtnNext;
     private TextField userName, password, fullName, email;
     private TextureAtlas atlas;
     private BitmapFont font;
@@ -52,8 +55,10 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
     private TextButton.TextButtonStyle style_button;
     private Skin skin;
     private String username_input, user_full_name, user_email, user_password;
-    private Container<Table> tableContainer0, tableContainer1,tableContainer2,tableContainer3;
-    private Table table, buttonTable, userNameTable, emailTable, fullNameTable, passwordTable;
+    private Container<Table> tableContainer0, tableContainer1,tableContainer2,tableContainer3, accountImageContainer;
+    private Table table, buttonTable, userNameTable, emailTable, fullNameTable, passwordTable, accountImageTable;
+    private Container<Table> accountEmailImageContainer;
+    private Table accountEmailImageTable;
 
 
     public RegisterScreen(SuperBirdGame g){
@@ -97,14 +102,6 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
 
-
-        /*for(int i =0; i<4;i++) {
-            tableContainer[i] = new Container<Table>();
-            tableContainer[i].setSize(sw, sh);
-            tableContainer[i].setPosition(0,0);
-        }*/
-        //tableContainer.setPosition((sw-cw)/2.0f, (sh-ch)/2.0f);
-
         tableContainer0 = new Container<Table>();
         tableContainer0.setSize(sw, sh);
         tableContainer0.setPosition(0,0);
@@ -121,9 +118,13 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         tableContainer3.setSize(sw, sh);
         tableContainer3.setPosition(0,0);
 
+        accountImageContainer = new Container<Table>();
+        accountImageContainer.setSize(sw,sh);
+        accountImageContainer.setPosition(0,0);
 
-
-
+        accountEmailImageContainer = new Container<Table>();
+        accountEmailImageContainer.setSize(sw,sh);
+        accountEmailImageContainer.setPosition(0,0);
 
         table = new Table(skin);
         table.setSize(sw,sh);
@@ -134,9 +135,93 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         passwordTable = new Table(skin);
         fullNameTable = new Table(skin);
         buttonTable = new Table(skin);
+        accountImageTable = new Table(skin);
+        accountEmailImageTable = new Table(skin);
+
+    }
+
+    public void accountExist(){
+        float sw = SuperBirdGame.GAME_WIDTH;
+        float sh = SuperBirdGame.GAME_HEIGHT;
+
+        float cw = sw * 0.7f;
+        float ch = sh * 0.5f;
+        Image accountexist = new Image(new Texture("background stuff//accnt_exist.png"));
+        Image accountEmailExist = new Image(new Texture("background stuff//accnt_email_exist.png"));
+
+        accountImageTable.row().colspan(3).expandX().fillX();
+        accountImageTable.add(accountexist).fillX().width(cw /2.0f).height(ch /2.0f).padBottom(sh/1.5f);
+
+        accountEmailImageTable.row().colspan(3).expandX().fillX();
+        accountEmailImageTable.add(accountEmailExist).fillX().width(cw /2.0f).height(ch /2.0f).padBottom(sh/1.5f);
+
+        accountImageContainer.setActor(accountImageTable);
+        accountEmailImageContainer.setActor(accountEmailImageTable);
+        accountImageContainer.setVisible(false);
+        accountEmailImageContainer.setVisible(false);
+    }
+
+    public void btnclickListeners(){
+
+        fbtnNext.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                //go to password
+                btnNextClicked("FullName");
+            }
+        });
+
+        fbtnBack.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                btnBackClicked("FullName");
+            }
+        });
 
 
 
+        ebtnBack.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                btnBackClicked("Email");
+            }
+        });
+
+        ubtnNext.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+
+            }
+
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Database database = new Database();
+                database.checkDatabase(userName.getText(), "random");
+                if(Database.usernameStatus.equals("DNE") ){
+                    btnNextClicked("Username");
+                }else if(Database.usernameStatus.equals("Exist")){
+                    System.out.println("The User Already Exist");
+                    accountImageContainer.setVisible(true);
+                }
+
+                return true;
+            }
+        });
+
+
+        pbtnNext.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                //set the screen to prompt full name
+                btnNextClicked("Password");
+            }
+        });
+
+        pbtnBack.addListener(new ClickListener(){
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                btnBackClicked("Password");
+            }
+        });
 
     }
 
@@ -146,27 +231,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         fullName = new TextField("", txtFieldStyle);
 
 
-        TextButton btnNext = new TextButton("Next", style_button);
-        TextButton btnBack = new TextButton("Back", style_button);
-
-
-
-        btnNext.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                //go to password
-                btnNextClicked("FullName");
-            }
-        });
-
-        btnBack.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                btnBackClicked("FullName");
-            }
-        });
-
-
+        fbtnNext = new TextButton("Next", style_button);
+        fbtnBack = new TextButton("Back", style_button);
         Table buttonTable = new Table(skin);
         fullNameTable.add(txtFullName).fillX().width((float)game.GAME_WIDTH/2);
         fullNameTable.row().colspan(3).expandX().fillX();
@@ -178,11 +244,9 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(fbtnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(fbtnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
-        //adding the table into the container
-     //   tableContainer.setActor(table);
         tableContainer2.setActor(fullNameTable);
         tableContainer2.setVisible(false);
     }
@@ -193,23 +257,24 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         email = new TextField("", txtFieldStyle);
 
 
-        TextButton btnNext = new TextButton("Next", style_button);
-        TextButton btnBack = new TextButton("Back", style_button);
+        ebtnNext = new TextButton("Next", style_button);
+        ebtnBack = new TextButton("Back", style_button);
 
 
+        ebtnNext.addListener(new ClickListener(){
 
-        btnNext.addListener(new ClickListener(){
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+                Database database = new Database();
+
+                database.checkEmail(email.getText());
+                //go to password
+
+                return true;
+            }
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 //go to password
-                btnNextClicked("Email");
-            }
-        });
-
-        btnBack.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                btnBackClicked("Email");
             }
         });
 
@@ -227,12 +292,19 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(ebtnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(ebtnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
         //adding the table into the container
         tableContainer3.setActor(emailTable);
         tableContainer3.setVisible(false);
+    }
+
+    public void setUpNewScreen(){
+        if(Database.emailStatus.equals("DNE"))
+            btnNextClicked("Email");
+        else if(Database.emailStatus.equals("Exist"))
+            accountEmailImageContainer.setVisible(true);
     }
 
     public void enterUserName(){
@@ -252,24 +324,11 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         userNameTable.add(userName).fillX().width((float)game.GAME_WIDTH/2).height((float)game.GAME_HEIGHT/6);
 
 
-        TextButton btnNext = new TextButton("Next", style_button);
-        TextButton btnBack = new TextButton("Back", style_button);
+        ubtnNext = new TextButton("Next", style_button);
+        ubtnBack = new TextButton("Back", style_button);
 
-        btnNext.setVisible(true);
-
-
-        btnNext.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                //if(userName.getText())
-                //go to password
-
-
-                btnNextClicked("Username");
-            }
-        });
-
-        btnBack.addListener(new ClickListener(){
+        ubtnNext.setVisible(true);
+       ubtnBack.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 btnBackClicked("Username");
@@ -284,8 +343,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(ubtnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(ubtnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
 
 
@@ -311,25 +370,10 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         //=================Next button =====================
 
-        TextButton btnNext = new TextButton("Next", style_button);
-        TextButton btnBack = new TextButton("Back", style_button);
+        pbtnNext = new TextButton("Next", style_button);
+        pbtnBack = new TextButton("Back", style_button);
 
 
-
-        btnNext.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                //set the screen to prompt full name
-                btnNextClicked("Password");
-            }
-        });
-
-        btnBack.addListener(new ClickListener(){
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                btnBackClicked("Password");
-            }
-        });
 
         Table buttonTable = new Table(skin);
 
@@ -338,8 +382,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
         buttonTable.pad(16);
         buttonTable.row().fillX().expandX();
-        buttonTable.add(btnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
-        buttonTable.add(btnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
+        buttonTable.add(pbtnBack).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).spaceRight((float)game.GAME_WIDTH/6);
+        buttonTable.add(pbtnNext).width(((float)game.GAME_WIDTH)/6.0f).height(((float)game.GAME_HEIGHT*0.5f)/3.0f).expand();
 
         tableContainer1.setVisible(false);
         tableContainer1.setActor(passwordTable);
@@ -370,6 +414,7 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
             tableContainer0.setVisible(false);
             tableContainer1.setVisible(true);
         }else if(state.equals("Password")){
+            accountImageContainer.setVisible(false);
             tableContainer1.setVisible(false);
             tableContainer2.setVisible(true);
         }else if(state.equals("FullName")){
@@ -386,31 +431,17 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
 
     }
 
-    //this method will validate the user input, it will check if the account already exist
-    //if so prompt user to enter a different one.
-    private void validateInput(String state){
-        if(state.equals("username")){
-
-        }
-    }
-
-
-
 
 
     //this method is from the library of libdx from Application Adapter
     //It runs automatically just like the render.
     public void show(){
 
-        //buttons();
-
         enterUserName();
         userPassword();
         userFullName();
         userEmail();
-
-        //
-
+        accountExist();
 
         //set the stage and the table container
        // for(int i=0; i < 5; i++)
@@ -418,6 +449,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         stage.addActor(tableContainer1);
         stage.addActor(tableContainer2);
         stage.addActor(tableContainer3);
+        stage.addActor(accountImageContainer);
+        stage.addActor(accountEmailImageContainer);
     }
 
     @Override
@@ -426,6 +459,8 @@ public class RegisterScreen extends ApplicationAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //buttons();
+        setUpNewScreen();
+        btnclickListeners();
         game.batch.begin();
         //render the stage and draw it
         game.batch.draw(background, 0, 0);

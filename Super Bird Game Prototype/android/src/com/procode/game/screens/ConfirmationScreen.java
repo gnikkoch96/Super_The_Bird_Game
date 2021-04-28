@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.procode.game.Database;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.User;
 import com.procode.game.tools.ImageFunctions;
@@ -148,6 +149,8 @@ public class ConfirmationScreen implements Screen {
         user.setPassword(password);
         user.setFullName(fullName);
         user.InsertDataToDatabase();
+        Database.emailStatus = "NULL";
+        Database.usernameStatus = "NULL";
     }
 
 

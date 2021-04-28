@@ -182,10 +182,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-               // User user = new User();
-               // user.Test(userName.getText(), password.getText());
-                //btnLoginClicked();
-                database.signInAuthentication(userName.getText(),password.getText());
+                btnLoginClicked();
+
                 return true;
             }
         });
@@ -193,19 +191,12 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
         btnSignUp = new TextButton("Sign Up", style_button);;
 
-        //set the position and size of the button
-        //btnSignUp.setPosition((game.GAME_WIDTH/2) + 300,GAME/2) - 550);
-        //btnSignUp.setSize(400,200);
-
         //set the listener for SignUp button
         btnSignUp.addListener(new ClickListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                //User user = new User();
-               // user.resetPassword(userName.getText(), password.getText());
                 btnSignUpClicked();
-               // database.upDatePassword("1231234","321321");
-             //   database.resetPassword(userName.getText());
+
             }
         });
 
@@ -244,8 +235,9 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
     public void setHomeScreen(){
 
-        if(Database.userStatus)
+        if(Database.userStatus && !userName.getText().equals("") && !password.getText().equals("")) {
             game.setScreen(new HomeScreen(game));
+        }
 
     }
 
