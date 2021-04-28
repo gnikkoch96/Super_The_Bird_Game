@@ -28,12 +28,13 @@ public class EditAccountScreen implements Screen {
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private TextButton.TextButtonStyle style_button;
-    private Label txtUserName, txtEmail, txtFullName;
+    private Label txtUserName, txtEmail, txtFullName, incorrectInfoLabel;
     private Table table;
     private TextField userName, fullName, email;
     private TextField.TextFieldStyle txtFieldStyle;
     private Label.LabelStyle labelStyle;
     private TextButton btnSave, btnBack;
+    private String label;
 
     public EditAccountScreen(SuperBirdGame g){
 
@@ -71,6 +72,9 @@ public class EditAccountScreen implements Screen {
         labelStyle.font = font;
         table = new Table(skin);
 
+
+
+
         tableContainer = new Container<Table>();
         tableContainer.setSize(sw,sh);
         //tableContainer.setPosition((sw-cw)/2.0f, (sh-ch));
@@ -81,7 +85,16 @@ public class EditAccountScreen implements Screen {
     }
 
 
+    public void showLabels(){
 
+        incorrectInfoLabel = new Label(label,labelStyle);
+        txtUserName.setAlignment(Align.center);
+        table.row().colspan(3).expandX().fillX();
+        table.add(incorrectInfoLabel).colspan(3);
+
+        incorrectInfoLabel.setVisible(false);
+        tableContainer.setActor(table);
+    }
 
     public void buttons(){
 
@@ -202,13 +215,15 @@ public class EditAccountScreen implements Screen {
             Database.emailStatus = "NULL";
             game.setScreen(new SettingsScreen(game));
         }
-        else if(Database.usernameStatus.equals("Exist") || Database.emailStatus.equals("Exist")){
-            System.out.println("Invalid Input the users exist");
-        }
+       // else if(Database.usernameStatus.equals("Exist")){
+
+       // }else if(Database.emailStatus.equals("Exist"))
+
     }
 
     @Override
     public void show() {
+       // showLabels();
         changeUserName();
         changeFullName();
         changeEmail();
