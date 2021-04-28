@@ -380,7 +380,7 @@ public class Bird implements Disposable {
         dead = true;
 
         isFlapping = false;
-        flapSound.stop();
+        flapSound.pause();
 
     }
 
@@ -529,7 +529,6 @@ public class Bird implements Disposable {
         flapSound.loop();
         isFlapping = true;
     }
-
 
     @Override
     public void dispose() {

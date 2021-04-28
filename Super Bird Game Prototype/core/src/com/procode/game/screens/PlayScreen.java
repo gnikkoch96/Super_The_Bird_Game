@@ -225,7 +225,7 @@ public class PlayScreen extends BaseScene implements Screen {
         currTime += delta;
         update(currTime);
 
-        if(!player.isFlapping)
+        if(!player.isDead() && !player.isFlapping)
             player.startFlap();
 
         //game.batch.draw(background, 0, 0);
