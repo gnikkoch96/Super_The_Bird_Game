@@ -1,5 +1,7 @@
 package com.procode.game;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -70,9 +72,10 @@ public class SuperBirdGame extends Game {
 		manager.finishLoading();
 
 		//this.setScreen(new SplashScreen(this));
-		this.setScreen(new EditAccountScreen(this));
+		//this.setScreen(new EditAccountScreen(this));
 		//this.setScreen(new ChangePasswordScreen(this));
 		//this.setScreen(new PlayScreen(this));
+		this.setScreen(new LoginScreen(this));
 	}
 
 	@Override

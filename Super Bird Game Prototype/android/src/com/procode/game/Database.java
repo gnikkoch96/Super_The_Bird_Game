@@ -239,7 +239,7 @@ public class Database {
     //update the username from the database
     public void upDateUsername(String username){
 
-        rootRef.child("Users").child(username).child("username").setValue(username)
+        rootRef.child("Users").child(User.currentUser).setValue(username)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -249,6 +249,28 @@ public class Database {
                     }
                 });
 
+        final HashMap<String,Object> usernameMap = new HashMap<>();
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                rootRef.child("Usernames").child("value").push().setValue(usernameMap).
+                        addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    // Toast
+                                    // userStatus = true;
+                                }else{
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     //update fullname
@@ -288,6 +310,28 @@ public class Database {
                         }
                     }
                 });
+        final HashMap<String,Object> emailMap = new HashMap<>();
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                rootRef.child("Emails").child("value").push().setValue(emailMap).
+                        addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    // Toast
+                                    // userStatus = true;
+                                }else{
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 

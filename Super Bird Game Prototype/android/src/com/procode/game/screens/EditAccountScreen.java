@@ -3,6 +3,7 @@ package com.procode.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.procode.game.Database;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.User;
+import com.procode.game.tools.ImageFunctions;
 
 public class EditAccountScreen implements Screen {
 
@@ -35,6 +38,7 @@ public class EditAccountScreen implements Screen {
     private Label.LabelStyle labelStyle;
     private TextButton btnSave, btnBack;
     private String label;
+    private Texture emailTaken, usernameTaken, username_email_taken;
 
     public EditAccountScreen(SuperBirdGame g){
 
@@ -73,8 +77,11 @@ public class EditAccountScreen implements Screen {
         table = new Table(skin);
 
 
-
-
+        emailTaken = ImageFunctions.resize("background stuff/emailTaken.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
+        usernameTaken = ImageFunctions.resize("background stuff/usernameTaken.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
+        username_email_taken = ImageFunctions.resize("background stuff/username_email_taken.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
+        
+        
         tableContainer = new Container<Table>();
         tableContainer.setSize(sw,sh);
         //tableContainer.setPosition((sw-cw)/2.0f, (sh-ch));
@@ -213,11 +220,17 @@ public class EditAccountScreen implements Screen {
         if(Database.usernameStatus.equals("DNE") && Database.emailStatus.equals("DNE")) {
             Database.usernameStatus = "NULL";
             Database.emailStatus = "NULL";
+
+            Database database = new Database();
+            database.upDateUsername(userName.getText());
+
+            if(!(fullName.getText().length() == 0) || !(fullName.getText().charAt(0) == ' ')){
+                database.upDateFullName(fullName.getText());
+            }
+
+            database.upDateEmail(email.getText());
             game.setScreen(new SettingsScreen(game));
         }
-       // else if(Database.usernameStatus.equals("Exist")){
-
-       // }else if(Database.emailStatus.equals("Exist"))
 
     }
 
@@ -240,7 +253,13 @@ public class EditAccountScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         setUpNewScreen();
         game.batch.begin();
-        //game.batch.draw(volumeImage,game.GAME_WIDTH - (game.GAME_WIDTH - 700),100);
+        if(Database.usernameStatus.equals("Exist") && Database.emailStatus.equals("Exist"))
+            game.batch.draw(username_email_taken,0,0);
+        else if(Database.emailStatus.equals("Exist"))
+            game.batch.draw(emailTaken,0,0);
+        else if(Database.usernameStatus.equals("Exist"))
+            game.batch.draw(usernameTaken,0,0);
+
         game.batch.end();
 
         stage.act(delta);
