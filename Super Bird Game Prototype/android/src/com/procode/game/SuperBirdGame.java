@@ -69,8 +69,8 @@ public class SuperBirdGame extends Game {
 		manager.load("audio/music/Homescreen.mp3", Music.class);
 		manager.finishLoading();
 
-		this.setScreen(new SplashScreen(this));
-		//this.setScreen(new LoginScreen(this));
+		//this.setScreen(new SplashScreen(this));
+		this.setScreen(new EditAccountScreen(this));
 		//this.setScreen(new ChangePasswordScreen(this));
 		//this.setScreen(new PlayScreen(this));
 	}

@@ -223,7 +223,6 @@ public class EditAccountScreen implements Screen {
 
     @Override
     public void show() {
-       // showLabels();
         changeUserName();
         changeFullName();
         changeEmail();

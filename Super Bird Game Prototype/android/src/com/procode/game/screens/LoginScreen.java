@@ -47,17 +47,18 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private Label txtUserName, txtPassword;
-    private Texture background;
+    private Texture background, inccorectBackground;
     private TextField.TextFieldStyle txtFieldStyle;
     private Label.LabelStyle labelStyle;
     private TextButton.TextButtonStyle style_button;
     private Skin skin;
     private Background bg;
-    private int moveHills_x, moveMountain_x, moveClouds_x, getMoveClouds_y;
+    private int moveHills_x, moveMountain_x, moveClouds_x, move_incorrect_x;
     private Container<Table> tableContainer;
     public static User currentUser;
     public static boolean userStatus = false;
     private Database database;
+    private boolean btn_clicked;
 
     public LoginScreen(SuperBirdGame g){
         currentUser = new User();
@@ -71,6 +72,8 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         skin = new Skin(Gdx.files.internal("comic-ui.json"));
 
         background = ImageFunctions.resize("background stuff/bg.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
+
+        inccorectBackground = ImageFunctions.resize("background stuff/incorrect_username_password.png", SuperBirdGame.GAME_WIDTH, SuperBirdGame.GAME_HEIGHT);
         font = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Cartoon 2 US.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -98,6 +101,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         moveHills_x = game.GAME_WIDTH;
         moveMountain_x = game.GAME_WIDTH - 50;
         moveClouds_x = game.GAME_WIDTH;
+        move_incorrect_x = game.GAME_WIDTH + 60;
 
         //========Setting the sizes of the containers ===================
         float sw = SuperBirdGame.GAME_WIDTH;
@@ -114,6 +118,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
 
         buttonTable = new Table(skin);
 
+        btn_clicked = false;
     }
 
 
@@ -215,7 +220,7 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     public void btnLoginClicked(){
         //just to see the user name in the console
         currentUser.userExist(userName.getText(), password.getText());
-
+        btn_clicked = true;
     }
 
     public void btnSignUpClicked(){
@@ -260,6 +265,13 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         else
             moveMountain_x = game.GAME_WIDTH;
 
+
+        if(!Database.userStatus && btn_clicked == true && !userName.getText().equals("") && !password.getText().equals("")){
+            if(move_incorrect_x > -(game.GAME_WIDTH))
+                move_incorrect_x -= 4;
+            else
+                move_incorrect_x = game.GAME_WIDTH + 60;
+        }
     }
 
     @Override
@@ -272,7 +284,9 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
         game.batch.begin();
         //render the stage and draw it
         //game.batch.draw(background, 0, 0);
+
         game.batch.draw(bg.getBackgroundSky(),0,0);
+        game.batch.draw(inccorectBackground,move_incorrect_x,0);
         game.batch.draw(bg.getBackground_hills(),moveHills_x,0);
         game.batch.draw(bg.getBackgroundMountains(),moveMountain_x,0);
         game.batch.draw(bg.getBackgroundClouds(),moveClouds_x,0);
