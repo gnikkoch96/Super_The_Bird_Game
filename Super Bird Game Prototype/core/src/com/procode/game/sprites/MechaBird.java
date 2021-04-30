@@ -401,14 +401,14 @@ public class MechaBird extends Enemy {
                     if ((super.currAttackState != 2 && super.currAttackState != 4 && super.currAttackState != 3)){
                         super.changeState(State.ATTACK, 2);
                         setDestination();
-                        mechaBirdSpin.play(volume);
+                        mechaBirdSpin.play(SettingsScreen.volume);
                     }
 
                     // charge up until the animation is complete, then start to spin in a circular motion
                     if (super.currAttackState == 2 && super.enemyAttacks.get(super.currAttackState).isAnimFinished() == true) {
                         super.changeState(State.ATTACK, 3);
                         super.setEnemySpeed((float) (super.enemySpeed * 1.5)); // needs to spin fast
-                        mechaBirdSpin.play();
+                        mechaBirdSpin.play(SettingsScreen.volume);
                     }
 
                     // will spin until it reaches its destination and when it does,
@@ -487,7 +487,7 @@ public class MechaBird extends Enemy {
                             MechaLaser item = shootPool.obtain();
                             item.init(this.position.x - (int) (super.enemyWidth / 4.75), this.position.y + (int) (super.enemyHeight / 1.9));
                             activeShots.add(item);
-                            mechaBirdLaser.play(volume);
+                            mechaBirdLaser.play(SettingsScreen.volume);
                         }
                         else if (super.enemyAttacks.get(super.currAttackState).getCurrFrameIndex() != 3){
                             shootPerframe = false;
@@ -524,7 +524,7 @@ public class MechaBird extends Enemy {
 
         if(this.isDead && (totalCurrHits == 0 || spitHits == 0 || playerCollided)){
             // update point value when the mecha bird is dead (Nikko: I place this here because it wasn't working properly when I placed it in the other statement)
-            deadSound.play();
+            deadSound.play(SettingsScreen.volume);
             if(!playerCollided) {
                 hud.updatePoints(pointValue);
             }

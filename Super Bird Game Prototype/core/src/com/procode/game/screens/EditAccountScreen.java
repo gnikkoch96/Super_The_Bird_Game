@@ -81,7 +81,7 @@ public class EditAccountScreen implements Screen {
 
     @Override
     public void show() {
-        changeUserName();
+       // changeUserName();
         changeFullName();
         changeEmail();
         buttons();
