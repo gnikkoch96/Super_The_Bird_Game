@@ -354,7 +354,7 @@ public class Bird implements Disposable {
             if (previousState != State.SHOOT && previousState == State.IDLE) { // to prevent overlapping of animations
 
                 // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
-                spitSound.play(volume);
+                spitSound.play(SettingsScreen.volume);
 
                 switchAnimations(State.SHOOT);
 
@@ -374,7 +374,7 @@ public class Bird implements Disposable {
 
         switchAnimations(State.DEAD);
 
-        deadSoundSad.play(volume);
+        deadSoundSad.play(SettingsScreen.volume);
 
         // set the screen to game over screen
         dead = true;
@@ -389,7 +389,7 @@ public class Bird implements Disposable {
             previousState = currentState;
             currentState = State.DAMAGED;
 
-            damageSoundNormal.play(volume);
+            damageSoundNormal.play(SettingsScreen.volume);
 
             timeVar = System.currentTimeMillis(); // update time var to current time value every time the bird gets damaged
             setInvincible(true);
@@ -527,6 +527,7 @@ public class Bird implements Disposable {
 
     public void startFlap() {
         flapSound.loop();
+        flapSound.play(SettingsScreen.volume);
         isFlapping = true;
     }
 

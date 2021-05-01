@@ -33,6 +33,8 @@ import com.procode.game.tools.ImageFunctions;
 import com.procode.game.tools.ParticleEffectComponent;
 import com.procode.game.tools.Spawner;
 
+import java.util.Set;
+
 
 //This class will handle the Play State logic of the game
 public class PlayScreen extends BaseScene implements Screen {
@@ -121,7 +123,7 @@ public class PlayScreen extends BaseScene implements Screen {
 
                 // background music stuff
         backgroundMusic = SuperBirdGame.manager.get("audio/music/music.mp3", Music.class);
-        backgroundMusic.setVolume(0.3f);
+        backgroundMusic.setVolume(SettingsScreen.volume);
         backgroundMusic.setLooping(true); // loops music
 //        backgroundMusic.play();
     }

@@ -39,7 +39,7 @@ public class HomeScreen implements Screen {
     private float currTime;
     private int fly;
     private boolean moveUp;
-    private Music backgroundMusic;
+    public static Music backgroundMusic;
 
     public int buttonSize; // because image is a circle only need the radius so size is a single variable
 
@@ -165,6 +165,7 @@ public class HomeScreen implements Screen {
         backgroundMusic = SuperBirdGame.manager.get("audio/music/Homescreen.mp3", Music.class);
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
+        backgroundMusic.setVolume(1f);
 
     }
 

@@ -43,7 +43,7 @@ public class SettingsScreen implements Screen {
     private ImageButton leftVolumeBtn, rightVolumeBtn;
     private SpriteDrawable currentVolume,volume0, volume1,volume2, volume3,volume4, volume5,volume6,volume7, volume8,volume9;
     public static int volumeChanges = 5;
-
+    public static float volume = 0.05f;
     public SettingsScreen(SuperBirdGame g){
         game = g;
         stage = new Stage(game.viewport, game.batch);
@@ -77,26 +77,43 @@ public class SettingsScreen implements Screen {
 
     public void setVolume(){
 
-        if(volumeChanges == 1)
+        if(volumeChanges == 1) {
             currentVolume = volume0;
-        else if(volumeChanges == 2)
+            volume = 0.1f;
+        }
+        else if(volumeChanges == 2) {
             currentVolume = volume1;
-        else if(volumeChanges == 3)
+            volume = 0.2f;
+        }
+        else if(volumeChanges == 3) {
             currentVolume = volume2;
-        else if(volumeChanges == 4)
+            volume = 0.3f;
+        }
+        else if(volumeChanges == 4) {
             currentVolume = volume3;
-        else if(volumeChanges == 5)
+            volume = 0.4f;
+        }
+        else if(volumeChanges == 5) {
             currentVolume = volume4;
-        else if(volumeChanges == 6)
+            volume = 0.5f;
+        }
+        else if(volumeChanges == 6) {
             currentVolume = volume5;
-        else if(volumeChanges == 7)
+            volume = 0.6f;
+        }
+        else if(volumeChanges == 7) {
             currentVolume = volume6;
-        else if(volumeChanges == 8)
+            volume = 0.7f;
+        }else if(volumeChanges == 8) {
             currentVolume = volume7;
-        else if(volumeChanges == 9)
+            volume = 0.8f;
+        }else if(volumeChanges == 9) {
             currentVolume = volume8;
-        else if(volumeChanges == 10)
+            volume = 0.9f;
+        }else if(volumeChanges == 10) {
             currentVolume = volume9;
+            volume = 1f;
+        }
 
         volumes.setDrawable(currentVolume);
     }
@@ -253,6 +270,7 @@ public class SettingsScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //buttons();
 
+        HomeScreen.backgroundMusic.setVolume(volume);
 
         game.batch.begin();
         //game.batch.draw(volumeImage,game.GAME_WIDTH - (game.GAME_WIDTH - 700),100);
