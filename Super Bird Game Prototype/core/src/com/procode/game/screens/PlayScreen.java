@@ -114,7 +114,7 @@ public class PlayScreen extends BaseScene implements Screen {
 //        enemyBird = new MechaBird(mechaBirdWidth, mechaBirdHeight, mechaBirdSpeed);
 
         int minEnemies = 1; // easy = 2 hard = 5
-        int maxEnemies = 15; // max should always be 15
+        int maxEnemies = 5; // max should always be 15
         float enemyMaxSpeed =  SuperBirdGame.GAME_HEIGHT / 40; // desired max speed = game height / 40, hard = /10
         float enemyMinSpeed = SuperBirdGame.GAME_HEIGHT / 80; // desired min speed = game height / 80, hard = /40
         float spawnPerSec = .001f; // easy = .001f hard = 1f
