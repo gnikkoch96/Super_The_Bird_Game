@@ -2,6 +2,7 @@ package com.procode.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -38,6 +39,7 @@ public class HomeScreen implements Screen {
     private float currTime;
     private int fly;
     private boolean moveUp;
+    public static Music backgroundMusic;
 
     public int buttonSize; // because image is a circle only need the radius so size is a single variable
 
@@ -133,6 +135,7 @@ public class HomeScreen implements Screen {
         btnPlay.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                backgroundMusic.stop();
                 game.setScreen(new LoadingScreen(game));
             }
         });
@@ -155,9 +158,15 @@ public class HomeScreen implements Screen {
         btnExit.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-               Gdx.app.exit();
+                Gdx.app.exit();
             }
         });
+
+        backgroundMusic = SuperBirdGame.manager.get("audio/music/Homescreen.mp3", Music.class);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.play();
+        backgroundMusic.setVolume(SettingsScreen.volume);
+
     }
 
     @Override
@@ -172,11 +181,11 @@ public class HomeScreen implements Screen {
         if(fly != game.GAME_HEIGHT && moveUp == true){
             fly += 5;
             if(fly == game.GAME_HEIGHT)
-            moveUp =false;
+                moveUp =false;
         }else{
             fly -= 5;
             if(fly == 0)
-            moveUp = true;
+                moveUp = true;
         }
     }
 
@@ -226,5 +235,6 @@ public class HomeScreen implements Screen {
         game.dispose();
         stage.dispose();
         bird.dispose();
+        backgroundMusic.dispose();
     }
 }

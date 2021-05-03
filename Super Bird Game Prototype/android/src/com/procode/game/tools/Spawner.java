@@ -37,7 +37,7 @@ public class Spawner {
 
     private float lastTimeIncreaseDifficulty;
     private boolean changeEnemyAttacks;
-    public float addedDifficultyTime = 25;
+    public float addedDifficultyTime = 10;
     // point system related
     private HUD hud;
 

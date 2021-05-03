@@ -117,6 +117,10 @@ public class GameOverScreen implements Screen {
                 game.setScreen(new HomeScreen(game));
 
             }
+
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
         });
 
 
@@ -127,6 +131,10 @@ public class GameOverScreen implements Screen {
                 //btnLoginClicked();
                 gameOverAnimation.replayLoop();
                 game.setScreen(new LoadingScreen(game));
+            }
+
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
             }
         });
     }
@@ -144,6 +152,7 @@ public class GameOverScreen implements Screen {
             saveScoreInDatabase();
         }
     }
+
 
     @Override
     public void render(float delta) {

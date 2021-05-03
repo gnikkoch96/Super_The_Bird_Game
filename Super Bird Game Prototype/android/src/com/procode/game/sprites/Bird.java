@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -17,7 +16,6 @@ import com.procode.game.tools.Enemy;
 import com.procode.game.tools.Hitbox;
 import com.procode.game.tools.ParticleEffectComponent;
 
-import java.lang.Math;
 import java.util.List;
 
 public class Bird implements Disposable {
@@ -57,7 +55,7 @@ public class Bird implements Disposable {
     public Hitbox hitbox;
 
     // audio related
-    private Sound spitSound;
+    private Sound spitSound, flapSound;
     private Sound damageSoundNormal, damageSoundLoud;
     private Sound deadSound, deadSoundSad;
 
@@ -79,6 +77,7 @@ public class Bird implements Disposable {
     private boolean growing;
 
     private float speedOffset;
+    public boolean isFlapping;
 
     public Bird(int x, int y, int birdWidth, int birdHeight, final Camera gameCamera) {
         currentAnimation = new Animation();
@@ -90,6 +89,7 @@ public class Bird implements Disposable {
         shrinking = false;
         growing = false;
         speedOffset = 1;
+        isFlapping = false;
 
         currentTime = 0;
         rateOfFireTime = .23f;
@@ -118,6 +118,7 @@ public class Bird implements Disposable {
 
         // getting sounds
         spitSound = SuperBirdGame.manager.get("audio/sound/spit.wav", Sound.class);
+        flapSound = SuperBirdGame.manager.get("audio/sound/bird_flap.mp3", Sound.class);
         damageSoundNormal = SuperBirdGame.manager.get("audio/sound/bird_scream_normal.wav", Sound.class);
         damageSoundLoud = SuperBirdGame.manager.get("audio/sound/bird_scream_loud.wav", Sound.class);
         deadSound = SuperBirdGame.manager.get("audio/sound/bird_dead.wav", Sound.class);
@@ -353,7 +354,7 @@ public class Bird implements Disposable {
             if (previousState != State.SHOOT && previousState == State.IDLE) { // to prevent overlapping of animations
 
                 // plays sound (Nikko: How to pause sound in the middle when the game is paused?)
-                spitSound.play(volume);
+                spitSound.play(SettingsScreen.volume);
 
                 switchAnimations(State.SHOOT);
 
@@ -373,11 +374,13 @@ public class Bird implements Disposable {
 
         switchAnimations(State.DEAD);
 
-        deadSoundSad.play(volume);
+        deadSoundSad.play(SettingsScreen.volume);
 
         // set the screen to game over screen
         dead = true;
 
+        isFlapping = false;
+        flapSound.pause();
 
     }
 
@@ -386,7 +389,7 @@ public class Bird implements Disposable {
             previousState = currentState;
             currentState = State.DAMAGED;
 
-            damageSoundNormal.play(volume);
+            damageSoundNormal.play(SettingsScreen.volume);
 
             timeVar = System.currentTimeMillis(); // update time var to current time value every time the bird gets damaged
             setInvincible(true);
@@ -522,6 +525,12 @@ public class Bird implements Disposable {
     }
 
 
+    public void startFlap() {
+        flapSound.loop();
+        flapSound.play(SettingsScreen.volume);
+        isFlapping = true;
+    }
+
     @Override
     public void dispose() {
         currentAnimation.dispose();
@@ -530,6 +539,7 @@ public class Bird implements Disposable {
         shootAnimation.dispose();
         damageAnimation.dispose();
         spitSound.dispose();
+        flapSound.dispose();
         deadSound.dispose();
         deadSoundSad.dispose();
         damageSoundNormal.dispose();

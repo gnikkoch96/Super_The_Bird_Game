@@ -37,28 +37,45 @@ public class Volume {
 
     public void setVolume(int changeVolume){
 
-        SettingsScreen.volumeChanges = changeVolume;
 
-        if(SettingsScreen.volumeChanges == 1)
+        if(SettingsScreen.volumeChanges == 1) {
             currentVolume = volume0;
-        else if(SettingsScreen.volumeChanges == 2)
+            SettingsScreen.volume = 0.1f;
+        }
+        else if(SettingsScreen.volumeChanges == 2) {
             currentVolume = volume1;
-        else if(SettingsScreen.volumeChanges == 3)
+            SettingsScreen.volume = 0.2f;
+        }
+        else if(SettingsScreen.volumeChanges == 3) {
             currentVolume = volume2;
-        else if(SettingsScreen.volumeChanges == 4)
+            SettingsScreen.volume = 0.3f;
+        }
+        else if(SettingsScreen.volumeChanges == 4) {
             currentVolume = volume3;
-        else if(SettingsScreen.volumeChanges == 5)
+            SettingsScreen.volume = 0.4f;
+        }
+        else if(SettingsScreen.volumeChanges == 5) {
             currentVolume = volume4;
-        else if(SettingsScreen.volumeChanges == 6)
+            SettingsScreen.volume = 0.5f;
+        }
+        else if(SettingsScreen.volumeChanges == 6) {
             currentVolume = volume5;
-        else if(SettingsScreen.volumeChanges == 7)
+            SettingsScreen.volume = 0.6f;
+        }
+        else if(SettingsScreen.volumeChanges == 7) {
             currentVolume = volume6;
-        else if(SettingsScreen.volumeChanges == 8)
+            SettingsScreen.volume = 0.7f;
+        }else if(SettingsScreen.volumeChanges == 8) {
             currentVolume = volume7;
-        else if(SettingsScreen.volumeChanges == 9)
+            SettingsScreen.volume = 0.8f;
+        }else if(SettingsScreen.volumeChanges == 9) {
             currentVolume = volume8;
-        else if(SettingsScreen.volumeChanges == 10)
+            SettingsScreen.volume = 0.9f;
+        }else if(SettingsScreen.volumeChanges == 10) {
             currentVolume = volume9;
+            SettingsScreen.volume = 1f;
+        }
+
         volumes.setDrawable(currentVolume);
     }
 
