@@ -220,6 +220,11 @@ public class LoginScreen extends ApplicationAdapter implements Screen {
     public void btnLoginClicked(){
         //just to see the user name in the console
         currentUser.userExist(userName.getText(), password.getText());
+        Database database = new Database();
+
+        //database.upDateGlobalScores(315);
+        //database.dumm();
+
         btn_clicked = true;
     }
 

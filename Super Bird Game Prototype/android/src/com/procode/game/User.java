@@ -3,17 +3,19 @@ package com.procode.game;
 import android.provider.ContactsContract;
 
 import com.procode.game.screens.LoginScreen;
+import com.procode.game.screens.Scoreboard;
 
 public class User {
 
-    private String username, password, email, birthday, fullName, scoreboard;
+    private String username, password, email, fullName, scoreboard;
     public static String currentUser = "";
+    public static String currentUserScores = "";
 
-    public User(String username, String password, String email, String birthday, String scoreboard){
+    public User(String username, String password, String email, String fullName, String scoreboard){
         this.username = username;
         this.password = password;
         this.email = email;
-        this.birthday = birthday;
+        this.fullName = fullName;
         this.scoreboard = scoreboard;
     }
 
@@ -21,20 +23,20 @@ public class User {
         username = "";
         password = "";
         email = "";
-        birthday = "";
+        scoreboard = "";
         fullName = "";
     }
 
     public void setUserName(String e){ username = e; }
     public void setPassword(String e){ password = e; }
     public void setEmail(String e){ email = e; }
-    public void setBirthday(String e){ birthday = e; }
+    public void setBirthday(String e){ scoreboard = e; }
     public void setFullName(String e){ fullName = e; }
 
     public String getUserName(){ return username; }
     public String getPassword(){return password;}
     public String getEmail(){return email;}
-    public String getBirthday(){return birthday;}
+    public String getBirthday(){return scoreboard;}
     public String getFullName(){return fullName;}
 
     public void InsertDataToDatabase(){

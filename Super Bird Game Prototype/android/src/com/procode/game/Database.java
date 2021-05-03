@@ -152,11 +152,34 @@ public class Database {
     //email, birthday and fullName
     //only use this one for New Users registering a new account
     public void insertData(){
+        String scoreboard = "0,0,0,0,0,0,0,0,0,0";
         userdataMap.put("username", this.username);
         userdataMap.put("password", this.password);
         userdataMap.put("email", this.email);
-        userdataMap.put("name", this.fullName);
-        userdataMap.put("scoreboard", 0);
+        userdataMap.put("fullName", this.fullName);
+        userdataMap.put("scoreboard", scoreboard);
+
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                rootRef.child("Users").child(username).updateChildren(userdataMap).
+                        addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    // Toast
+                                    // userStatus = true;
+                                }else{
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -184,7 +207,7 @@ public class Database {
         final HashMap<String,Object> emailMap = new HashMap<>();
 
         usernameMap.put("username", this.username);
-        emailMap.put("email", this.email);
+
 
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -208,6 +231,7 @@ public class Database {
             }
         });
 
+        emailMap.put("email", this.email);
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -337,9 +361,167 @@ public class Database {
 
 
 
-
     public void upDateScore(int score){
-        
+
+        rootRef.child("Users").child(User.currentUser).child("scoreboard").setValue(score)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+
+                        }
+                    }
+                });
+
+        /*final HashMap<String,Object> scoreMap = new HashMap<>();
+        scoreMap.put("user", score);
+        rootRef.child("Scoreboard").child("scores").child("user").push().setValue(scoreMap).
+                addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+
+                        }
+                    }
+                });*/
+    }
+
+    public void upDateGlobalScores(final int score){
+
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("Scoreboard").child("scores").exists()){
+                    Iterator<DataSnapshot> ds =
+                            dataSnapshot.child("Scoreboard").child("scores").getChildren().iterator();
+                    //Iterator<DataSnapshot> ds = dataSnapshot.getChildren().iterator();
+
+                    int []num = new int[20];
+                    String concatonate = "";
+                    String []values = new String[20];
+                    int counter = 0;
+                    boolean flag = false;
+                    boolean isSpace = false;
+                    int []users = new int[21];
+                    String name = "";
+                    String []names = new String[21];
+                    String rank = "";
+
+                    while(ds.hasNext()){
+                        values[counter] = ds.next().getValue(String.class);
+
+                        for(int i =0; i < values[counter].length(); i++){
+
+                            if(values[counter].charAt(i) == ' '){
+                                isSpace = true;
+                            }
+
+                            if(flag == true){
+                                concatonate += values[counter].charAt(i) + "";
+                            }
+
+                            if(isSpace == false){
+                                rank += values[counter].charAt(i) + "";
+                            }
+
+                            if(values[counter].charAt(i) == ','){
+                                flag = true;
+                            }
+
+                            if(flag == false && isSpace == false){
+                                name += values[counter].charAt(i) + "";
+                            }
+
+                        }
+
+                        num[counter] = Integer.parseInt(concatonate);
+                        users[Integer.parseInt(rank)] = num[counter];
+                        names[Integer.parseInt(rank)] = name;
+
+                        concatonate = "";
+                        name = "";
+                        rank = "";
+                        flag = false;
+                        isSpace = false;
+                        counter++;
+
+
+                    }
+
+                    flag = false;
+                    int temp = 0;
+                    for(int i= 1; i < 21; i++){
+
+                        if(flag = true){
+                            upDateRankScores(names[i], i + "", temp);
+                            temp = users[i];
+                        }
+
+                        if(score > users[i]){
+                            upDateRankScores(User.currentUser,  i + "", score);
+                            temp = users[i];
+                            flag = true;
+                        }
+
+
+                        //System.out.println("ranks: " + users[i]);
+                    }
+
+
+                }else{
+
+                    System.out.println("it does not exist");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+
+        });
+
+
+    }
+
+    public void dumm(){
+        int num = 500;
+        for(int i=1; i < 21;i++){
+            upDateRankScores("NoobMaster69", i + "", num);
+            num -= 10;
+        }
+    }
+
+
+    public void upDateRankScores(final String username, final String rank, final int score){
+        rootRef.child("Scoreboard").child("scores").child("Rank" + rank).setValue(rank + " " + username + "," + score).
+                addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+
+                        }
+                    }
+                });
+    }
+
+    public void testUpdate(String score){
+
+        rootRef.child("Users").child(User.currentUser).child("scoreboard").child(" ").setValue(score)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+
+                        }
+                    }
+                });
+    }
+
+    public void getScores(){
+
     }
     /*public void upDateScore(int score){
         rootRef.child("Users").child(this.username).child(this.score).setValue(score)
@@ -370,10 +552,15 @@ public class Database {
                     if(userData.getUserName().equals(userName)){
                         if(userData.getPassword().equals(userPassword)){
 
+                            User.currentUserScores = dataSnapshot.child(parentDbName).child(userName).
+                                    child("scoreboard").getValue(String.class);
+
                             Database.userStatus = true;
                             Database.usernameStatus = "Exist";
                             LoginScreen.currentUser = userData;
+                            //User.userInfo = userData;
                             System.out.println("it exist : " + LoginScreen.userStatus);
+                            System.out.println("scoreboad: " +  User.currentUserScores);
                         }else{
                             Database.usernameStatus = "DNE";
                         }
