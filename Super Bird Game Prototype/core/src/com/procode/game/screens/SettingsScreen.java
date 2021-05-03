@@ -42,8 +42,8 @@ public class SettingsScreen implements Screen {
     private Image volumes, volumeLabel;
     private ImageButton leftVolumeBtn, rightVolumeBtn;
     private SpriteDrawable currentVolume,volume0, volume1,volume2, volume3,volume4, volume5,volume6,volume7, volume8,volume9;
-    public static int volumeChanges = 5;
-    public static float volume = 0.05f;
+    public static int volumeChanges = 10;
+    public static float volume = 1f;
     public SettingsScreen(SuperBirdGame g){
         game = g;
         stage = new Stage(game.viewport, game.batch);

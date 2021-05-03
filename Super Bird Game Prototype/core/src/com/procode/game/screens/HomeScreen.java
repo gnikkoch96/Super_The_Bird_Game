@@ -165,7 +165,7 @@ public class HomeScreen implements Screen {
         backgroundMusic = SuperBirdGame.manager.get("audio/music/Homescreen.mp3", Music.class);
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
-        backgroundMusic.setVolume(1f);
+        backgroundMusic.setVolume(SettingsScreen.volume);
 
     }
 
