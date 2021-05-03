@@ -108,7 +108,12 @@ public class LoadingScreen extends Game implements Screen {
 
     @Override
     public void create() {
-        game.setScreen(new PlayScreen(game));
+        try{
+            game.setScreen(new PlayScreen(game));
+        }catch(Exception e){
+
+        }
+
     }
 
     @Override

@@ -9,13 +9,13 @@ public class Scores {
     private int[] scores;
     private int userScore;
 
-    public static String[] globalScores;
+    public static String[] globalScores = new String[21];
     public Scores(){
         user = "";
         username = "";
         scoreboard = "";
         scores = new int[10];
-        globalScores = new String[21];
+
     }
 
     public void setScore(int score){
@@ -45,10 +45,12 @@ public class Scores {
             //if(flag == false)
 
         }
-        populateScores[counter] = Integer.parseInt(concatonate);
+        //populateScores[counter] = Integer.parseInt(concatonate);
         int temp = 0;
         flag = false;
         for(i = 0; i < 10; i++){
+
+
 
             if(flag == true){
                 int temp1 = temp;
@@ -67,6 +69,9 @@ public class Scores {
         }
 
         for(i=0; i < 10; i++){
+
+            if(populateScores[i] == 0)
+                break;
             if(i < 9)
             scoreboard += populateScores[i] + ",";
             else
@@ -145,7 +150,7 @@ public class Scores {
                 concatonate += localScores.charAt(i) + "";
             }
         }
-        scores[counter] = Integer.parseInt(concatonate);
+//        scores[counter] = Integer.parseInt(concatonate);
         return scores;
     }
 

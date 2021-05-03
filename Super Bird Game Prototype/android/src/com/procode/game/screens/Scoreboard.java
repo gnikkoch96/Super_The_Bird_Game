@@ -244,6 +244,7 @@ public class Scoreboard implements Screen {
         scrollTable.row().colspan(3).expandX().fillX();
         scrollTable.add(topLabel).fillX();
 
+        Scores scores = new Scores();
         for(int i =1; i < 21; i++){
             Label user = new Label(Scores.globalScores[i], labelStyle);
             scrollTable.row().colspan(3).expandX().fillX();
