@@ -22,8 +22,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.procode.game.Database;
 import com.procode.game.SuperBirdGame;
+import com.procode.game.User;
 import com.procode.game.tools.ImageFunctions;
+import com.procode.game.tools.Scores;
 
 import java.util.ArrayList;
 
@@ -43,6 +46,7 @@ public class Scoreboard implements Screen {
     private Table tableLocalScore, tableGlobalScore, buttonLocalScoreTable, buttonGlobalScoreTable;
     private float sw, sh, cw, ch;
     private TextureRegionDrawable textureRegionDrawableBg;
+    private Database database = new Database();
 
     public Scoreboard(SuperBirdGame g) {
         game = g;
@@ -176,8 +180,16 @@ public class Scoreboard implements Screen {
         scrollTable.row().colspan(3).expandX().fillX();
         scrollTable.add(topLabel).fillX();
 
-        for(int i =0; i < 20; i++){
-            Label user = new Label(i + ". Robin" + i + nameSpace + "        300", labelStyle);
+        Scores scores = new Scores();
+        int []sc = new int[10];
+
+        sc = scores.getScores();
+
+        for(int i =0; i < 10; i++){
+
+            if(sc[i] == 0)
+                break;
+            Label user = new Label(i + ". " + User.currentUser + nameSpace + sc[i], labelStyle);
             scrollTable.row().colspan(3).expandX().fillX();
             scrollTable.add(user);
         }
@@ -232,8 +244,8 @@ public class Scoreboard implements Screen {
         scrollTable.row().colspan(3).expandX().fillX();
         scrollTable.add(topLabel).fillX();
 
-        for(int i =0; i < 20; i++){
-            Label user = new Label(i + ". Jason" + i + nameSpace + "        600", labelStyle);
+        for(int i =1; i < 21; i++){
+            Label user = new Label(Scores.globalScores[i], labelStyle);
             scrollTable.row().colspan(3).expandX().fillX();
             scrollTable.add(user);
         }
@@ -270,6 +282,8 @@ public class Scoreboard implements Screen {
     }
     @Override
     public void render(float delta) {
+
+        database.getGlobalScores();
 
         //buttons();
         Gdx.gl.glClearColor(0,1,1,0);

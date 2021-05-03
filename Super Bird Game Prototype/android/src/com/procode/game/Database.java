@@ -20,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.procode.game.User;
 import com.procode.game.screens.LoginScreen;
+import com.procode.game.tools.Scores;
+
 import java.lang.Object;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -361,7 +363,7 @@ public class Database {
 
 
 
-    public void upDateScore(int score){
+    public void upDateScore(String score){
 
         rootRef.child("Users").child(User.currentUser).child("scoreboard").setValue(score)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -384,6 +386,91 @@ public class Database {
                         }
                     }
                 });*/
+    }
+
+    public void getGlobalScores(){
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("Scoreboard").child("scores").exists()){
+                    Iterator<DataSnapshot> ds =
+                            dataSnapshot.child("Scoreboard").child("scores").getChildren().iterator();
+                    //Iterator<DataSnapshot> ds = dataSnapshot.getChildren().iterator();
+
+                    int []num = new int[20];
+                    String concatonate = "";
+                    String []values = new String[20];
+                    int counter = 0;
+                    boolean flag = false;
+                    boolean isSpace = false;
+                    int []users = new int[21];
+                    String name = "";
+                    String []names = new String[21];
+                    String rank = "";
+
+                    while(ds.hasNext()){
+                        values[counter] = ds.next().getValue(String.class);
+                        //System.out.println("v:" + values[counter]);
+                        for(int i =0; i < values[counter].length(); i++){
+
+                            if(values[counter].charAt(i) == ' '){
+                                isSpace = true;
+                            }
+
+                            if(flag == true){
+                                concatonate += values[counter].charAt(i) + "";
+                            }
+
+                            if(isSpace == false){
+                                rank += values[counter].charAt(i) + "";
+                            }
+
+                            if(values[counter].charAt(i) == ','){
+                                flag = true;
+                            }
+
+                            if(flag == false && isSpace == true){
+                                name += values[counter].charAt(i) + "";
+                            }
+
+                        }
+
+                        num[counter] = Integer.parseInt(concatonate);
+
+                        users[Integer.parseInt(rank)] = num[counter];
+                        // System.out.println("d: " + rank + " "+ num[counter]);
+                        //  System.out.println("u: " + users[Integer.parseInt(rank)]);
+                        names[Integer.parseInt(rank)] = name;
+
+                        concatonate = "";
+                        name = "";
+                        rank = "";
+                        flag = false;
+                        isSpace = false;
+                        counter++;
+
+
+                    }
+
+                    for(int i=1; i < 21; i++){
+                        System.out.println(names[i] + "          " + users[i]);
+                        Scores.globalScores[i] = i + ".) " + names[i] + "          " + users[i];
+                    }
+
+                }else{
+
+                    System.out.println("it does not exist");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+
+        });
     }
 
     public void upDateGlobalScores(final int score){
@@ -409,7 +496,7 @@ public class Database {
 
                     while(ds.hasNext()){
                         values[counter] = ds.next().getValue(String.class);
-
+                        //System.out.println("v:" + values[counter]);
                         for(int i =0; i < values[counter].length(); i++){
 
                             if(values[counter].charAt(i) == ' '){
@@ -428,14 +515,17 @@ public class Database {
                                 flag = true;
                             }
 
-                            if(flag == false && isSpace == false){
+                            if(flag == false && isSpace == true){
                                 name += values[counter].charAt(i) + "";
                             }
 
                         }
 
                         num[counter] = Integer.parseInt(concatonate);
+
                         users[Integer.parseInt(rank)] = num[counter];
+                       // System.out.println("d: " + rank + " "+ num[counter]);
+                      //  System.out.println("u: " + users[Integer.parseInt(rank)]);
                         names[Integer.parseInt(rank)] = name;
 
                         concatonate = "";
@@ -448,24 +538,49 @@ public class Database {
 
                     }
 
-                    flag = false;
+                    int i = 0;
+                    flag =false;
                     int temp = 0;
-                    for(int i= 1; i < 21; i++){
+                    for(i = 1; i < 21; i++){
+                       // System.out.println(users[i]);
+                        if(score > users[i]){
+                            upDateRankScores(User.currentUser,  i + "", score);
+                            temp = users[i];
+                            flag = true;
+                            break;
+                        }
+
+                    }
+
+                    if(flag == true){
+                        for(int x = i + 1; x < 21;x++){
+
+                                upDateRankScores(names[x - 1],  x + "", temp);
+                                temp = users[x];
+
+                        }
+                    }
+
+                    /*flag = false;
+                    boolean signal = false;
+                    int temp = 0;
+                    for(int i= 1; i < 11; i++){
 
                         if(flag = true){
                             upDateRankScores(names[i], i + "", temp);
                             temp = users[i];
                         }
 
-                        if(score > users[i]){
+                        if(score > users[i] && signal == false){
                             upDateRankScores(User.currentUser,  i + "", score);
                             temp = users[i];
                             flag = true;
+                            signal = true;
                         }
 
 
                         //System.out.println("ranks: " + users[i]);
-                    }
+                    }*/
 
 
                 }else{
@@ -558,6 +673,7 @@ public class Database {
                             Database.userStatus = true;
                             Database.usernameStatus = "Exist";
                             LoginScreen.currentUser = userData;
+                            User.currentUser = userName;
                             //User.userInfo = userData;
                             System.out.println("it exist : " + LoginScreen.userStatus);
                             System.out.println("scoreboad: " +  User.currentUserScores);

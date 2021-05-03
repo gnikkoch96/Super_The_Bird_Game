@@ -74,7 +74,7 @@ public class SuperBirdGame extends Game {
 		//this.setScreen(new SplashScreen(this));
 		//this.setScreen(new EditAccountScreen(this));
 		//this.setScreen(new ChangePasswordScreen(this));
-		//this.setScreen(new PlayScreen(this));
+		//this.setScreen(new Scoreboard(this));
 		this.setScreen(new LoginScreen(this));
 	}
 

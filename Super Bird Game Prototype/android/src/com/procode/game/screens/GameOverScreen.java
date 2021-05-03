@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.procode.game.SuperBirdGame;
 import com.procode.game.tools.Animation;
 import com.procode.game.tools.ImageFunctions;
+import com.procode.game.tools.Scores;
 
 public class GameOverScreen implements Screen {
 
@@ -130,10 +131,17 @@ public class GameOverScreen implements Screen {
         });
     }
 
+    public void saveScoreInDatabase(){
+
+        Scores userScore = new Scores();
+        userScore.setScore(this.score);
+    }
+
     @Override
     public void show() {
         if(gameOverAnimation.isAnimFinished()) {
             buttons();
+            saveScoreInDatabase();
         }
     }
 
